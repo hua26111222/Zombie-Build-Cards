@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>丧尸堡垒 - 生存模式</title>
 <style>
 /* ========== [杀戮尖塔风格 - Slay the Spire] CSS变量系统 ========== */
@@ -50,6 +51,20 @@ body {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   font-family: var(--font-body);
+}
+
+/* 移动端横屏适配 */
+@media (max-width: 768px) and (orientation: portrait) {
+  html { font-size: 14px; }
+}
+
+/* 安全区域适配 iPhone X+ */
+@supports (padding: max(0px)) {
+  #gameContent, .modal-content {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
 }
 
 /* 石材质感纹理叠加 */

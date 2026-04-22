@@ -57,35 +57,9 @@ body {
   font-family: var(--font-body);
 }
 
-/* ========== 移动端横屏适配 - 强制横屏和增大字体 ========== */
+/* ========== 移动端横屏适配和增大字体 ========== */
 @media (max-width: 768px) {
-  html { font-size: 16px !important; }
-  
-  /* 强制竖屏旋转90度显示为横屏 */
-  @media (orientation: portrait) {
-    html, body {
-      width: 100vh !important;
-      height: 100vw !important;
-      transform: rotate(90deg) !important;
-      transform-origin: left top !important;
-      position: fixed !important;
-      top: 0 !important;
-      left: 100vw !important;
-      overflow: hidden !important;
-    }
-  }
-  
-  /* 横屏时恢复正常 */
-  @media (orientation: landscape) {
-    html, body {
-      transform: none !important;
-      width: 100% !important;
-      height: 100% !important;
-      position: static !important;
-      top: auto !important;
-      left: auto !important;
-    }
-  }
+  html { font-size: 18px !important; }
   
   /* 游戏内容放大 */
   #gameContent, #battleContent {
@@ -1009,6 +983,32 @@ body::before {
 </style>
 </head>
 <body>
+<script>
+// 强制移动端横屏显示
+(function() {
+  function lockOrientation() {
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      // 竖屏时旋转容器
+      if (window.innerHeight > window.innerWidth) {
+        document.documentElement.style.width = '100vh';
+        document.documentElement.style.height = '100vw';
+        document.documentElement.style.transform = 'rotate(90deg)';
+        document.documentElement.style.transformOrigin = 'left top';
+        document.documentElement.style.position = 'fixed';
+        document.documentElement.style.top = '0';
+        document.documentElement.style.left = '100vh';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+  }
+  
+  // 页面加载和屏幕方向变化时执行
+  lockOrientation();
+  window.addEventListener('load', lockOrientation);
+  window.addEventListener('orientationchange', lockOrientation);
+  window.addEventListener('resize', lockOrientation);
+})();
+</script>
 
 <!-- 开始菜单 -->
 <div id="startMenu">

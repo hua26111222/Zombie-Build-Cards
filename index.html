@@ -9,75 +9,259 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>丧尸堡垒 - 生存模式</title>
 <style>
-/* ========== [杀戮尖塔风格 - Slay the Spire] CSS变量系统 ========== */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif:wght@400;700&display=swap');
+/* ========== [丧尸末日像素风格] CSS变量系统 ========== */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
 :root {
-  /* 核心配色 */
-  --bg-darkest: #080608;
-  --bg-dark: #0a0808;
-  --bg-mid: #0c0a0c;
-  --bg-light: #12100e;
+  /* 丧尸末日红绿灰配色 - 增强对比度 */
+  --bg-darkest: #050505;
+  --bg-dark: #0d0d0d;
+  --bg-mid: #181818;
+  --bg-light: #282828;
   
-  /* 文字颜色 */
-  --text-primary: #c4b8a8;
-  --text-secondary: #8a9a8a;
-  --text-dim: #5a5248;
+  /* 文字颜色 - 增强对比度 */
+  --text-primary: #e8e8d0;
+  --text-secondary: #989880;
+  --text-dim: #585850;
   
-  /* 强调色 */
-  --accent-gold: #a89878;
-  --accent-green: #90c890;
-  --accent-blue: #90a8c8;
+  /* 强调色 - 血红与毒绿 增强亮度 */
+  --accent-blood: #e84040;
+  --accent-poison: #80c060;
+  --accent-rust: #a07040;
+  --accent-gold: #d8b040;
   
-  /* 状态色 */
-  --health: #c85050;
-  --health-dark: #a03030;
-  --shield: #70c0a8;
-  --energy: #c8b860;
-  --strength: #c8a070;
-  --poison: #80c870;
+  /* 状态色 - 增强饱和度 */
+  --health: #d03030;
+  --health-dark: #902020;
+  --shield: #609080;
+  --energy: #c0b060;
+  --strength: #e87040;
+  --poison: #80c060;
   
-  /* 边框 */
-  --border-subtle: rgba(80,100,70,0.3);
-  --border-normal: rgba(80,100,70,0.4);
-  --border-strong: rgba(120,150,100,0.5);
+  /* 边框 - 金属质感增强 */
+  --border-subtle: rgba(100,100,80,0.4);
+  --border-normal: rgba(120,120,100,0.6);
+  --border-strong: rgba(160,160,120,0.8);
   
-  /* 字体 */
-  --font-title: 'Cinzel', 'Georgia', serif;
-  --font-body: 'Noto Serif', 'Georgia', serif;
+  /* 像素风格字体 */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-retro: 'VT323', monospace;
+  --font-title: 'Press Start 2P', monospace;
+  --font-body: 'VT323', monospace;
+  
+  /* 像素网格线 */
+  --pixel-grid: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* 像素化全局样式 */
+* { 
+  margin:0; 
+  padding:0; 
+  box-sizing:border-box; 
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+}
+
 html, body { width:100%; height:100%; overflow:hidden; font-size:16px; }
 body { 
-  background:var(--bg-dark); color:var(--text-primary); 
+  background:var(--bg-dark); 
+  color:var(--text-primary); 
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   font-family: var(--font-body);
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 
-/* ========== 移动端横屏适配 - 超大字体高对比度 ========== */
+/* 像素扫描线效果 - 增强版 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.25) 0px,
+    rgba(0,0,0,0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* 颗粒噪点效果 - 增强版 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  animation: staticNoise 0.1s steps(3) infinite;
+}
+
+@keyframes staticNoise {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-1px, 1px); }
+  66% { transform: translate(1px, -1px); }
+  100% { transform: translate(-1px, -1px); }
+}
+
+/* ========== 增强像素风格 - CRT显示器效果 ========== */
+
+/* CRT暗角效果 - 增强沉浸感 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 60%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+  z-index: 10001;
+  animation: crtVignette 0.08s steps(2) infinite;
+}
+
+@keyframes crtVignette {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+/* CRT色差效果 - 增强像素感 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  z-index: 10002;
+  animation: crtScanline 0.05s steps(2) infinite;
+}
+
+@keyframes crtScanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(2px); }
+}
+
+/* 屏幕光晕层 */
+#screenGlow {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: radial-gradient(ellipse at center, rgba(50,40,30,0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9998;
+  animation: screenPulse 4s ease-in-out infinite;
+}
+
+@keyframes screenPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* 像素网格强化层 */
+#pixelGrid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 9997;
+  animation: gridShift 8s linear infinite;
+}
+
+@keyframes gridShift {
+  0% { background-position: 0 0; }
+  100% { background-position: 4px 4px; }
+}
+
+/* 屏幕闪烁效果（用于战斗特效） */
+@keyframes screenFlash {
+  0% { opacity: 0; }
+  10% { opacity: 0.15; }
+  20% { opacity: 0; }
+  30% { opacity: 0.1; }
+  40% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.screen-flash-red::before {
+  background: radial-gradient(ellipse at center, rgba(200,50,50,0.6) 0%, transparent 70%) !important;
+  animation: screenFlash 0.3s ease-out forwards !important;
+}
+
+.screen-flash-green::before {
+  background: radial-gradient(ellipse at center, rgba(80,180,80,0.6) 0%, transparent 70%) !important;
+  animation: screenFlash 0.3s ease-out forwards !important;
+}
+
+.screen-flash-white::before {
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.6) 0%, transparent 70%) !important;
+  animation: screenFlash 0.2s ease-out forwards !important;
+}
+
+/* 屏幕震动效果 */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-4px, -2px); }
+  20% { transform: translate(4px, 2px); }
+  30% { transform: translate(-3px, 3px); }
+  40% { transform: translate(3px, -3px); }
+  50% { transform: translate(-2px, 2px); }
+  60% { transform: translate(2px, -2px); }
+  70% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  90% { transform: translate(-1px, 0); }
+}
+
+.screen-shake {
+  animation: screenShake 0.4s ease-out;
+}
+
+/* ========== 移动端横屏适配 - 像素风格 ========== */
 @media (max-width: 768px) {
   html { font-size: 22px !important; }
   
-  /* 横屏时字体更大 */
   @media (orientation: landscape) {
-    html { font-size: 28px !important; }
+    html { font-size: 24px !important; }
     
-    /* 高对比度文字颜色 */
     body, #gameContent, #battleContent, #handArea {
-      color: #f0e8d8 !important;
+      color: #d0d0c0 !important;
     }
     
-    /* 战斗容器 - 杀戮尖塔布局 */
     #battleContainer {
       flex-direction: row !important;
       justify-content: space-between !important;
       align-items: center !important;
       padding: 8px 12px !important;
       min-height: 32vh !important;
-      background: linear-gradient(90deg, #0a0808 0%, #121010 50%, #0a0808 100%) !important;
+      background: linear-gradient(90deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%) !important;
     }
     
     /* 中间分隔线隐藏 */
@@ -85,7 +269,7 @@ body {
       display: none !important;
     }
     
-    /* 玩家敌人面板 - 杀戮尖塔风格 */
+    /* 玩家敌人面板 - 像素末日风格 */
     #playerPanel, #enemyPanel {
       width: 48% !important;
       padding: 8px !important;
@@ -94,16 +278,18 @@ body {
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
-      background: rgba(15,12,10,0.6) !important;
-      border-radius: 6px !important;
-      border: 1px solid rgba(100,80,60,0.3) !important;
+      background: rgba(12,12,10,0.8) !important;
+      border-radius: 0px !important;
+      border: 3px solid #404030 !important;
       min-height: 28vh !important;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5) !important;
     }
     
-    /* 玩家敌人文字 */
+    /* 像素风格文字 */
     #playerPanel, #enemyPanel, #enemyIntent, #enemyName, #enemyHpText, #playerHpTextNew {
-      color: #e8e0d0 !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+      color: #c0c0a0 !important;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.8) !important;
+      font-family: var(--font-retro) !important;
     }
     
     /* 手牌区域 */
@@ -242,7 +428,8 @@ body {
       max-height: 90vh !important;
       overflow-y: auto !important;
     }
-    #overlay, #rewardModal { display: flex !important; }
+    #overlay { display: flex !important; }
+    #rewardModal { display: none; }
     
     #mapModal > *, #overlay > div, #rewardModal > *, #shopModal > *, #playerInfoModal > *, #buildModal > *, #survivorModal > *, #cardDetailModal > * {
       text-align: center !important;
@@ -337,156 +524,200 @@ body::before {
   pointer-events:none; z-index:9999;
 }
 
-/* ========== 开始菜单 - 杀戮尖塔深渊风格 ========== */
+
+/* ========== 开始菜单 - 丧尸末日像素风格 ========== */
 #startMenu {
   position:fixed; top:0; left:0; right:0; bottom:0;
   background: 
-    linear-gradient(180deg, var(--bg-darkest) 0%, var(--bg-mid) 50%, var(--bg-darkest) 100%);
+    linear-gradient(180deg, #050505 0%, #0d0d08 40%, #080d08 60%, #050505 100%);
   display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:500;
   overflow:hidden;
+  border: 6px solid #404030;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9), inset 0 0 50px rgba(20,30,20,0.3);
 }
 
-/* 深渊雾气效果 */
+/* 末日毒雾效果 */
 #startMenu::before {
   content:''; position:absolute; top:0; left:0; right:0; bottom:0;
   background: 
-    radial-gradient(ellipse at 20% 85%, rgba(60,40,50,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 15%, rgba(40,50,40,0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(30,25,35,0.3) 0%, transparent 70%);
+    radial-gradient(ellipse at 30% 90%, rgba(80,100,60,0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 10%, rgba(100,40,40,0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(30,35,30,0.2) 0%, transparent 60%);
   pointer-events:none;
+  animation: toxicGlow 6s ease-in-out infinite alternate;
 }
 
-/* 烛光闪烁效果 */
-#startMenu::after {
-  content:''; position:absolute; top:0; left:0; right:0; bottom:0;
-  background: radial-gradient(ellipse at 30% 40%, rgba(180,120,60,0.06) 0%, transparent 40%);
-  pointer-events:none;
-  animation: candleFlicker 4s ease-in-out infinite alternate;
-}
-@keyframes candleFlicker {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+@keyframes toxicGlow {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
-/* 装饰性顶部边框 */
+/* 装饰性像素边框 */
 .start-menu-border-top {
   position:absolute; top:0; left:50%; transform:translateX(-50%);
-  width:220px; height:2px;
-  background: linear-gradient(90deg, transparent, rgba(100,80,60,0.6), transparent);
+  width:280px; height:4px;
+  background: linear-gradient(90deg, transparent, #505040, #808060, #505040, transparent);
   z-index:2;
+  box-shadow: 0 2px 8px rgba(80,80,50,0.5);
 }
-.start-menu-border-top::before,
-.start-menu-border-top::after {
-  content:'◆'; position:absolute; top:-5px; font-size:9px; color:rgba(100,80,60,0.6);
-}
-.start-menu-border-top::before { left:-18px; }
-.start-menu-border-top::after { right:-18px; }
 
-/* 标题样式 */
+/* 标题样式 - 像素字体 增强版 */
 #startMenu h1 {
-  font-size:68px; color:var(--text-primary); letter-spacing:14px; margin-bottom:6px;
-  text-shadow: 0 0 80px rgba(180,140,80,0.35), 0 0 160px rgba(180,140,80,0.15);
-  font-weight:400; position:relative; z-index:1; font-family: var(--font-title);
+  font-size:52px; 
+  color:#f0e8d0; 
+  letter-spacing:6px; 
+  margin-bottom:8px;
+  text-shadow: 
+    4px 4px 0 #000,
+    -1px -1px 0 #203020,
+    0 0 40px rgba(220,180,80,0.6),
+    0 0 80px rgba(200,100,60,0.4);
+  font-weight:400; 
+  position:relative; 
+  z-index:1; 
+  font-family: var(--font-pixel);
   text-transform: uppercase;
-  animation: titleGlow 3s ease-in-out infinite alternate;
+  animation: titlePulse 2s ease-in-out infinite;
+  border-bottom: 4px solid #403020;
+  padding-bottom: 15px;
 }
-@keyframes titleGlow {
-  0% { text-shadow: 0 0 60px rgba(180,140,80,0.25), 0 0 120px rgba(180,140,80,0.1); }
-  100% { text-shadow: 0 0 100px rgba(180,140,80,0.45), 0 0 200px rgba(180,140,80,0.2); }
+
+@keyframes titlePulse {
+  0%, 100% { text-shadow: 4px 4px 0 #000, 0 0 40px rgba(220,180,80,0.6), 0 0 80px rgba(200,100,60,0.4); }
+  50% { text-shadow: 4px 4px 0 #000, 0 0 60px rgba(220,180,80,0.8), 0 0 100px rgba(200,100,60,0.6); }
+}
+
+@keyframes pixelFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
 }
 
 #startMenu h2 {
-  font-size:12px; color:var(--text-dim); margin-bottom:55px; letter-spacing:10px; font-weight:400;
-  position:relative; z-index:1; text-transform: uppercase;
+  font-size:14px; 
+  color:#606050; 
+  margin-bottom:40px; 
+  letter-spacing:6px; 
+  font-weight:400;
+  position:relative; 
+  z-index:1; 
+  font-family: var(--font-pixel);
+  text-transform: uppercase;
 }
 
-/* 分隔线 */
+/* 分隔线 - 像素风格 */
 .start-divider {
-  width:320px; height:1px;
-  background: linear-gradient(90deg, transparent, rgba(80,70,60,0.5), transparent);
-  margin:22px 0; position:relative; z-index:1;
-}
-.start-divider::before {
-  content:'◇ ◇ ◇'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  background:var(--bg-darkest); padding:0 18px; font-size:8px; color:rgba(80,70,60,0.5); letter-spacing:6px;
+  width:280px; height:4px;
+  background: linear-gradient(90deg, transparent, #404030, #606040, #404030, transparent);
+  margin:20px 0; position:relative; z-index:1;
+  box-shadow: 0 0 10px rgba(60,60,40,0.5);
 }
 
 /* 最高记录 */
 #startMenu .highScore {
-  color:var(--accent-gold); font-size:14px; margin-bottom:32px;
-  padding:18px 55px; background:rgba(18,14,12,0.95);
-  border:1px solid rgba(120,100,80,0.5); border-radius:2px;
-  position:relative; z-index:1;
-  letter-spacing:4px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-}
-#startMenu .highScore::before {
-  content:'◆';
-  position:absolute; left:14px; top:50%; transform:translateY(-50%);
-  color:rgba(120,100,80,0.6); font-size:8px;
-}
-#startMenu .highScore::after {
-  content:'◆';
-  position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  color:rgba(120,100,80,0.6); font-size:8px;
+  color:#80a060; 
+  font-size:14px; 
+  margin-bottom:30px;
+  padding:12px 40px; 
+  background:rgba(15,20,12,0.9);
+  border:2px solid #404030;
+  position:relative; 
+  z-index:1;
+  letter-spacing:2px;
+  font-family: var(--font-retro);
+  text-shadow: 2px 2px 0 #000;
 }
 
-/* 提示文字 */
+/* 提示文字 - 末日氛围 */
 #startMenu .tips {
-  max-width:400px; text-align:center; color:#4a4438; font-size:13px;
-  margin-bottom:48px; line-height:2.4; padding:0 30px;
-  position:relative; z-index:1; font-style:italic;
+  max-width:360px; 
+  text-align:center; 
+  color:#505040; 
+  font-size:16px;
+  margin-bottom:40px; 
+  line-height:2; 
+  padding:0 20px;
+  position:relative; 
+  z-index:1; 
+  font-family: var(--font-retro);
+  text-shadow: 1px 1px 0 #000;
 }
 
 /* 底部装饰边框 */
 .start-menu-border-bottom {
   position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-  width:220px; height:2px;
-  background: linear-gradient(90deg, transparent, rgba(100,80,60,0.6), transparent);
+  width:280px; height:4px;
+  background: linear-gradient(90deg, transparent, #505040, #808060, #505040, transparent);
   z-index:2;
+  box-shadow: 0 -2px 8px rgba(80,80,50,0.5);
 }
-.start-menu-border-bottom::before,
-.start-menu-border-bottom::after {
-  content:'◆'; position:absolute; top:-5px; font-size:9px; color:rgba(100,80,60,0.6);
-}
-.start-menu-border-bottom::before { left:-18px; }
-.start-menu-border-bottom::after { right:-18px; }
 
-/* 菜单按钮 */
+/* 像素风格按钮 - 增强版 */
 #startMenu button {
-  padding:22px 85px; font-size:17px; 
-  background:linear-gradient(180deg, #1c1814, #12100e);
-  color:var(--text-primary); border:1px solid #3a3228; cursor:pointer; margin:14px;
-  border-radius:2px; letter-spacing:6px; position:relative; z-index:1;
-  transition: all 0.3s ease;
-  font-family: var(--font-title);
+  padding:20px 80px; 
+  font-size:16px; 
+  background: linear-gradient(180deg, #2a2a20, #1a1a10);
+  color:#d8d0b0; 
+  border:4px solid #505040; 
+  cursor:pointer; 
+  margin:12px;
+  position:relative; 
+  z-index:1;
+  transition: all 0.1s steps(2);
+  font-family: var(--font-pixel);
   text-transform: uppercase;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-#startMenu button::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, rgba(180,160,120,0.4), transparent);
-}
-#startMenu button:hover {
-  background:linear-gradient(180deg, #282420, #1c1814);
-  border-color:#5a5040;
-  box-shadow: 0 6px 30px rgba(140,120,80,0.25), inset 0 0 20px rgba(100,80,60,0.1);
-  color:#d4c8b8;
-  transform: translateY(-3px);
-}
-#startMenu button:active { 
-  transform: translateY(0);
-  background:linear-gradient(180deg, #141210, #0e0c0a);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 
+    6px 6px 0 #000,
+    inset 2px 2px 0 #404030;
+  text-shadow: 2px 2px 0 #000;
+  letter-spacing: 2px;
 }
 
-/* ========== 战斗容器 - 杀戮尖塔横版布局 ========== */
+#startMenu button:hover {
+  background: linear-gradient(180deg, #383830, #282820);
+  border-color:#808060;
+  color:#f0e8c8;
+  transform: translate(-3px, -3px);
+  box-shadow: 
+    8px 8px 0 #000,
+    inset 2px 2px 0 #505040,
+    0 0 30px rgba(200,180,80,0.3);
+  text-shadow: 3px 3px 0 #000, 0 0 10px rgba(200,180,80,0.5);
+}
+
+#startMenu button:active { 
+  transform: translate(3px, 3px);
+  background: linear-gradient(180deg, #1a1a10, #101008);
+  box-shadow: 
+    2px 2px 0 #000,
+    inset 1px 1px 0 #303020;
+}
+
+/* 主按钮特殊样式 */
+#startMenu button:first-of-type {
+  background: linear-gradient(180deg, #3a2020, #251510);
+  border-color:#704040;
+  color:#f0c8a0;
+}
+
+#startMenu button:first-of-type:hover {
+  background: linear-gradient(180deg, #4a2828, #352020);
+  border-color:#905050;
+  color:#ffd8b0;
+  box-shadow: 
+    8px 8px 0 #000,
+    inset 2px 2px 0 #604040,
+    0 0 40px rgba(220,100,80,0.5);
+  text-shadow: 3px 3px 0 #000, 0 0 15px rgba(220,100,80,0.7);
+}
+
+/* ========== 战斗容器 - 杀戮尖塔横版布局 增强版 ========== */
 #battleContainer {
   position:fixed; top:0; left:0; right:0; bottom:42%;
   display:none; z-index:50; overflow:hidden;
   background: 
-    linear-gradient(90deg, var(--bg-darkest) 0%, var(--bg-mid) 30%, #0f0c15 50%, var(--bg-mid) 70%, var(--bg-darkest) 100%);
+    linear-gradient(90deg, #050505 0%, #181818 30%, #120a10 50%, #181818 70%, #050505 100%);
   flex-direction: row;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
 }
 
 /* ========== 玩家面板 - 左侧 ========== */
@@ -497,15 +728,49 @@ body::before {
   background: radial-gradient(ellipse at left center, rgba(30,45,35,0.5) 0%, transparent 70%);
 }
 
-/* 玩家立绘容器 */
-#playerAvatar {
-  font-size:75px; margin-bottom:18px;
-  filter: drop-shadow(0 0 25px rgba(100,160,100,0.35));
-  animation: playerIdle 3s ease-in-out infinite;
+/* 战斗幸存者显示区域 */
+#battleSurvivors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  min-height: 50px;
 }
-@keyframes playerIdle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+.battle-survivor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 8px;
+  background: rgba(20, 25, 20, 0.8);
+  border-radius: 6px;
+  border: 1px solid rgba(80, 160, 80, 0.3);
+}
+.battle-survivor .icon {
+  font-size: 28px;
+  line-height: 1;
+}
+.battle-survivor .name {
+  font-size: 10px;
+  color: #8a9a8a;
+  margin-top: 2px;
+  max-width: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.battle-survivor.player-self {
+  border-color: rgba(200, 160, 80, 0.5);
+  background: rgba(30, 25, 15, 0.9);
+}
+.battle-survivor.player-self .name {
+  color: #c0a070;
+}
+.battle-survivor .s-energy {
+  font-size: 9px;
+  color: var(--energy);
+  margin-top: 2px;
+  opacity: 0.9;
 }
 
 /* 玩家HP血条 */
@@ -555,97 +820,108 @@ body::before {
   background:var(--bg-darkest); padding:5px;
 }
 
-/* ========== 敌人区域 - 杀戮尖塔风格（右侧） ========== */
+
+/* ========== 敌人区域 - 像素末日风格（右侧） ========== */
 #enemyPanel {
   position:absolute; right:0; top:0; bottom:0; width:40%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:25px;
-  background: radial-gradient(ellipse at right center, rgba(30,45,35,0.5) 0%, transparent 70%);
+  background: 
+    linear-gradient(180deg, #0a0a08 0%, #0f100a 100%),
+    radial-gradient(ellipse at right center, rgba(40,60,30,0.3) 0%, transparent 70%);
+  border-left: 4px solid #303020;
 }
 
-/* 敌人意图指示 */
+/* 敌人意图指示 - 像素风格 */
 #enemyIntent {
-  font-size:16px; font-weight:600; margin-bottom:8px;
-  padding:10px 24px; background:rgba(35,15,15,0.95);
-  border:1px solid rgba(200,80,80,0.6); border-radius:4px;
-  color:#e88080; letter-spacing:2px;
-  box-shadow: 0 3px 15px rgba(180,60,60,0.25), inset 0 1px 0 rgba(255,255,255,0.03);
-  font-family: var(--font-title);
-  animation: intentPulse 2s ease-in-out infinite;
+  font-size:12px; font-weight:600; margin-bottom:8px;
+  padding:8px 16px; background:rgba(30,15,15,0.95);
+  border:2px solid #503030; border-radius:0px;
+  color:#c06060; letter-spacing:1px;
+  box-shadow: 3px 3px 0 #000, inset 1px 1px 0 #403020;
+  font-family: var(--font-pixel);
+  animation: intentPulse 2s steps(2) infinite;
 }
 @keyframes intentPulse {
-  0%, 100% { box-shadow: 0 3px 15px rgba(180,60,60,0.25); }
-  50% { box-shadow: 0 3px 20px rgba(180,60,60,0.4); }
+  0%, 100% { box-shadow: 3px 3px 0 #000, inset 1px 1px 0 #403020; }
+  50% { box-shadow: 4px 4px 0 #000, inset 1px 1px 0 #503030; }
 }
 
 #nextIntentHint {
-  font-size:12px; margin-bottom:12px; padding:5px 14px;
-  background:rgba(25,20,15,0.9); border:1px solid rgba(120,100,80,0.4);
-  border-radius:3px; color:#7a7a6a;
+  font-size:11px; margin-bottom:12px; padding:5px 12px;
+  background:rgba(20,18,12,0.9); border:2px solid #404020;
+  border-radius:0px; color:#707050;
   opacity:0.9;
+  font-family: var(--font-retro);
+  text-shadow: 1px 1px 0 #000;
 }
 #nextIntentHint.show { 
-  opacity:1; color:#c8b860; border-color:rgba(180,160,100,0.6);
-  background:rgba(35,30,18,0.95);
+  opacity:1; color:#a09050; border-color:#606030;
+  background:rgba(30,28,18,0.95);
 }
 
-/* 敌人立绘容器 */
+/* 敌人像素艺术容器 */
 #enemySprite { 
-  font-size:95px; margin:15px 0;
-  filter: drop-shadow(0 0 30px rgba(100,160,100,0.35));
-  transition: transform 0.15s ease;
+  font-size:14px; margin:15px 0;
+  line-height: 1.15;
+  filter: drop-shadow(3px 3px 0 #000);
+  transition: transform 0.15s steps(2);
+  white-space: pre;
+  color: #809060;
+  text-shadow: 2px 2px 0 #000;
 }
 
 /* 敌人名称 */
 #enemyName { 
-  font-size:20px; letter-spacing:4px; margin-bottom:12px;
-  color:var(--text-primary); font-weight:400;
-  text-shadow: 0 0 20px rgba(150,180,120,0.3);
-  font-family: var(--font-title);
+  font-size:14px; letter-spacing:2px; margin-bottom:12px;
+  color:#a0a080; font-weight:400;
+  font-family: var(--font-pixel);
   text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000;
 }
 
-/* ========== 敌人状态卡片 ========== */
+/* ========== 敌人状态卡片 - 像素风格 ========== */
 #enemyStatusPanel {
-  background:linear-gradient(180deg, rgba(18,16,12,0.98), rgba(12,10,8,1));
-  border:1px solid var(--border-normal); border-radius:5px;
-  padding:16px 20px; margin-bottom:8px;
+  background:linear-gradient(180deg, rgba(15,15,12,0.98), rgba(10,10,8,1));
+  border:3px solid #404030; border-radius:0px;
+  padding:14px 18px; margin-bottom:8px;
   width:92%; max-width:300px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
-}
-
-/* 敌人HP血条 */
-#enemyHpBarNew { 
-  width:100%; height:22px; background:rgba(25,12,12,0.95); 
-  border:1px solid rgba(180,80,80,0.4); border-radius:4px;
-  margin:10px 0 12px; overflow:hidden; position:relative;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
-}
-#enemyHpFill { 
-  height:100%; min-width:0; 
-  background:linear-gradient(180deg, #b84040, #8a2828);
-  border-radius:3px;
-  transition:width 0.4s ease-out; 
-  box-shadow: 0 0 10px rgba(200,80,80,0.4);
-}
-#enemyHpFill.damage { background:linear-gradient(90deg, #802828, #601818) !important; }
-#enemyHpText {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  color:#fff; font-size:13px; font-weight:600; text-shadow:0 2px 3px rgba(0,0,0,0.9);
-  z-index:10; letter-spacing:1px;
-  font-family: var(--font-title);
+  box-shadow: 4px 4px 0 #000;
 }
 #enemyStatusPanel .row { 
   display:flex; justify-content:space-around; flex-wrap:wrap; gap:12px; 
 }
 #enemyStatusPanel .stat { text-align:center; }
-#enemyStatusPanel .stat .label { color:#5a6a5a; font-size:11px; letter-spacing:1px; text-transform:uppercase; }
-#enemyStatusPanel .stat .value { color:var(--text-primary); font-size:16px; font-weight:600; }
+#enemyStatusPanel .stat .label { color:#505040; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-family: var(--font-pixel); }
+#enemyStatusPanel .stat .value { color:#a0a090; font-size:16px; font-weight:600; font-family: var(--font-retro); }
 #enemyStatus { font-size:12px; display:flex; gap:14px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
 #enemyStatus span { 
-  padding:4px 12px; background:rgba(20,18,15,0.9); 
-  border:1px solid var(--border-subtle); border-radius:4px; color:var(--text-secondary);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  padding:4px 10px; background:rgba(20,18,15,0.9); 
+  border:2px solid #404020; border-radius:0px; color:#707060;
+  font-family: var(--font-retro);
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* 敌人HP血条 - 像素风格 */
+#enemyHpBarNew { 
+  width:100%; height:20px; background:rgba(20,10,10,0.95); 
+  border:2px solid #503020; border-radius:0px;
+  margin:10px 0 12px; overflow:hidden; position:relative;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 2px 2px 0 #000;
+}
+#enemyHpFill { 
+  height:100%; min-width:0; 
+  background: linear-gradient(180deg, #b83030 0%, #802020 50%, #602010 100%);
+  border-radius:0px;
+  transition:width 0.3s steps(5); 
+  box-shadow: inset 0 2px 0 #c04040, inset 0 -2px 0 #501010;
+}
+#enemyHpFill.damage { background: linear-gradient(180deg, #802020 0%, #501010 100%) !important; }
+#enemyHpText {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  color:#fff; font-size:12px; font-weight:600; text-shadow:2px 2px 0 #000;
+  z-index:10; letter-spacing:1px;
+  font-family: var(--font-pixel);
 }
 
 /* ========== 战斗动画效果 - 杀戮尖塔风格 ========== */
@@ -693,186 +969,223 @@ body::before {
   font-family: var(--font-title);
 }
 
-/* ========== 手牌区域 - 杀戮尖塔风格 ========== */
+/* ========== 手牌区域 - 像素末日风格 ========== */
 #handArea {
   position:fixed; left:0; right:0; bottom:0; height:42%;
-  background: linear-gradient(180deg, var(--bg-darkest) 0%, var(--bg-mid) 100%);
-  border-top:1px solid var(--border-normal);
+  background: linear-gradient(180deg, #0a0a08 0%, #151510 100%);
+  border-top:4px solid #303020;
   display:none; flex-direction:column; z-index:100;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 -4px 0 #000, 0 -8px 20px rgba(0,0,0,0.5);
 }
 
-/* 玩家状态栏 */
+/* 玩家状态栏 - 像素风格 */
 #handHeader {
   display:flex; justify-content:space-between; align-items:center;
-  padding:12px 18px; background:rgba(10,8,6,0.98);
-  border-bottom:1px solid rgba(60,80,55,0.25); flex-shrink:0;
+  padding:10px 16px; background:rgba(12,12,10,0.98);
+  border-bottom:3px solid #303020; flex-shrink:0;
   gap:12px;
 }
 
-/* 玩家HP血条 */
+/* 玩家HP血条 - 像素风格 */
 .hp-bar-container {
-  display:flex; align-items:center; gap:10px; flex:1;
+  display:flex; align-items:center; gap:8px; flex:1;
   min-width:150px;
 }
-.hp-icon { font-size:18px; filter: drop-shadow(0 0 5px rgba(200,80,80,0.6)); }
+.hp-icon { font-size:16px; filter: drop-shadow(2px 2px 0 #000); }
 .hp-bar-track {
-  flex:1; height:20px; background:rgba(25,12,12,0.95);
-  border:1px solid rgba(180,80,80,0.4); border-radius:4px; overflow:hidden;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  flex:1; height:18px; background:rgba(20,10,10,0.95);
+  border:2px solid #503020; border-radius:0px; overflow:hidden;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 2px 2px 0 #000;
 }
 .hp-bar-fill {
-  height:100%; background:linear-gradient(180deg, var(--health), var(--health-dark));
-  border-radius:3px; transition:width 0.4s ease;
-  box-shadow: 0 0 8px rgba(200,80,80,0.4);
+  height:100%; 
+  background: linear-gradient(180deg, #b83030 0%, #802020 50%, #601010 100%);
+  border-radius:0px; 
+  transition:width 0.3s steps(5);
+  box-shadow: inset 0 2px 0 #c04040, inset 0 -2px 0 #501010;
 }
 .hp-bar-text {
-  color:#e0c0c0; font-size:12px; font-weight:600; min-width:55px; text-align:center;
-  text-shadow:0 1px 2px rgba(0,0,0,0.6);
+  color:#d0d0c0; font-size:11px; font-weight:600; min-width:55px; text-align:center;
+  text-shadow:2px 2px 0 #000;
+  font-family: var(--font-pixel);
 }
 
-/* 玩家属性标签 */
+/* 玩家属性标签 - 像素风格 */
 .player-stat-tag {
   display:flex; align-items:center; gap:4px;
-  padding:6px 10px; background:rgba(18,16,12,0.95);
-  border:1px solid var(--border-normal); border-radius:4px;
-  font-size:12px; color:var(--text-secondary);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  padding:5px 10px; background:rgba(18,18,15,0.95);
+  border:2px solid #404030; border-radius:0px;
+  font-size:11px; color:#707060;
+  font-family: var(--font-pixel);
+  box-shadow: 2px 2px 0 #000;
 }
-.player-stat-tag span { color:var(--text-primary); font-weight:600; }
-.player-stat-tag.block { border-color:rgba(80,160,140,0.6); color:var(--shield); }
-.player-stat-tag.block span { color:#a0e0d0; }
-.player-stat-tag.energy-tag { border-color:rgba(180,160,80,0.6); color:var(--energy); }
-.player-stat-tag.energy-tag span { color:#e8e0a0; }
-.player-stat-tag.str-tag { border-color:rgba(180,120,60,0.6); color:var(--strength); }
-.player-stat-tag.str-tag span { color:#e8c890; }
+.player-stat-tag span { color:#909080; font-weight:600; }
+.player-stat-tag.block { border-color:#406050; color:#508070; }
+.player-stat-tag.block span { color:#70a090; }
+.player-stat-tag.energy-tag { border-color:#605040; color:#908050; }
+.player-stat-tag.energy-tag span { color:#b0a060; }
+.player-stat-tag.str-tag { border-color:#604030; color:#907040; }
+.player-stat-tag.str-tag span { color:#b08050; }
 
-/* 能量和按钮 */
+/* 能量和按钮 - 像素风格 */
 #energyBar { 
-  font-size:14px; color:var(--energy); background:rgba(22,20,12,0.95);
-  padding:6px 14px; border:1px solid rgba(180,160,80,0.5);
-  border-radius:4px; letter-spacing:1px; font-family: var(--font-title);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  font-size:12px; color:#a09050; background:rgba(22,20,12,0.95);
+  padding:6px 14px; border:2px solid #504020;
+  border-radius:0px; letter-spacing:1px; font-family: var(--font-pixel);
+  box-shadow: 2px 2px 0 #000;
 }
 #endTurnBtn {
-  background:linear-gradient(180deg, #1c1c10, #14140a);
-  color:var(--accent-green); border:1px solid rgba(100,140,80,0.6);
-  padding:8px 16px; font-size:13px; cursor:pointer; border-radius:4px;
-  letter-spacing:2px; transition: all 0.2s; font-family: var(--font-title);
+  background:linear-gradient(180deg, #1a2018, #101410);
+  color:#70a060; border:2px solid #405030;
+  padding:8px 16px; font-size:11px; cursor:pointer; border-radius:0px;
+  letter-spacing:1px; transition: all 0.1s steps(2); font-family: var(--font-pixel);
   text-transform: uppercase;
+  box-shadow: 3px 3px 0 #000;
 }
 #endTurnBtn:hover {
-  background:linear-gradient(180deg, #252820, #1c1c10);
-  border-color:rgba(140,180,100,0.8);
-  box-shadow: 0 0 15px rgba(100,160,60,0.25);
+  background:linear-gradient(180deg, #252a22, #1a2018);
+  border-color:#608050;
+  box-shadow: 4px 4px 0 #000;
 }
 #fleeBtn {
-  background:rgba(35,22,20,0.95); color:#c09090; border:1px solid rgba(160,90,80,0.5);
-  padding:8px 12px; font-size:12px; cursor:pointer; border-radius:4px;
-  transition: all 0.2s;
+  background:rgba(35,22,20,0.95); color:#a07060; border:2px solid #503030;
+  padding:8px 12px; font-size:11px; cursor:pointer; border-radius:0px;
+  transition: all 0.1s steps(2);
+  font-family: var(--font-pixel);
+  box-shadow: 2px 2px 0 #000;
 }
-#fleeBtn:hover { background:rgba(40,25,22,0.9); }
+#fleeBtn:hover { background:rgba(45,30,28,0.95); }
 #fleeBtn:disabled { opacity:0.4; cursor:not-allowed; }
 
-/* ========== 手牌 - 杀戮尖塔卡片样式 ========== */
+/* ========== 手牌 - 像素风格卡牌 ========== */
 #handCards { 
   flex:1; display:flex; justify-content:center; align-items:center; gap:10px; 
   overflow-x:auto; padding:15px 12px;
   -webkit-overflow-scrolling: touch;
 }
 #handCards::-webkit-scrollbar { height:4px; }
-#handCards::-webkit-scrollbar-thumb { background:rgba(80,100,70,0.4); border-radius:2px; }
+#handCards::-webkit-scrollbar-thumb { background:#404030; }
 
-/* 基础卡牌样式 */
+/* 基础卡牌样式 - 像素风格 */
 .card {
   min-width:110px; min-height:155px; 
-  background:linear-gradient(180deg, #1c1916, #0f0e0c);
-  border:2px solid var(--border-normal);
+  background:linear-gradient(180deg, #1a1815, #101008);
+  border:3px solid #404030;
   text-align:center; cursor:pointer; padding:10px;
-  flex-shrink:0; border-radius:6px; display:flex; flex-direction:column;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  flex-shrink:0; border-radius:0px; display:flex; flex-direction:column;
+  transition: all 0.15s steps(3);
+  box-shadow: 4px 4px 0 #000;
   position:relative; overflow:hidden;
 }
 
-/* 卡牌顶部光泽 */
-.card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:45%;
-  background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
-  pointer-events:none;
-  border-radius:4px 4px 0 0;
-}
-
-/* 卡牌内边框装饰 */
+/* 卡牌内边框装饰 - 像素风格 */
 .card::after {
   content:''; position:absolute; top:4px; left:4px; right:4px; bottom:4px;
-  border:1px solid rgba(255,255,255,0.06); border-radius:4px;
+  border:1px solid rgba(255,255,255,0.08); border-radius:0px;
   pointer-events:none;
 }
 
-/* 卡牌悬停效果 */
+/* 卡牌悬停效果 - 像素风格 - 增强视觉冲击 */
 .card:hover { 
-  transform:translateY(-18px) scale(1.06); 
-  border-color:var(--border-strong);
-  background:linear-gradient(180deg, #242018, #161410);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.5), 0 0 25px rgba(100,160,80,0.15);
+  transform: translateY(-18px) scale(1.06); 
+  border-color:#707050;
+  box-shadow: 8px 8px 0 #000, 0 20px 50px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, #2a2618, #1a1810);
   z-index:10;
+  animation: cardHoverPulse 0.8s ease-in-out infinite;
 }
 
-/* 卡牌类型边框 - 攻击 */
+@keyframes cardHoverPulse {
+  0%, 100% { 
+    box-shadow: 8px 8px 0 #000, 0 20px 50px rgba(0,0,0,0.6), 0 0 20px rgba(100,120,80,0.2);
+  }
+  50% { 
+    box-shadow: 8px 8px 0 #000, 0 20px 50px rgba(0,0,0,0.6), 0 0 35px rgba(100,120,80,0.35);
+  }
+}
+
+.card:hover .icon {
+  animation: iconBounce 0.6s ease-in-out infinite;
+  filter: drop-shadow(4px 4px 0 #000) brightness(1.1);
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: scale(1.08); }
+  50% { transform: scale(1.12); }
+}
+
+/* 卡牌类型边框 - 像素风格 - 攻击 */
 .card.atk { 
-  border-color:rgba(180,80,70,0.5); 
-  box-shadow: 0 5px 15px rgba(180,60,50,0.15);
+  border-color:#804040; 
+  box-shadow: 4px 4px 0 #301010;
 }
 .card.atk:hover { 
-  border-color:rgba(220,100,90,0.9); 
-  box-shadow: 0 18px 45px rgba(180,60,50,0.35), 0 0 30px rgba(220,100,90,0.2);
+  border-color:#c06060; 
+  box-shadow: 8px 8px 0 #000, 0 0 30px rgba(200,60,50,0.4), 0 20px 50px rgba(0,0,0,0.6);
+  animation: atkCardPulse 0.6s ease-in-out infinite;
 }
 
-/* 卡牌类型边框 - 防御 */
+@keyframes atkCardPulse {
+  0%, 100% { box-shadow: 8px 8px 0 #000, 0 0 25px rgba(200,60,50,0.35), 0 20px 50px rgba(0,0,0,0.6); }
+  50% { box-shadow: 8px 8px 0 #000, 0 0 40px rgba(200,60,50,0.5), 0 20px 50px rgba(0,0,0,0.6); }
+}
+
+/* 卡牌类型边框 - 像素风格 - 防御 */
 .card.def { 
-  border-color:rgba(80,160,140,0.5); 
-  box-shadow: 0 5px 15px rgba(60,160,140,0.15);
+  border-color:#406050; 
+  box-shadow: 4px 4px 0 #102010;
 }
 .card.def:hover { 
-  border-color:rgba(100,200,170,0.9); 
-  box-shadow: 0 18px 45px rgba(60,180,150,0.35), 0 0 30px rgba(100,200,170,0.2);
+  border-color:#60a090; 
+  box-shadow: 8px 8px 0 #000, 0 0 30px rgba(60,180,140,0.4), 0 20px 50px rgba(0,0,0,0.6);
+  animation: defCardPulse 0.6s ease-in-out infinite;
 }
 
-/* 卡牌类型边框 - 技能 */
+@keyframes defCardPulse {
+  0%, 100% { box-shadow: 8px 8px 0 #000, 0 0 25px rgba(60,180,140,0.35), 0 20px 50px rgba(0,0,0,0.6); }
+  50% { box-shadow: 8px 8px 0 #000, 0 0 40px rgba(60,180,140,0.5), 0 20px 50px rgba(0,0,0,0.6); }
+}
+
+/* 卡牌类型边框 - 像素风格 - 技能 */
 .card.skill { 
-  border-color:rgba(180,160,80,0.5); 
-  box-shadow: 0 5px 15px rgba(180,160,60,0.15);
+  border-color:#605040; 
+  box-shadow: 4px 4px 0 #201810;
 }
 .card.skill:hover { 
-  border-color:rgba(220,190,100,0.9); 
-  box-shadow: 0 18px 45px rgba(180,160,60,0.35), 0 0 30px rgba(220,190,100,0.2);
+  border-color:#a09060; 
+  box-shadow: 8px 8px 0 #000, 0 0 30px rgba(180,160,80,0.4), 0 20px 50px rgba(0,0,0,0.6);
+  animation: skillCardPulse 0.6s ease-in-out infinite;
 }
 
-/* 卡牌能量消耗 */
+@keyframes skillCardPulse {
+  0%, 100% { box-shadow: 8px 8px 0 #000, 0 0 25px rgba(180,160,80,0.35), 0 20px 50px rgba(0,0,0,0.6); }
+  50% { box-shadow: 8px 8px 0 #000, 0 0 40px rgba(180,160,80,0.5), 0 20px 50px rgba(0,0,0,0.6); }
+}
+
+/* 卡牌能量消耗 - 像素风格 */
 .card .cost { 
-  font-size:16px; font-weight:700; background:rgba(25,20,12,0.98);
-  color:var(--energy); padding:3px 10px;
-  display:inline-block; border-radius:3px; align-self:flex-start;
-  border:1px solid rgba(180,160,80,0.5);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-  font-family: var(--font-title);
-  text-shadow: 0 0 8px rgba(200,180,80,0.3);
+  font-size:14px; font-weight:700; background:rgba(25,20,12,0.98);
+  color:#a09050; padding:3px 10px;
+  display:inline-block; border-radius:0px; align-self:flex-start;
+  border:2px solid #504020;
+  box-shadow: 2px 2px 0 #000;
+  font-family: var(--font-pixel);
+  text-shadow: 2px 2px 0 #000;
 }
 
-/* 卡牌图标 */
+/* 卡牌图标 - 像素风格 */
 .card .icon { 
-  font-size:38px; margin:8px 0; 
-  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5));
-  transition: transform 0.2s ease;
+  font-size:32px; margin:8px 0; 
+  filter: drop-shadow(3px 3px 0 #000);
+  transition: transform 0.15s steps(2);
 }
-.card:hover .icon { transform: scale(1.1); }
+.card:hover .icon { transform: scale(1.08); }
 
-/* 卡牌名称 */
+/* 卡牌名称 - 像素风格 */
 .card .name { 
-  font-size:13px; color:var(--text-primary); font-weight:600; margin:4px 0;
-  font-family: var(--font-body);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  font-size:12px; color:#c0c0a0; font-weight:600; margin:4px 0;
+  font-family: var(--font-pixel);
+  text-shadow: 2px 2px 0 #000;
 }
 
 /* 卡牌效果描述 */
@@ -1023,6 +1336,21 @@ body::before {
 .reward-option .quality { font-size:11px; padding:3px 10px; border-radius:3px; color:#000; font-weight:600; }
 .reward-option .select-hint { color:var(--text-secondary); font-size:12px; }
 
+/* 奖励类型样式 */
+.reward-option.reward-card { border-color: rgba(80, 160, 200, 0.5); }
+.reward-option.reward-card .type-badge { background: linear-gradient(135deg, #1a3a4a, #0d2530); color: #80c0e0; }
+.reward-option.reward-relic { border-color: rgba(200, 160, 80, 0.5); }
+.reward-option.reward-relic .type-badge { background: linear-gradient(135deg, #3a2a1a, #251a0d); color: #e0c080; }
+.reward-option.reward-resource { border-color: rgba(100, 180, 100, 0.5); }
+.reward-option.reward-resource .type-badge { background: linear-gradient(135deg, #1a3a1a, #0d250d); color: #80c080; }
+.reward-option.reward-draw { border-color: rgba(180, 120, 200, 0.5); }
+.reward-option.reward-draw .type-badge { background: linear-gradient(135deg, #2a1a3a, #1a0d25); color: #c0a0e0; }
+
+.type-badge {
+  font-size:11px; padding:4px 10px; border-radius:4px; font-weight:600;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
 /* ========== 商店 ========== */
 #shopModal {
   position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -1148,7 +1476,7 @@ body::before {
 /* ========== 幸存者界面 ========== */
 #survivorModal {
   position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:92%; max-width:420px; max-height:85vh; overflow-y:auto;
+  width:92%; max-width:420px; max-height:85vh; overflow-y:auto; display:none;
   display:none;
   padding:20px; text-align:center;
   background:linear-gradient(180deg, #0a0e0c, var(--bg-darkest));
@@ -1262,7 +1590,8 @@ body::before {
 <div id="startMenu">
   <div class="start-menu-border-top"></div>
   
-  <h1>丧尸堡垒</h1>
+  <h1>末日堡垒</h1>
+    <p class="subtitle">DOOM FORTRESS</p>
   <h2>Slay the Spire</h2>
   
   <div class="start-divider"></div>
@@ -1289,17 +1618,17 @@ body::before {
 
 <!-- 战场容器 - 杀戮尖塔横版布局 -->
 <div id="battleContainer">
-  <!-- 左侧 - 玩家面板 -->
+  <!-- 左侧 - 玩家/幸存者面板 -->
   <div id="playerPanel">
-    <div id="playerAvatar">🏰</div>
+    <div id="battleSurvivors"></div>
     <div id="playerHpBarNew">
       <div id="playerHpFill" style="width:100%"></div>
-      <span id="playerHpTextNew">80 / 80</span>
+      <span id="playerHpTextNew">50 / 50</span>
     </div>
     <div id="playerStats">
       <span class="stat-tag block">🛡 <span id="playerBlockTag">0</span></span>
       <span class="stat-tag str">⚔ <span id="playerStrTag">0</span></span>
-      <span class="stat-tag energy">⚡ <span id="energyDisplay">3</span></span>
+      <span class="stat-tag energy">⚡ <span id="energyDisplay">0</span></span>
     </div>
   </div>
   
@@ -1385,6 +1714,7 @@ body::before {
       <!-- 招募按钮 -->
       <div style="text-align:center;margin-bottom:12px;">
         <button id="recruitBtn" onclick="recruitSurvivor()" style="background:linear-gradient(180deg, #1a2520, #0f1a15);color:#80c8a8;border:1px solid rgba(80,160,120,0.5);padding:10px 20px;border-radius:4px;font-size:1rem;cursor:pointer;width:90%;">🎰 招募幸存者</button>
+        <div style="color:#788878;font-size:0.8rem;margin-top:4px;">消耗 🪵20 ⚙️10 | 可编入队伍获得加成</div>
       </div>
       
       <!-- 功能按钮 -->
@@ -1392,6 +1722,7 @@ body::before {
         <button onclick="openPlayerInfo()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">👤 玩家信息</button>
         <button onclick="openBuildMenu()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🏗 基地建设</button>
         <button onclick="openShop()" style="background:linear-gradient(180deg, #1a1c28, #121420);color:#90a8c8;border:1px solid rgba(100,140,180,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🛒 黑市商店</button>
+        <button onclick="showDeckModal()" style="background:linear-gradient(180deg, #1a1828, #12121a);color:#a8a0c8;border:1px solid rgba(140,120,180,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">📚 查看卡包</button>
       </div>
     </div>
     
@@ -1467,7 +1798,8 @@ body::before {
 
 <!-- 幸存者界面 -->
 <div id="survivorModal" style="display:none">
-  <h3>👥 幸存者</h3>
+  <h3>👥 幸存者管理</h3>
+  <div style="color:#8a9a8a;font-size:0.85rem;margin-bottom:10px;text-align:center;">招募幸存者并编入队伍，战斗中获得属性加成！</div>
   <div class="survivor-tabs">
     <button class="tab-btn active" onclick="openTeamSetup()">⚔️ 队伍</button>
     <button class="tab-btn" onclick="renderSurvivorList()">📋 列表</button>
@@ -1479,6 +1811,7 @@ body::before {
     <button class="recruit-btn" onclick="recruitSurvivor()">招募</button>
   </div>
   <div class="recruit-odds">概率: 普通55% | 稀有27% | 史诗13% | 传奇5%</div>
+  <div style="color:#788878;font-size:0.8rem;margin-top:8px;text-align:center;">点击幸存者卡片可编入/移出队伍</div>
   <button class="info-close" onclick="closeSurvivorMenu()">[ 返回 ]</button>
 </div>
 
@@ -1517,13 +1850,128 @@ function getRelicQuality(level){ if(level>=5) return '传说'; if(level>=4) retu
 // ║  [SYS_DATA] 数据系统 - 静态数据定义                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
+// 像素风格ASCII丧尸敌人
 const ENEMY_SPRITES = {
-  '游荡丧尸': '🧟', '饥饿丧尸': '🧟‍♂️', '撕咬丧尸': '🦇', '狂暴丧尸': '💪🧟',
-  '腐烂丧尸': '☠️🧟', '变异丧尸': '👽🧟', '跳跃丧尸': '🏃🧟', '丧尸群首领': '👑🧟',
-  '瘟疫丧尸': '☣️🧟', '强化丧尸': '⚔️🧟', '嗜血丧尸': '🩸🧟', '丧尸领主': '💀👑',
-  '瘟疫之源': '☣️💀', '死亡骑士': '⚔️💀', '攻城丧尸': '🔨🧟',
+  '游荡丧尸': `
+  ██████
+ ██░░░░██
+ ████████
+ ██▓▓▓▓██
+  ██████
+   ████`,
+  '饥饿丧尸': `
+ ███████
+██░░░░░██
+██▓▓▓▓▓██
+ ██░░░██
+  ██████
+   ████`,
+  '撕咬丧尸': `
+  ▄▄▄▄▄
+ █░░░░░█
+ █▓▓▓▓▓█
+ ██░░░██
+  █████
+   ▀▀▀`,
+  '狂暴丧尸': `
+ ████████
+██░░▓▓░░██
+██████████
+██▓▓▓▓▓▓██
+ ████████
+  ░░░░░░`,
+  '腐烂丧尸': `
+  ████
+ █░☠░█
+ █▓▓▓█
+ █░░░█
+  ████
+ ██  ██`,
+  '变异丧尸': `
+ ▄▄████▄▄
+█░░░◆◆░░░█
+█▓██████▓█
+ ██▓▓▓▓██
+  █████
+   ▀▀▀`,
+  '跳跃丧尸': `
+   ██
+  ████
+ █░░░░█
+ █▓▓▓▓█
+  ████
+  █  █`,
+  '丧尸群首领': `
+   ▓▓
+  ████
+ █░░█░░█
+ █▓████▓█
+ ████████
+ ████████
+  ░░░░░`,
+  '瘟疫丧尸': `
+ ████████
+██░░☣░░██
+██▓▓▓▓▓██
+ ██▓▓▓██
+  ██████
+   ████`,
+  '强化丧尸': `
+ ████████
+██░░██░░██
+██████████
+██▓▓▓▓▓▓██
+ ████████
+  ░░░░░░`,
+  '嗜血丧尸': `
+ ████████
+██░░🩸░░██
+██▓▓██▓▓██
+ ██▓▓▓▓██
+  ██████
+   ████`,
+  '丧尸领主': `
+  ▓▓██▓▓
+ ████████
+██░░████░░██
+████████████
+██▓▓▓▓▓▓▓▓██
+ ████████████
+  ░░░░░░░░`,
+  '瘟疫之源': `
+  ☣️███☣️
+ ████████
+██░░☣░░░██
+██▓▓▓▓▓▓██
+ ███▓▓███
+  ██████
+   ▀▀▀▀`,
+  '死亡骑士': `
+  ▓▓██▓▓
+ ████████
+██░░⚔░░░██
+████████████
+██▓▓▓▓▓▓▓▓██
+ ████████████
+  ░░░░░░░░`,
+  '攻城丧尸': `
+ ████████
+██░░██░░██
+██████████
+██▓▓▓▓▓▓██
+ ████████
+  ██████
+  ██  ██`,
 };
-function getEnemySprite(name){ return ENEMY_SPRITES[name] || '🧟'; }
+function getEnemySprite(name){ 
+  return ENEMY_SPRITES[name] || `
+  ████
+ █░░░█
+ █▓▓▓█
+ █░░░█
+  ████
+  █  █`; 
+}
 
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  [SYS_FACILITY] 设施系统 - 建设数据结构                       ║
@@ -1634,22 +2082,22 @@ const RELICS = [
 ];
 
 const ENEMIES = [
-  // [SYS_FIX] 敌人属性调整 - 与玩家50HP基础匹配
-  {name:'游荡丧尸',hp:15,atk:6,tier:1,intents:['atk','atk'],desc:'普通游荡者'},
-  {name:'饥饿丧尸',hp:18,atk:8,tier:1,intents:['atk','atk','atk'],desc:'饥饿的丧尸'},
-  {name:'撕咬丧尸',hp:22,atk:10,tier:2,intents:['atk','def','atk'],desc:'会用利爪撕咬'},
-  {name:'狂暴丧尸',hp:18,atk:12,tier:2,intents:['atk','atk','special'],desc:'狂暴状态下危险'},
-  {name:'腐烂丧尸',hp:28,atk:7,tier:2,intents:['def','atk','atk'],desc:'腐烂但顽强'},
-  {name:'变异丧尸',hp:35,atk:9,tier:3,intents:['atk','def','def'],desc:'发生过变异'},
-  {name:'跳跃丧尸',hp:14,atk:15,tier:2,intents:['atk','atk','special'],desc:'速度快'},
-  {name:'攻城丧尸',hp:50,atk:18,tier:3,intents:['siege','atk','atk'],desc:'专门攻击建筑',siege:true},
-  {name:'丧尸群首领',hp:70,atk:15,tier:3,intents:['atk','atk','special'],elite:true,desc:'领导丧尸群'},
-  {name:'瘟疫丧尸',hp:60,atk:12,tier:4,intents:['special','atk','atk'],elite:true,desc:'携带病毒'},
-  {name:'强化丧尸',hp:80,atk:14,tier:4,intents:['def','atk','special'],elite:true,desc:'经过强化'},
-  {name:'嗜血丧尸',hp:55,atk:20,tier:4,intents:['atk','atk','special'],elite:true,desc:'渴望血肉'},
-  {name:'丧尸领主',hp:160,atk:22,tier:5,intents:['special','atk','def'],elite:true,boss:true,desc:'统领丧尸的王'},
-  {name:'瘟疫之源',hp:140,atk:18,tier:5,intents:['def','special','atk'],elite:true,boss:true,desc:'病毒源头'},
-  {name:'死亡骑士',hp:180,atk:25,tier:5,intents:['atk','special','special'],elite:true,boss:true,desc:'不死者指挥官'},
+  // [SYS_FIX] 敌人属性 - 玩家初始0能量，依赖幸存者提供能量
+  {name:'游荡丧尸',hp:30,atk:10,tier:1,intents:['atk','atk'],desc:'普通游荡者'},
+  {name:'饥饿丧尸',hp:35,atk:12,tier:1,intents:['atk','atk','atk'],desc:'饥饿的丧尸'},
+  {name:'撕咬丧尸',hp:42,atk:14,tier:2,intents:['atk','def','atk'],desc:'会用利爪撕咬'},
+  {name:'狂暴丧尸',hp:35,atk:18,tier:2,intents:['atk','atk','special'],desc:'狂暴状态下危险'},
+  {name:'腐烂丧尸',hp:50,atk:11,tier:2,intents:['def','atk','atk'],desc:'腐烂但顽强'},
+  {name:'变异丧尸',hp:60,atk:14,tier:3,intents:['atk','def','def'],desc:'发生过变异'},
+  {name:'跳跃丧尸',hp:28,atk:22,tier:2,intents:['atk','atk','special'],desc:'速度快'},
+  {name:'攻城丧尸',hp:80,atk:26,tier:3,intents:['siege','atk','atk'],desc:'专门攻击建筑',siege:true},
+  {name:'丧尸群首领',hp:110,atk:22,tier:3,intents:['atk','atk','special'],elite:true,desc:'领导丧尸群'},
+  {name:'瘟疫丧尸',hp:100,atk:18,tier:4,intents:['special','atk','atk'],elite:true,desc:'携带病毒'},
+  {name:'强化丧尸',hp:120,atk:22,tier:4,intents:['def','atk','special'],elite:true,desc:'经过强化'},
+  {name:'嗜血丧尸',hp:95,atk:30,tier:4,intents:['atk','atk','special'],elite:true,desc:'渴望血肉'},
+  {name:'丧尸领主',hp:250,atk:35,tier:5,intents:['special','atk','def'],elite:true,boss:true,desc:'统领丧尸的王'},
+  {name:'瘟疫之源',hp:220,atk:30,tier:5,intents:['def','special','atk'],elite:true,boss:true,desc:'病毒源头'},
+  {name:'死亡骑士',hp:280,atk:40,tier:5,intents:['atk','special','special'],elite:true,boss:true,desc:'不死者指挥官'},
 ];
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -1658,14 +2106,16 @@ const ENEMIES = [
 
 // 受伤/恢复系统常量
 const INJURY_CONFIG = {
-  baseInjuryChance: 0.12,      // 基础受伤概率 12%
-  seriousChance: 0.15,          // 受伤后15%概率直接重伤
-  deathChance: 0.08,            // 重伤时8%概率阵亡（每场）
+  baseInjuryChance: 0.25,      // 基础受伤概率 25%
+  injuryDamageMin: 15,          // 最小受伤伤害 15%
+  injuryDamageMax: 35,          // 最大受伤伤害 35%
+  seriousHpPercent: 0.5,        // 血量低于50%时重伤
+  deathHpPercent: 0,            // 血量低于0时死亡
   recoveryPerWave: 0.35,         // 每波次恢复进度 +35%
   seriousRecoveryPerWave: 0.20, // 重伤恢复较慢 +20%
   maxRecovery: 1.0,              // 满恢复 = 1.0
-  injuryEffect: 0.5,             // 受伤时属性降至50%
-  seriousEffect: 0.2,           // 重伤时属性降至20%
+  injuryEffect: 0.6,             // 轻伤时属性降至60%
+  seriousEffect: 0.3,           // 重伤时属性降至30%
 };
 
 const SURVIVORS = [
@@ -1702,11 +2152,18 @@ const SURVIVORS = [
    desc:'铜墙铁壁，坚不可摧'},
   {id:'tank_2', name:'医生王', icon:'👨‍⚕️', role:'mid', rarity:'rare',
    baseStats:{hp:15, atk:2, def:1},
-   state:{injuryResist:0.15, energyBonus:0, cardBonus:0},
+   state:{injuryResist:0.15, energyBonus:1, cardBonus:0},
    growth:{hpPerLevel:5, relicSlots:1},
-   passive:{type:'healPerTurn', value:3, desc:'每回合治疗 +3 HP'},
+   passive:{type:'healPerTurn', value:3, desc:'每回合治疗 +3 HP，战斗开始 +1 能量'},
    active:{name:'急救术', cost:1, effect:{heal:15}, desc:'恢复15 HP'},
    desc:'救死扶伤，团队的守护天使'},
+  {id:'tank_4', name:'能源专家', icon:'⚡', role:'mid', rarity:'epic',
+   baseStats:{hp:10, atk:1, def:2},
+   state:{injuryResist:0.10, energyBonus:2, cardBonus:0},
+   growth:{hpPerLevel:4, relicSlots:2},
+   passive:{type:'energyStart', value:2, desc:'战斗开始 +2 能量'},
+   active:{name:'充能', cost:0, effect:{energyAll:1}, desc:'全队 +1 能量'},
+   desc:'能源大师，战场的动力源泉'},
   {id:'tank_3', name:'重装兵', icon:'🪖', role:'mid', rarity:'common',
    baseStats:{hp:25, atk:0, def:4},
    state:{injuryResist:0.40, energyBonus:-1, cardBonus:0},
@@ -1796,21 +2253,20 @@ function generateEnemy(tier, isElite, isBoss) {
   // [SYS_BALANCE] 获取当前波次用于计算难度
   let wave = G.wave || 1;
   
-  // [SYS_BALANCE] 使用对数增长曲线代替线性增长
-  // 基础属性 + 波次影响的log曲线（确保100波后增长趋于平缓）
-  let waveScale = 1 + Math.log(wave) * 0.15;  // log曲线，增速逐渐放缓
-  let tierBonus = tier * 0.5;
+  // [SYS_BALANCE] 玩家初始0能量，敌人属性相应加强
+  let waveScale = 1 + Math.log(wave) * 0.25;  // 稍快增速
+  let tierBonus = tier * 0.8;  // 更高tier加成
   
-  let hpBase = (10 + tierBonus * 8 + Math.floor(Math.random() * 8)) * waveScale;
-  let atkBase = (5 + tierBonus * 3 + Math.floor(Math.random() * 4)) * waveScale;
+  let hpBase = (20 + tierBonus * 12 + Math.floor(Math.random() * 12)) * waveScale;
+  let atkBase = (10 + tierBonus * 5 + Math.floor(Math.random() * 6)) * waveScale;
   
-  // [SYS_BALANCE] BOSS属性：更高但不爆炸
+  // [SYS_BALANCE] BOSS和精英属性大幅加强
   if (isBoss) {
-    hpBase *= 2.5;  // 降低从3.0
-    atkBase *= 1.5;  // 降低从1.8
+    hpBase *= 3.5;
+    atkBase *= 2.0;
   } else if (isElite) {
-    hpBase *= 1.3;  // 降低从1.5
-    atkBase *= 1.2;  // 降低从1.3
+    hpBase *= 1.8;
+    atkBase *= 1.6;
   }
   
   // 意图组合
@@ -2055,8 +2511,8 @@ function getProceduralRelicPool(level) {
 
 function initGame(inheritedRelic){
   G = {
-    mode:'menu', wave:1, hp:50, maxHp:50, block:0, str:0, strBase:0,
-    energy:3, maxEnergy:3, drawCount:5,
+    mode:'map', wave:1, hp:50, maxHp:50, block:0, str:0, strBase:0,
+    energy:0, maxEnergy:0, drawCount:4,
     poisonApply:0, lifesteal:0, hpDrain:0, drawExtra:0,
     level:1, exp:0, expToLevel:100,
     wood:0, metal:0, parts:0,
@@ -2160,7 +2616,17 @@ function openPlayerInfo(){
   document.getElementById('pDeckCount').textContent = G.deck.length;
   document.getElementById('pDiscardCount').textContent = G.discard.length;
 }
-function closePlayerInfo(){ document.getElementById('playerInfoModal').style.display = 'none'; }
+function closePlayerInfo(){
+  document.getElementById('playerInfoModal').style.display = 'none';
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  document.getElementById('mapModal').style.display = 'block';
+  document.getElementById('mapWood').textContent = G.wood;
+  document.getElementById('mapMetal').textContent = G.metal;
+  document.getElementById('mapParts').textContent = G.parts;
+  document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
+  updateRecruitBtn();
+}
 
 function levelUp(){
   if(G.exp < G.expToLevel) return;
@@ -2186,15 +2652,13 @@ function levelUp(){
   G.strBase += 0.5;  // 每级+0.5力量（原来是1）
   G.str = G.strBase;
   
-  // [SYS_BALANCE] 抽牌和能量成长更慢
+  // [SYS_BALANCE] 抽牌成长更慢，能量完全依赖幸存者
   if(G.level % 3 === 0) G.drawCount += 1;  // 每3级+1抽牌
-  if(G.level % 5 === 0) G.maxEnergy += 1;  // 每5级+1能量
   
   let bonus = [];
   bonus.push('最大生命 +3');
   bonus.push('力量 +0.5');
   if(G.level % 3 === 0) bonus.push('抽牌数 +1');
-  if(G.level % 5 === 0) bonus.push('最大能量 +1');
   
   showOverlay('等级提升！', '恭喜升到 ' + G.level + ' 级！\n\n• ' + bonus.join('\n• '), () => { closeOverlay(); closePlayerInfo(); updatePlayerStatusBar(); });
   updatePlayerStatusBar();
@@ -2277,7 +2741,17 @@ function sellHandCard(idx){
   openShop();
 }
 
-function closeShop(){ document.getElementById('shopModal').style.display = 'none'; }
+function closeShop(){
+  document.getElementById('shopModal').style.display = 'none';
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  document.getElementById('mapModal').style.display = 'block';
+  document.getElementById('mapWood').textContent = G.wood;
+  document.getElementById('mapMetal').textContent = G.metal;
+  document.getElementById('mapParts').textContent = G.parts;
+  document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
+  updateRecruitBtn();
+}
 
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  [SYS_FACILITY] 建设系统 - 设施建造与升级                       ║
@@ -2294,15 +2768,16 @@ function openBuildMenu(){
 
 function formatEffectText(name, level){
   let f = FACILITIES[name];
+  if(!f) return '';
   let effect = f.upgradeEffect ? f.upgradeEffect(level) : f.effects;
-  if(!effect) return '';
+  if(!effect) return '无效果';
   let parts = [];
   if(effect.blockPerTurn) parts.push('护盾+' + effect.blockPerTurn);
   if(effect.healPerTurn) parts.push('治疗+' + effect.healPerTurn);
   if(effect.startStr) parts.push('力量+' + effect.startStr);
   if(effect.extraEnergy) parts.push('能量+' + effect.extraEnergy);
   if(effect.seeNextIntent) parts.push('预知意图');
-  return parts.join(' | ');
+  return parts.length > 0 ? parts.join(' | ') : '无效果';
 }
 
 function renderBuildList(){
@@ -2372,6 +2847,14 @@ function buildOrUpgrade(name){
 
 function closeBuildMenu(){
   document.getElementById('buildModal').style.display = 'none';
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  document.getElementById('mapModal').style.display = 'block';
+  document.getElementById('mapWood').textContent = G.wood;
+  document.getElementById('mapMetal').textContent = G.metal;
+  document.getElementById('mapParts').textContent = G.parts;
+  document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
+  updateRecruitBtn();
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -2412,7 +2895,9 @@ function recruitSurvivor(){
   if(rarePool.length === 0) rarePool = pool;
 
   let picked = rarePool[Math.floor(Math.random() * rarePool.length)];
-  G.survivors.push({ ...picked, level: 1, exp: 0 });
+  // [SYS_TEAM_HP] 初始化幸存者个人血量
+  let maxHp = picked.baseStats.hp;
+  G.survivors.push({ ...picked, level: 1, exp: 0, currentHp: maxHp, maxHp: maxHp });
 
   addBattleLog('🎉 招募成功: ' + picked.name + ' ' + picked.icon + ' [' + RARITY_NAMES[picked.rarity] + ']', 'log-player');
 
@@ -2484,41 +2969,84 @@ function getPassiveDesc(passive){
 // ║  [SYS_SURVIVOR v2.0] 受伤/恢复系统                            ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
+// [SYS_TEAM_HP] 幸存者个人血量受伤系统
 function tryInjurySurvivor(survivor){
-  if(!survivor || survivor.status === 'dead' || survivor.status === 'injured' || survivor.status === 'serious') return;
-  if(survivor.isPlayer) return; // 玩家角色不适用受伤系统
+  if(!survivor || survivor.status === 'dead') return;
+  if(survivor.isPlayer) return; // 玩家角色不适用
 
   // 受伤概率 = 基础概率 - 抗性
   let chance = INJURY_CONFIG.baseInjuryChance - (survivor.state?.injuryResist || 0);
   chance = Math.max(0.05, chance); // 最低5%
 
   if(Math.random() < chance){
-    survivor.status = 'injured';
-    survivor.recoveryProgress = 0;
-    addBattleLog('💥 ' + survivor.name + ' 受伤了！', 'log-damage');
+    // 计算伤害（基于最大血量的百分比）
+    let scale = 1 + (survivor.level - 1) * 0.1;
+    let effectMult = getSurvivorEffectMult(survivor);
+    let maxHp = Math.floor(survivor.baseStats.hp * scale * effectMult);
+    let dmgPercent = INJURY_CONFIG.injuryDamageMin + Math.random() * (INJURY_CONFIG.injuryDamageMax - INJURY_CONFIG.injuryDamageMin);
+    let damage = Math.floor(maxHp * dmgPercent / 100);
 
-    // 检查是否直接重伤
-    if(Math.random() < INJURY_CONFIG.seriousChance){
+    survivor.currentHp = Math.max(0, survivor.currentHp - damage);
+    addBattleLog('💥 ' + survivor.icon + survivor.name + ' 受到 ' + damage + ' 点伤害！(' + survivor.currentHp + '/' + maxHp + ')', 'log-damage');
+
+    // 根据血量更新状态
+    let seriousThreshold = Math.floor(maxHp * INJURY_CONFIG.seriousHpPercent);
+    if(survivor.currentHp <= 0){
+      // 死亡
+      survivor.status = 'dead';
+      addBattleLog('☠️ ' + survivor.icon + survivor.name + ' 阵亡！所有升级和专属卡牌消失！', 'log-damage');
+
+      // 移除队伍
+      for(let pos in G.team){
+        if(G.team[pos] && G.team[pos].id === survivor.id){
+          G.team[pos] = null;
+        }
+      }
+
+      // 移除专属卡牌
+      removeSurvivorCards(survivor.id);
+    } else if(survivor.currentHp <= seriousThreshold && survivor.status !== 'serious'){
       survivor.status = 'serious';
-      addBattleLog('⚠️ ' + survivor.name + ' 重伤！可能有生命危险', 'log-damage');
+      survivor.recoveryProgress = 0;
+      addBattleLog('⚠️ ' + survivor.icon + survivor.name + ' 重伤！血量过低！', 'log-damage');
+    } else if(survivor.status === 'healthy'){
+      survivor.status = 'injured';
+      survivor.recoveryProgress = 0;
     }
+
+    // 更新战斗显示
+    updateBattleSurvivors();
   }
 }
 
-function checkSurvivorDeath(){
-  // 每场战斗结束时检查重伤幸存者
-  G.survivors.forEach(s => {
-    if(s.status === 'serious'){
-      if(Math.random() < INJURY_CONFIG.deathChance){
-        s.status = 'dead';
-        addBattleLog('☠️ ' + s.name + ' 阵亡...', 'log-damage');
+// [SYS_TEAM_HP] 移除幸存者的专属卡牌
+function removeSurvivorCards(survivorId){
+  // 从牌组中移除该幸存者的专属卡
+  G.deck = G.deck.filter(c => c.survivorId !== survivorId);
+  G.discard = G.discard.filter(c => c.survivorId !== survivorId);
+  G.hand = G.hand.filter(c => c.survivorId !== survivorId);
+  addBattleLog('🃏 ' + survivorId + ' 的专属卡牌已移除', 'log-system');
+}
 
-        // 移除队伍
-        for(let pos in G.team){
-          if(G.team[pos] && G.team[pos].id === s.id){
-            G.team[pos] = null;
-          }
-        }
+// [SYS_TEAM_HP] 每场战斗结束检查重伤幸存者恢复
+function checkSurvivorDeath(){
+  // 重伤幸存者每场战斗有概率死亡（已在 tryInjurySurvivor 中处理即时死亡）
+  // 这里只处理重伤后恢复逻辑
+  G.survivors.forEach(s => {
+    if(s.status === 'dead') return;
+    if(s.isPlayer) return;
+
+    // 计算当前最大血量
+    let scale = 1 + (s.level - 1) * 0.1;
+    let maxHp = Math.floor(s.baseStats.hp * scale);
+
+    // 重伤时每场战斗有概率恢复
+    if(s.status === 'serious' && s.currentHp > 0){
+      // 重伤状态下，血量每场恢复一点
+      s.currentHp = Math.min(s.currentHp + 1, maxHp);
+      if(s.currentHp >= Math.floor(maxHp * INJURY_CONFIG.seriousHpPercent)){
+        s.status = 'injured';
+        addBattleLog('💚 ' + s.icon + s.name + ' 脱离生命危险，转为轻伤', 'log-heal');
       }
     }
   });
@@ -2532,7 +3060,7 @@ function clearSurvivorRest(){
 }
 
 function recoverySurvivors(){
-  // 回合结束时恢复（不参战的幸存者）
+  // [SYS_TEAM_HP] 回合结束时恢复（不参战的幸存者）- 基于血量恢复
   G.survivors.forEach(s => {
     if(s.status === 'dead') return;
     if(s.isPlayer) return; // 玩家角色不适用
@@ -2541,17 +3069,25 @@ function recoverySurvivors(){
     let inBattle = Object.values(G.team).find(t => t && t.id === s.id);
     if(inBattle) return; // 参战的不恢复
 
-    let rate = s.status === 'serious' ? INJURY_CONFIG.seriousRecoveryPerWave
-                                     : INJURY_CONFIG.recoveryPerWave;
-    s.recoveryProgress += rate;
+    let scale = 1 + (s.level - 1) * 0.1;
+    let maxHp = Math.floor(s.baseStats.hp * scale);
 
-    if(s.recoveryProgress >= INJURY_CONFIG.maxRecovery){
-      s.status = 'healthy';
-      s.recoveryProgress = 0;
-      addBattleLog('✨ ' + s.name + ' 恢复了健康！', 'log-heal');
-    } else if(s.status === 'serious' && s.recoveryProgress >= 0.5){
+    // 恢复血量
+    let recoverRate = s.status === 'serious' ? 0.20 : 0.35;
+    let recoverAmount = Math.floor(maxHp * recoverRate);
+    s.currentHp = Math.min(s.currentHp + recoverAmount, maxHp);
+
+    // 根据血量更新状态
+    let seriousThreshold = Math.floor(maxHp * INJURY_CONFIG.seriousHpPercent);
+
+    if(s.status === 'serious' && s.currentHp > seriousThreshold){
       s.status = 'injured';
-      addBattleLog('💚 ' + s.name + ' 从重伤转为轻伤', 'log-heal');
+      addBattleLog('💚 ' + s.icon + s.name + ' 从重伤转为轻伤 (' + s.currentHp + '/' + maxHp + ')', 'log-heal');
+    }
+
+    if(s.status === 'injured' && s.currentHp >= maxHp){
+      s.status = 'healthy';
+      addBattleLog('✨ ' + s.icon + s.name + ' 恢复了健康！', 'log-heal');
     }
   });
 }
@@ -2560,8 +3096,11 @@ function getSurvivorStatusText(s){
   if(s.isPlayer) return '⚔️ 堡垒领主';
   let color = STATUS_COLORS[s.status] || '#888';
   let text = STATUS_NAMES[s.status] || '未知';
-  if(s.status === 'injured' || s.status === 'serious'){
-    return '<span style="color:' + color + '">' + text + ' (' + Math.floor(s.recoveryProgress * 100) + '%)</span>';
+  // [SYS_TEAM_HP] 显示个人血量
+  if(s.currentHp !== undefined && s.baseStats){
+    let scale = 1 + (s.level - 1) * 0.1;
+    let maxHp = Math.floor(s.baseStats.hp * scale);
+    return '<span style="color:' + color + '">' + text + ' ❤️' + s.currentHp + '/' + maxHp + '</span>';
   }
   return '<span style="color:' + color + '">' + text + '</span>';
 }
@@ -2860,6 +3399,7 @@ function recalcFacilityEffects(){
 // ╚══════════════════════════════════════════════════════════════════╝
 
 function showMap(){
+  G.mode = 'map';
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
   document.getElementById('mapModal').style.display = 'block';
@@ -2958,7 +3498,8 @@ function selectPath(type){
   
   document.getElementById('battleContainer').style.display = 'flex';
   document.getElementById('handArea').style.display = 'flex';
-  document.getElementById('battleLogBar').style.display = 'block';
+  let battleLogBar = document.getElementById('battleLogBar');
+  if(battleLogBar) battleLogBar.style.display = 'block';
   logQueue = []; // 清空旧日志
   
   startBattle();
@@ -2967,6 +3508,36 @@ function selectPath(type){
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  [SYS_BATTLE] 战斗系统 - 回合 & 伤害 & 卡牌                      ║
 // ╚══════════════════════════════════════════════════════════════════╝
+
+// 更新战斗中的幸存者显示
+function updateBattleSurvivors(){
+  let container = document.getElementById('battleSurvivors');
+  if(!container) return;
+  
+  let html = '';
+  
+  // 玩家自己（作为幸存者显示）
+  html += `<div class="battle-survivor player-self">
+    <span class="icon">👤</span>
+    <span class="name">玩家</span>
+  </div>`;
+  
+  // 队伍中的幸存者
+  for(let key in G.team){
+    let s = G.team[key];
+    if(s){
+      let statusColor = s.status === 'healthy' ? '#80c890' : s.status === 'injured' ? '#c8a840' : '#d06060';
+      let energyInfo = s.state && s.state.energyBonus > 0 ? `<span class="s-energy">⚡+${s.state.energyBonus}</span>` : '';
+      html += `<div class="battle-survivor" style="border-color:${statusColor}">
+        <span class="icon">${s.icon || '👤'}</span>
+        <span class="name">${s.name || '未知'}</span>
+        ${energyInfo}
+      </div>`;
+    }
+  }
+  
+  container.innerHTML = html;
+}
 
 function startBattle(){
   // [SYS_FIX] 战斗开始时保存基础值（队伍效果只在战斗开始时应用一次）
@@ -2977,6 +3548,9 @@ function startBattle(){
     G.drawCount_battle = G.drawCount;
     G.teamBattleEffects = {};  // 保存队伍战斗效果
   }
+  
+  // 更新战斗幸存者显示
+  updateBattleSurvivors();
   
   G.energy = G.maxEnergy;
   G.block = 0;
@@ -3126,6 +3700,12 @@ function updateBattleUI(){
   document.getElementById('energy2').textContent = G.energy;
   document.getElementById('maxEnergy2').textContent = G.maxEnergy;
 
+  // [SYS_TEAM_HP] 战斗画面玩家/队伍血条 - 显示总血量
+  let teamHp = getTeamTotalHp();
+  let teamHpPct = Math.max(0, (teamHp.current / teamHp.max) * 100);
+  document.getElementById('playerHpFill').style.width = teamHpPct + '%';
+  document.getElementById('playerHpTextNew').textContent = teamHp.current + ' / ' + teamHp.max;
+
   // 手牌 - 使用文档片段减少重排
   let handContainer = document.getElementById('handCards');
   let cardsHtml = '';
@@ -3144,18 +3724,47 @@ function updateBattleUI(){
   updatePlayerStatusBar();
 }
 
+// [SYS_TEAM_HP] 计算队伍总血量（玩家 + 队伍成员）
+function getTeamTotalHp(){
+  let totalHp = G.hp;
+  let totalMaxHp = G.maxHp;
+  
+  for(let pos in G.team){
+    let s = G.team[pos];
+    if(s && s.status !== 'dead'){
+      let effectMult = getSurvivorEffectMult(s);
+      let scale = 1 + (s.level - 1) * 0.1;
+      let survivorHp = Math.floor(s.baseStats.hp * scale * effectMult);
+      totalHp += survivorHp;
+      totalMaxHp += survivorHp;
+    }
+  }
+  
+  return { current: totalHp, max: totalMaxHp };
+}
+
 function updatePlayerStatusBar(){
-  // HP血条
-  let hpPct = Math.max(0, (G.hp / G.maxHp) * 100);
-  document.getElementById('playerHpBar').style.width = hpPct + '%';
-  document.getElementById('playerHpText').textContent = G.hp + '/' + G.maxHp;
+  // [SYS_TEAM_HP] 使用队伍总血量
+  let teamHp = getTeamTotalHp();
+  let hpPct = Math.max(0, (teamHp.current / teamHp.max) * 100);
+  
+  // 安全检查元素是否存在
+  let hpBar = document.getElementById('playerHpBar');
+  let hpText = document.getElementById('playerHpText');
+  if(hpBar) hpBar.style.width = hpPct + '%';
+  if(hpText) hpText.textContent = teamHp.current + '/' + teamHp.max;
+  
   // 护盾
-  document.getElementById('playerBlockTag').textContent = G.block;
+  let blockTag = document.getElementById('playerBlockTag');
+  if(blockTag) blockTag.textContent = G.block;
   // 力量
-  document.getElementById('playerStrTag').textContent = G.str;
-  // 能量（已有）
-  document.getElementById('energy2').textContent = G.energy;
-  document.getElementById('maxEnergy2').textContent = G.maxEnergy;
+  let strTag = document.getElementById('playerStrTag');
+  if(strTag) strTag.textContent = G.str;
+  // 能量
+  let energy2 = document.getElementById('energy2');
+  let maxEnergy2 = document.getElementById('maxEnergy2');
+  if(energy2) energy2.textContent = G.energy;
+  if(maxEnergy2) maxEnergy2.textContent = G.maxEnergy;
 }
 
 function useCard(idx){
@@ -3260,6 +3869,12 @@ function triggerHitEffect(damage){
   battleContainer.appendChild(flash);
   setTimeout(() => flash.remove(), 150);
   
+  // 屏幕震动效果（攻击时）
+  document.body.classList.remove('screen-shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('screen-shake');
+  setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+  
   // 伤害数字飘出（带颜色变化）
   let dmgNum = document.createElement('div');
   dmgNum.className = 'damage-number';
@@ -3311,6 +3926,12 @@ function triggerPlayerHit(damage){
   flash.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg, rgba(255,0,0,0.4) 0%, rgba(200,0,0,0.2) 100%);pointer-events:none;z-index:300;animation:playerHitFlash 0.4s ease-out forwards;';
   document.body.appendChild(flash);
   setTimeout(() => flash.remove(), 400);
+  
+  // 屏幕震动效果（受伤时）
+  document.body.classList.remove('screen-shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('screen-shake');
+  setTimeout(() => document.body.classList.remove('screen-shake'), 400);
 
   // 伤害数字飘出
   let dmgNum = document.createElement('div');
@@ -3324,13 +3945,19 @@ function triggerPlayerHit(damage){
   handArea.appendChild(dmgNum);
   setTimeout(() => dmgNum.remove(), 800);
 
-  // [SYS_SURVIVOR] 玩家受伤时，队伍幸存者可能受伤
-  if(G.block <= 0 && damage > 0){ // 只有直接受伤时才触发
+  // [SYS_TEAM_HP] 玩家受伤时，随机一个健康幸存者受到溅射伤害
+  if(G.block <= 0 && damage > 0){
+    let healthySurvivors = [];
     for(let pos in G.team){
       let s = G.team[pos];
       if(s && s.status === 'healthy'){
-        tryInjurySurvivor(s);
+        healthySurvivors.push(s);
       }
+    }
+    // 随机选择一个受伤
+    if(healthySurvivors.length > 0){
+      let target = healthySurvivors[Math.floor(Math.random() * healthySurvivors.length)];
+      tryInjurySurvivor(target);
     }
   }
 
@@ -3601,9 +4228,9 @@ function battleWin(){
   // [SYS_SURVIVOR] 战斗结束，休息中的幸存者恢复
   recoverySurvivors();
 
-  let wood = G.isElite ? 20 : 12;
-  let metal = G.isElite ? 15 : 8;
-  let parts = G.isElite ? 12 : 5;
+  let wood = G.isElite ? 15 : 8;
+  let metal = G.isElite ? 12 : 5;
+  let parts = G.isElite ? 8 : 3;
   if(G.enemy.boss){ wood*=3; metal*=3; parts*=3; }
 
   // [SYS_SURVIVOR] 资源加成（后排工程师等）
@@ -3652,36 +4279,49 @@ function generateRewards(){
   
   let rewards = [];
   
-  // 选项1: 木材（最便宜卡牌出售价为2木材，这里给1木材）
-  rewards.push({type:'resourceOnly', name:'基础木材', desc:'获得 1 木材', wood:1, icon:'🪵', quality:'普通'});
-  
   if(!G.isElite){
-    // 从预设卡牌池随机选卡牌
-    let cards1 = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-    let cards2 = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-    if(cards1.length > 0) rewards.push({type:'card', ...cards1[0], quality:getCardQuality(cards1[0].score)});
-    if(cards2.length > 0) rewards.push({type:'card', ...cards2[0], quality:getCardQuality(cards2[0].score)});
+    // 普通战斗：混合奖励类型
+    let rewardTypes = ['card', 'card', 'resource', 'draw'];
+    shuffle(rewardTypes);
     
-    if(Math.random() < 0.5) rewards.push(generateResourcePack(baseScore));
-    else {
-      let extraCards = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-      if(extraCards.length > 0) rewards.push({type:'card', ...extraCards[0], quality:getCardQuality(extraCards[0].score)});
+    rewardTypes.forEach((type, idx) => {
+      if(type === 'card'){
+        let cards = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
+        if(cards.length > 0) rewards.push({type:'card', ...cards[0], quality:getCardQuality(cards[0].score)});
+      } else if(type === 'resource'){
+        rewards.push(generateResourcePack(baseScore));
+      } else if(type === 'draw'){
+        rewards.push({type:'drawCard', name:'额外抽卡', desc:'随机获得 ' + (G.wave > 5 ? 2 : 1) + ' 张卡牌', value:G.wave > 5 ? 2 : 1, icon:'🎴', quality:'稀有'});
+      }
+    });
+    
+    // 确保有4个奖励
+    while(rewards.length < 4){
+      let cards = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
+      if(cards.length > 0) rewards.push({type:'card', ...cards[0], quality:getCardQuality(cards[0].score)});
+      else rewards.push({type:'resourceOnly', name:'木材', desc:'+5 木材', wood:5, icon:'🪵', quality:'普通'});
     }
   } else {
-    // 精英奖励
-    let cards1 = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-    let cards2 = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-    if(cards1.length > 0) rewards.push({type:'card', ...cards1[0], quality:getCardQuality(cards1[0].score)});
-    if(cards2.length > 0) rewards.push({type:'card', ...cards2[0], quality:getCardQuality(cards2[0].score)});
+    // 精英战斗：宝物为主 + 卡牌
+    let cards = drawRandomCards(ALL_CARDS, 2, minScore, maxScore);
+    cards.forEach(c => rewards.push({type:'card', ...c, quality:getCardQuality(c.score)}));
+    
+    // 随机宝物
+    let relicLevel = Math.min(5, Math.max(1, Math.floor(G.wave / 3)));
+    let relicPool = RELICS.filter(r => r.level <= relicLevel);
+    shuffle(relicPool);
+    if(relicPool.length > 0){
+      let relic = relicPool[0];
+      rewards.push({type:'relic', ...relic, quality:['普通','稀有','史诗','传说'][[1,2,3,4][relic.level-1] || 1]});
+    }
+    
+    rewards.push(generateResourcePack(baseScore));
+  }
     
     // 宝物
     let relics = getRelicPool(Math.max(1, baseScore-5), Math.min(25, baseScore+5));
     relics = relics.filter(r => !G.relics.find(e => e.name === r.name));
-    if(relics.length > 0){ let r = relics[Math.floor(Math.random() * relics.length)]; rewards.push({type:'relic', ...r, quality:getRelicQuality(r.level)}); }
-    else { let cards = drawRandomCards(ALL_CARDS, 1, baseScore, 25); if(cards.length > 0) rewards.push({type:'card', ...cards[0], quality:getCardQuality(cards[0].score)}); }
-    rewards.push(generateResourcePack(Math.min(25, baseScore + 5)));
-  }
-  
+  // BOSS额外奖励
   if(G.enemy && G.enemy.boss){
     rewards.push({type:'drawCard', value:2, name:'BOSS宝藏', desc:'直接获得 2 张随机卡牌！', icon:'👑', quality:'传说'});
   }
@@ -3697,16 +4337,29 @@ function generateResourcePack(level){
 function showBattleRewards(){
   let rewards = generateRewards();
   let title = G.isElite ? '精英战斗胜利！' : '战斗胜利！';
-  let subtitle = G.isElite ? '可选择宝物奖励' : '选择一张卡牌';
-  if(G.enemy && G.enemy.boss) subtitle = 'BOSS奖励！稀有宝物等你拿！';
+  let subtitle = G.isElite ? '选择一项奖励' : '选择一项奖励';
+  if(G.enemy && G.enemy.boss) subtitle = 'BOSS奖励！选择一项奖励！';
   
   let html = `<div class="reward-header"><h2>${title}</h2><p>${subtitle}</p></div>`;
   
   rewards.forEach((r, i) => {
     let qColor = getQualityColor(r.quality || '普通');
-    html += `<div class="reward-option" onclick="selectReward(${i})">
+    // 根据类型添加不同的CSS类和标签
+    let typeClass = 'reward-card';
+    let typeBadge = '🎴 卡牌';
+    if(r.type === 'relic'){ typeClass = 'reward-relic'; typeBadge = '💎 宝物'; }
+    else if(r.type === 'resourcePack' || r.type === 'resourceOnly'){ typeClass = 'reward-resource'; typeBadge = '📦 物资'; }
+    else if(r.type === 'drawCard'){ typeClass = 'reward-draw'; typeBadge = '✨ 抽卡'; }
+    
+    html += `<div class="reward-option ${typeClass}" onclick="selectReward(${i})">
       <span class="icon">${r.icon || '❓'}</span>
-      <div class="info"><div class="name">${r.name}</div><div class="desc">${r.desc || ''}</div></div>
+      <div class="info">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="name">${r.name}</span>
+          <span class="type-badge">${typeBadge}</span>
+        </div>
+        <div class="desc">${r.desc || ''}</div>
+      </div>
       <span class="quality" style="background:${qColor}">${r.quality || ''}</span>
       <span class="select-hint">[选择]</span>
     </div>`;
@@ -3720,32 +4373,175 @@ function showBattleRewards(){
 function selectReward(idx){
   let r = G.currentRewards[idx];
   if(!r) return;
+
+  let gainedCards = [];
   
   switch(r.type){
-    case 'card': G.deck.push({...r, uid:uid()}); addBattleLog('获得卡牌: ' + r.name, 'log-player'); break;
+    case 'card': 
+      G.deck.push({...r, uid:uid()}); 
+      gainedCards.push(r);
+      addBattleLog('获得卡牌: ' + r.name, 'log-player'); 
+      break;
     case 'relic': G.relics.push({...r}); applyRelicEffect(r); addBattleLog('获得宝物: ' + r.name, 'log-player'); break;
     case 'resourcePack': G.wood += r.wood||0; G.metal += r.metal||0; G.parts += r.parts||0; addBattleLog('获得物资！', 'log-player'); break;
     case 'resourceOnly': G.wood += r.wood||0; addBattleLog('获得 ' + r.wood + ' 木材', 'log-player'); break;
     case 'drawCard':
       let bonus = r.value || 1;
       let cards = drawRandomCards(ALL_CARDS, bonus, 1, Math.min(5, G.wave));
-      cards.forEach(c => { G.deck.push({...c, uid:uid()}); addBattleLog('获得: ' + c.name, 'log-player'); });
+      cards.forEach(c => { G.deck.push({...c, uid:uid()}); gainedCards.push(c); addBattleLog('获得: ' + c.name, 'log-player'); });
       break;
   }
   
   document.getElementById('rewardModal').style.display = 'none';
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
-  document.getElementById('battleLogBar').style.display = 'none';
-  updatePlayerStatusBar();
-  showMap();
+  let battleLogBar = document.getElementById('battleLogBar');
+  if(battleLogBar) battleLogBar.style.display = 'none';
+
+  // [SYS_DECK] 展示获得的卡牌
+  if(gainedCards.length > 0){
+    showGainedCardsModal(gainedCards);
+  }
+}
+
+// [SYS_DECK] 展示获得的卡牌弹窗 - 像素末日风格
+function showGainedCardsModal(cards){
+  let html = '<div style="text-align:center;padding:20px;background:rgba(10,10,8,0.98);border:3px solid #505040;border-radius:4px;max-width:90vw;">';
+  html += '<h2 style="color:#f0e8d0;margin-bottom:20px;font-family:var(--font-pixel);font-size:1.5rem;text-shadow:2px 2px 0 #000;">🎉 获得卡牌！</h2>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;">';
+  
+  cards.forEach(card => {
+    let qualityColor = getQualityColor(getCardQuality(card.score || 5));
+    html += `<div class="card ${card.type || 'attack'}" style="
+      background:linear-gradient(180deg, rgba(35,30,25,0.98), rgba(20,18,15,0.98));
+      border:2px solid ${qualityColor};border-radius:4px;padding:15px;width:120px;
+      box-shadow:2px 2px 0 rgba(0,0,0,0.5);text-align:center;
+    ">
+      <div class="cost" style="background:rgba(20,18,12,0.98);color:#d8b040;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:8px;border:1px solid rgba(168,152,80,0.4);font-family:var(--font-retro);">${card.cost || 0}</div>
+      <div style="color:#e8e8d0;font-weight:bold;margin-bottom:5px;font-family:var(--font-retro);">${card.name}</div>
+      <div style="color:#989880;font-size:12px;">${card.desc || ''}</div>
+      <div style="margin-top:8px;font-size:11px;color:${qualityColor};font-family:var(--font-retro);">${card.type || '技能'}</div>
+    </div>`;
+  });
+  
+  html += '</div>';
+  html += '<button onclick="closeGainedCardsModal()" style="margin-top:25px;padding:12px 30px;background:linear-gradient(180deg,#2a2520,#1a1815);color:#e8e0d0;border:1px solid rgba(168,152,120,0.5);border-radius:4px;cursor:pointer;font-size:1.1rem;font-family:var(--font-retro);">[ 确定 ]</button>';
+  html += '</div>';
+  
+  let modal = document.getElementById('gainedCardsModal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'gainedCardsModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = html;
+  modal.style.display = 'flex';
+}
+
+function closeGainedCardsModal(){
+  let modal = document.getElementById('gainedCardsModal');
+  if(modal) modal.style.display = 'none';
+}
+
+// [SYS_DECK] 查看卡包 - 像素末日风格
+function showDeckModal(){
+  let modal = document.getElementById('deckModal');
+  if(!modal){
+    let m = document.createElement('div');
+    m.id = 'deckModal';
+    m.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;overflow-y:auto;';
+    m.innerHTML = '<div style="max-width:900px;margin:20px auto;padding:20px;background:rgba(10,10,8,0.98);border:3px solid #505040;border-radius:4px;box-shadow:0 0 30px rgba(0,0,0,0.8);"><h1 style="color:#f0e8d0;text-align:center;font-family:var(--font-pixel);font-size:1.8rem;margin-bottom:20px;text-shadow:2px 2px 0 #000;">📚 卡包</h1><div id="deckContent"></div><button onclick="closeDeckModal()" style="display:block;margin:20px auto;padding:12px 30px;background:linear-gradient(180deg,#2a2520,#1a1815);color:#e8e0d0;border:1px solid rgba(168,152,120,0.5);border-radius:4px;cursor:pointer;font-family:var(--font-retro);font-size:1.2rem;">[ 返回 ]</button></div>';
+    document.body.appendChild(m);
+    modal = m;
+  }
+  
+  renderDeckContent();
+  modal.style.display = 'block';
+}
+
+function renderDeckContent(){
+  let content = document.getElementById('deckContent');
+  if(!content) return;
+  
+  // 按类型分组
+  let cards = {
+    attack: [],
+    skill: [],
+    power: []
+  };
+  
+  G.deck.forEach(c => {
+    let type = c.type || 'skill';
+    if(!cards[type]) cards[type] = [];
+    cards[type].push(c);
+  });
+  
+  let html = '';
+  
+  // 卡组统计 - 像素末日风格
+  html += `<div style="background:rgba(15,15,12,0.95);border:1px solid rgba(100,100,80,0.4);border-radius:4px;padding:15px;margin-bottom:20px;">
+    <div style="color:#989880;font-size:1.1rem;margin-bottom:10px;font-family:var(--font-retro);">卡组统计</div>
+    <div style="display:flex;gap:20px;color:#686858;">
+      <span>总卡牌: <span style="color:#e8e8d0">${G.deck.length}</span></span>
+      <span>攻击: <span style="color:#d08080">${cards.attack.length}</span></span>
+      <span>技能: <span style="color:#80a0d0">${cards.skill.length}</span></span>
+      <span>能力: <span style="color:#a0d080">${cards.power.length}</span></span>
+    </div>
+  </div>`;
+  
+  // 分类显示 - 像素末日风格
+  let typeNames = { attack:'⚔️ 攻击', skill:'🛡️ 技能', power:'⚡ 能力' };
+  let typeColors = { attack:'#d08080', skill:'#80a0d0', power:'#a0d080' };
+  
+  for(let type in cards){
+    if(cards[type].length === 0) continue;
+    html += `<div style="margin-bottom:20px;">
+      <h3 style="color:${typeColors[type]};margin-bottom:10px;font-family:var(--font-retro);font-size:1.3rem;">${typeNames[type]} (${cards[type].length})</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">`;
+    
+    cards[type].forEach((card, i) => {
+      let qualityColor = getQualityColor(getCardQuality(card.score || 5));
+      let count = G.deck.filter(c => c.name === card.name).length;
+      html += `<div style="
+        background:linear-gradient(180deg,rgba(35,30,25,0.95),rgba(20,18,15,0.95));
+        border:2px solid ${qualityColor};border-radius:4px;padding:10px;width:140px;position:relative;
+        box-shadow:2px 2px 0 rgba(0,0,0,0.5);
+      ">
+        ${count > 1 ? `<span style="position:absolute;top:-8px;right:-8px;background:${qualityColor};color:#000;font-size:11px;font-weight:bold;padding:2px 6px;border-radius:4px;text-shadow:none;">×${count}</span>` : ''}
+        <div style="background:rgba(20,18,12,0.98);color:#d8b040;padding:2px 6px;border-radius:3px;display:inline-block;font-size:12px;margin-bottom:5px;border:1px solid rgba(168,152,80,0.4);">${card.cost || 0}</div>
+        <div style="color:#e8e8d0;font-size:13px;font-weight:bold;font-family:var(--font-retro);">${card.name}</div>
+        <div style="color:#989880;font-size:11px;margin-top:3px;">${card.desc || ''}</div>
+      </div>`;
+    });
+    
+    html += '</div></div>';
+  }
+  
+  // 弃牌堆 - 像素末日风格
+  if(G.discard.length > 0){
+    html += `<div style="margin-top:30px;padding-top:20px;border-top:1px solid rgba(80,80,80,0.3);">
+      <h3 style="color:#585850;margin-bottom:10px;font-family:var(--font-retro);">🗑 弃牌堆 (${G.discard.length})</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">`;
+    G.discard.forEach(card => {
+      html += `<span style="background:rgba(30,30,28,0.8);padding:5px 10px;border-radius:4px;color:#686858;font-size:12px;border:1px solid rgba(80,80,80,0.3);">${card.name}</span>`;
+    });
+    html += '</div></div>';
+  }
+  
+  content.innerHTML = html;
+}
+
+function closeDeckModal(){
+  let modal = document.getElementById('deckModal');
+  if(modal) modal.style.display = 'none';
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  [SYS_PERSIST] 持久化系统 - 存档 & 遗物传承                       ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
-const SAVE_KEY = 'zombieFortress_save';
+const SAVE_KEY = 'doomFortress_save';
 
 // 获取永久数据
 function getPermanentData(){
@@ -3868,7 +4664,8 @@ function gameOver(){
   // 隐藏战斗界面
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
-  document.getElementById('battleLogBar').style.display = 'none';
+  let battleLogBar3 = document.getElementById('battleLogBar');
+  if(battleLogBar3) battleLogBar3.style.display = 'none';
   
   // 显示失败总结
   let summary = `你在丧尸横行的世界中坚持到了第 ${G.wave} 波次！\n\n`;

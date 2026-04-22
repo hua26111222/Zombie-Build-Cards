@@ -226,22 +226,18 @@ body::after {
   animation: screenFlash 0.2s ease-out forwards !important;
 }
 
-/* 屏幕震动效果 */
+/* 屏幕震动效果 - 优化版 */
 @keyframes screenShake {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-4px, -2px); }
-  20% { transform: translate(4px, 2px); }
-  30% { transform: translate(-3px, 3px); }
-  40% { transform: translate(3px, -3px); }
-  50% { transform: translate(-2px, 2px); }
-  60% { transform: translate(2px, -2px); }
-  70% { transform: translate(-1px, 1px); }
-  80% { transform: translate(1px, -1px); }
-  90% { transform: translate(-1px, 0); }
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-3px, 2px, 0); }
+  50% { transform: translate3d(3px, -2px, 0); }
+  75% { transform: translate3d(-2px, 1px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 .screen-shake {
-  animation: screenShake 0.4s ease-out;
+  animation: screenShake 0.25s ease-out;
+  will-change: transform;
 }
 
 /* ========== 移动端横屏适配 - 像素风格 ========== */
@@ -926,17 +922,18 @@ body::before {
 
 /* ========== 战斗动画效果 - 杀戮尖塔风格 ========== */
 @keyframes enemyHit {
-  0% { transform: translateX(0); }
-  15% { transform: translateX(-15px) rotate(-4deg); }
-  35% { transform: translateX(12px) rotate(4deg); }
-  55% { transform: translateX(-8px) rotate(-2deg); }
-  75% { transform: translateX(5px) rotate(1deg); }
-  100% { transform: translateX(0) rotate(0deg); }
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  20% { transform: translate3d(-10px, 0, 0) rotate(-3deg); }
+  40% { transform: translate3d(8px, 0, 0) rotate(3deg); }
+  60% { transform: translate3d(-5px, 0, 0) rotate(-1deg); }
+  80% { transform: translate3d(3px, 0, 0) rotate(0deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
 }
 @keyframes enemyShake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
+  0% { transform: translate3d(0, 0, 0); }
+  30% { transform: translate3d(-4px, 0, 0); }
+  60% { transform: translate3d(4px, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 @keyframes hpBarShake {
   0%, 100% { transform: scaleY(1); }
@@ -1626,7 +1623,6 @@ body::before {
       <span id="playerHpTextNew">50 / 50</span>
     </div>
     <div id="playerStats">
-      <span class="stat-tag block">🛡 <span id="playerBlockTag">0</span></span>
       <span class="stat-tag str">⚔ <span id="playerStrTag">0</span></span>
       <span class="stat-tag energy">⚡ <span id="energyDisplay">0</span></span>
     </div>
@@ -3402,7 +3398,7 @@ function showMap(){
   G.mode = 'map';
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
-  document.getElementById('mapModal').style.display = 'block';
+  document.getElementById('mapModal').style.display = 'flex';
   document.getElementById('mapWave').textContent = G.wave;
   document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
   document.getElementById('mapWood').textContent = G.wood;
@@ -3754,17 +3750,21 @@ function updatePlayerStatusBar(){
   if(hpBar) hpBar.style.width = hpPct + '%';
   if(hpText) hpText.textContent = teamHp.current + '/' + teamHp.max;
   
-  // 护盾
-  let blockTag = document.getElementById('playerBlockTag');
-  if(blockTag) blockTag.textContent = G.block;
-  // 力量
-  let strTag = document.getElementById('playerStrTag');
-  if(strTag) strTag.textContent = G.str;
-  // 能量
+  // 能量 - 底部手牌区域（主要显示位置）
   let energy2 = document.getElementById('energy2');
   let maxEnergy2 = document.getElementById('maxEnergy2');
   if(energy2) energy2.textContent = G.energy;
   if(maxEnergy2) maxEnergy2.textContent = G.maxEnergy;
+  
+  // 护盾 - 底部手牌区域
+  let blockTag2 = document.getElementById('playerBlockTag2');
+  if(blockTag2) blockTag2.textContent = G.block;
+  
+  // 力量 - 底部手牌区域和左侧面板
+  let strTag2 = document.getElementById('playerStrTag2');
+  if(strTag2) strTag2.textContent = G.str;
+  let strTag = document.getElementById('playerStrTag');
+  if(strTag) strTag.textContent = G.str;
 }
 
 function useCard(idx){
@@ -3873,7 +3873,7 @@ function triggerHitEffect(damage){
   document.body.classList.remove('screen-shake');
   void document.body.offsetWidth;
   document.body.classList.add('screen-shake');
-  setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+  setTimeout(() => document.body.classList.remove('screen-shake'), 250);
   
   // 伤害数字飘出（带颜色变化）
   let dmgNum = document.createElement('div');
@@ -3896,6 +3896,11 @@ function triggerHitEffect(damage){
   
   // 更新血量文字
   enemyHpText.textContent = currentHp + ' / ' + maxHp;
+  
+  // 更新敌人状态（护盾、中毒、力量）
+  document.getElementById('enemyDefDisplay').textContent = G.enemyDef;
+  document.getElementById('enemyPoisonDisplay').textContent = G.enemyPoison;
+  document.getElementById('enemyStrDisplay').textContent = G.enemyStr;
   
   // 恢复血条颜色
   setTimeout(() => {
@@ -3931,7 +3936,7 @@ function triggerPlayerHit(damage){
   document.body.classList.remove('screen-shake');
   void document.body.offsetWidth;
   document.body.classList.add('screen-shake');
-  setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+  setTimeout(() => document.body.classList.remove('screen-shake'), 250);
 
   // 伤害数字飘出
   let dmgNum = document.createElement('div');
@@ -3972,6 +3977,11 @@ function animateEnemyDefend(){
   shield.style.cssText = 'position:absolute;font-size:40px;top:50%;left:50%;transform:translate(-50%,-50%);animation:damageNumber 0.5s ease-out forwards;opacity:1;';
   enemyPanel.appendChild(shield);
   setTimeout(() => shield.remove(), 500);
+  
+  // 更新敌人状态显示
+  document.getElementById('enemyDefDisplay').textContent = G.enemyDef;
+  document.getElementById('enemyPoisonDisplay').textContent = G.enemyPoison;
+  document.getElementById('enemyStrDisplay').textContent = G.enemyStr;
   
   updateBattleUI();
 }
@@ -4401,6 +4411,9 @@ function selectReward(idx){
   // [SYS_DECK] 展示获得的卡牌
   if(gainedCards.length > 0){
     showGainedCardsModal(gainedCards);
+  } else {
+    // 没有获得卡牌，直接返回选择战斗菜单
+    document.getElementById('mapModal').style.display = 'flex';
   }
 }
 
@@ -4442,6 +4455,13 @@ function showGainedCardsModal(cards){
 function closeGainedCardsModal(){
   let modal = document.getElementById('gainedCardsModal');
   if(modal) modal.style.display = 'none';
+  
+  // 关闭卡牌弹窗后，显示选择战斗菜单
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  let battleLogBar = document.getElementById('battleLogBar');
+  if(battleLogBar) battleLogBar.style.display = 'none';
+  document.getElementById('mapModal').style.display = 'flex';
 }
 
 // [SYS_DECK] 查看卡包 - 像素末日风格

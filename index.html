@@ -57,13 +57,18 @@ body {
   font-family: var(--font-body);
 }
 
-/* ========== 移动端横屏适配 - 增大字体适配 ========== */
+/* ========== 移动端横屏适配 - 超大字体高对比度 ========== */
 @media (max-width: 768px) {
-  html { font-size: 20px !important; }
+  html { font-size: 22px !important; }
   
   /* 横屏时字体更大 */
   @media (orientation: landscape) {
-    html { font-size: 24px !important; }
+    html { font-size: 28px !important; }
+    
+    /* 高对比度文字颜色 */
+    body, #gameContent, #battleContent, #handArea {
+      color: #f0e8d8 !important;
+    }
     
     /* 战斗容器横屏适配 */
     #battleContainer {
@@ -71,23 +76,34 @@ body {
       justify-content: space-around !important;
       padding: 15px !important;
       min-height: 35vh !important;
+      background: linear-gradient(90deg, #0a0808 0%, #121010 50%, #0a0808 100%) !important;
     }
     
     /* 玩家敌人面板居中 */
     #playerPanel, #enemyPanel {
       width: 45% !important;
-      padding: 12px !important;
+      padding: 15px !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
+      background: rgba(20,18,15,0.8) !important;
+      border-radius: 10px !important;
+      border: 2px solid rgba(168,152,120,0.5) !important;
+    }
+    
+    /* 玩家敌人文字高对比度 */
+    #playerPanel, #enemyPanel, #enemyIntent, #enemyName, #enemyHpText {
+      color: #fff !important;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
     }
     
     /* 手牌区域 */
     #handArea {
       min-height: 55vh !important;
-      padding: 12px 10px !important;
+      padding: 15px 12px !important;
+      background: linear-gradient(180deg, #0f0d0a 0%, #080608 100%) !important;
     }
     
     /* 手牌居中 */
@@ -98,83 +114,115 @@ body {
     /* 玩家状态栏 */
     #handHeader {
       flex-wrap: wrap !important;
-      gap: 10px !important;
-      padding: 10px !important;
+      gap: 12px !important;
+      padding: 12px !important;
       justify-content: center !important;
+      background: rgba(15,12,10,0.9) !important;
     }
     
     /* 卡牌尺寸放大 */
     .card {
-      width: 130px !important;
-      min-width: 120px !important;
-      font-size: 1.1rem !important;
-      margin: 4px !important;
+      width: 140px !important;
+      min-width: 130px !important;
+      font-size: 1.2rem !important;
+      margin: 5px !important;
+      background: linear-gradient(180deg, #252220, #151312) !important;
+      border: 2px solid #a89878 !important;
+      color: #fff !important;
     }
     
-    .card-name { font-size: 1rem !important; font-weight: bold !important; }
-    .card-cost { font-size: 1.2rem !important; }
-    .card-desc { font-size: 1rem !important; }
+    .card-name { font-size: 1.1rem !important; font-weight: bold !important; color: #f0e8d8 !important; }
+    .card-cost { font-size: 1.3rem !important; color: #f8e878 !important; }
+    .card-desc { font-size: 1rem !important; color: #d0c8b8 !important; }
     
-    /* 按钮放大 */
+    /* 按钮 - 高对比度 */
     button {
-      font-size: 1.2rem !important;
-      padding: 12px 20px !important;
+      font-size: 1.3rem !important;
+      padding: 14px 22px !important;
+      color: #fff !important;
+      background: linear-gradient(180deg, #3a3228, #1a1815) !important;
+      border: 2px solid #a89878 !important;
+      border-radius: 8px !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    }
+    button:hover {
+      background: linear-gradient(180deg, #4a4238, #2a2825) !important;
     }
     
     /* 地图按钮 - 大按钮居中 */
     .map-btn {
-      font-size: 1.4rem !important;
-      padding: 15px 25px !important;
-      margin: 8px auto !important;
+      font-size: 1.5rem !important;
+      padding: 18px 30px !important;
+      margin: 10px auto !important;
       display: block !important;
-      width: 90% !important;
-      max-width: 350px !important;
-      border-radius: 10px !important;
+      width: 92% !important;
+      max-width: 380px !important;
+      border-radius: 12px !important;
+      color: #fff !important;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
     }
+    .map-btn.elite { background: linear-gradient(180deg, #5a3020, #3a2015) !important; border-color: #c88040 !important; }
+    .map-btn.shop { background: linear-gradient(180deg, #204050, #152535) !important; border-color: #60a0c0 !important; }
     
-    /* 弹窗 */
+    /* 弹窗 - 高对比度 */
     .modal-content {
       max-width: 95vw !important;
       max-height: 90vh !important;
-      font-size: 1.3rem !important;
+      font-size: 1.4rem !important;
       text-align: center !important;
-      padding: 20px !important;
+      padding: 25px !important;
+      background: rgba(15,12,10,0.98) !important;
+      border: 3px solid #a89878 !important;
+      color: #fff !important;
     }
     
     /* 地图弹窗整体居中 */
     #mapModal {
       text-align: center !important;
-      padding: 15px !important;
+      padding: 20px !important;
+      background: rgba(12,10,8,0.98) !important;
     }
-    #mapModal h3 { font-size: 1.6rem !important; margin-bottom: 15px !important; }
+    #mapModal h3 { font-size: 1.8rem !important; margin-bottom: 20px !important; color: #f8e080 !important; }
     #mapModal .map-info { 
       text-align: center !important; 
       display: block !important;
-      margin: 0 auto 20px !important;
-      font-size: 1.2rem !important;
+      margin: 0 auto 25px !important;
+      font-size: 1.3rem !important;
+      color: #e0d8c8 !important;
     }
-    #mapModal .map-info .row { justify-content: center !important; gap: 15px !important; }
+    #mapModal .map-info .row { justify-content: center !important; gap: 20px !important; }
     
     /* 开始菜单居中 */
     #startMenu {
-      padding: 25px !important;
+      padding: 30px !important;
       text-align: center !important;
+      background: rgba(10,8,6,0.98) !important;
     }
-    #startMenu h1 { font-size: 3.5rem !important; }
-    #startMenu h2 { font-size: 1.8rem !important; }
-    #startMenu .tips { font-size: 1.2rem !important; line-height: 1.8 !important; }
+    #startMenu h1 { font-size: 4rem !important; color: #f8e080 !important; text-shadow: 0 2px 10px rgba(248,200,80,0.3) !important; }
+    #startMenu h2 { font-size: 2rem !important; color: #c8b870 !important; }
+    #startMenu .tips { font-size: 1.3rem !important; line-height: 1.8 !important; color: #d0c8b8 !important; }
+    #startMenu .highScore { font-size: 1.3rem !important; color: #a8c890 !important; }
     #startMenu button {
-      font-size: 1.4rem !important;
-      padding: 15px 30px !important;
+      font-size: 1.5rem !important;
+      padding: 18px 35px !important;
       display: block !important;
-      margin: 10px auto !important;
-      width: 85% !important;
-      max-width: 320px !important;
+      margin: 12px auto !important;
+      width: 88% !important;
+      max-width: 350px !important;
+      color: #fff !important;
     }
     
-    /* 玩家状态标签 */
-    .player-status-bar { font-size: 1.2rem !important; }
-    .stat-tag { font-size: 1.1rem !important; padding: 6px 12px !important; }
+    /* 玩家状态标签 - 高对比度 */
+    .player-status-bar { font-size: 1.3rem !important; color: #fff !important; }
+    .stat-tag { font-size: 1.2rem !important; padding: 8px 14px !important; color: #fff !important; background: rgba(40,35,30,0.9) !important; border: 1px solid rgba(168,152,120,0.6) !important; }
+    
+    /* 所有弹窗内容居中 */
+    .overlay-content, #overlay > div, #rewardContent, #shopContent, #buildContent, #survivorContent, #playerInfoContent {
+      text-align: center !important;
+    }
+    .overlay-content *, #overlayMsg, .modal-content * {
+      text-align: center !important;
+    }
   }
   
   /* 竖屏时提示横屏 */

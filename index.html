@@ -1384,7 +1384,7 @@ body::before {
       
       <!-- 招募按钮 -->
       <div style="text-align:center;margin-bottom:12px;">
-        <button onclick="recruitSurvivor()" style="background:linear-gradient(180deg, #1a2520, #0f1a15);color:#80c8a8;border:1px solid rgba(80,160,120,0.5);padding:10px 20px;border-radius:4px;font-size:1rem;cursor:pointer;width:90%;">🎰 招募幸存者</button>
+        <button id="recruitBtn" onclick="recruitSurvivor()" style="background:linear-gradient(180deg, #1a2520, #0f1a15);color:#80c8a8;border:1px solid rgba(80,160,120,0.5);padding:10px 20px;border-radius:4px;font-size:1rem;cursor:pointer;width:90%;">🎰 招募幸存者</button>
       </div>
       
       <!-- 功能按钮 -->
@@ -1488,6 +1488,14 @@ body::before {
 // ╚══════════════════════════════════════════════════════════════════╝
 
 let G = {};
+
+// 统一关闭所有弹窗
+function closeAllModals(){
+  ['mapModal','survivorModal','shopModal','playerInfoModal','buildModal','overlay','rewardModal'].forEach(id => {
+    let el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+}
 
 function uid(){ return Math.random().toString(36).substr(2,9); }
 function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
@@ -2090,13 +2098,7 @@ function startGame(){
   }
   
   document.getElementById('startMenu').style.display = 'none';
-
-  // 强制关闭所有弹窗
-  ['mapModal','survivorModal','shopModal','playerInfoModal','buildModal','overlay','rewardModal'].forEach(id => {
-    let el = document.getElementById(id);
-    if(el) el.style.display = 'none';
-  });
-
+  closeAllModals();
   updatePlayerStatusBar();
   addBattleLog('=== 游戏开始 ===', 'log-system');
   addBattleLog('你是一名幸存者...', 'log-system');
@@ -2137,6 +2139,7 @@ function applyRelicEffect(relic){
 // ╚══════════════════════════════════════════════════════════════════╝
 
 function openPlayerInfo(){
+  closeAllModals();
   document.getElementById('playerInfoModal').style.display = 'block';
   document.getElementById('pLevel').textContent = G.level;
   document.getElementById('pExp').textContent = G.exp + ' / ' + G.expToLevel;
@@ -2202,6 +2205,7 @@ function levelUp(){
 // ╚══════════════════════════════════════════════════════════════════╝
 
 function openShop(){
+  closeAllModals();
   document.getElementById('shopModal').style.display = 'block';
   document.getElementById('shopWood').textContent = G.wood;
   document.getElementById('shopMetal').textContent = G.metal;
@@ -2280,6 +2284,7 @@ function closeShop(){ document.getElementById('shopModal').style.display = 'none
 // ╚══════════════════════════════════════════════════════════════════╝
 
 function openBuildMenu(){
+  closeAllModals();
   document.getElementById('buildModal').style.display = 'block';
   document.getElementById('buildWood').textContent = G.wood;
   document.getElementById('buildMetal').textContent = G.metal;
@@ -2413,6 +2418,7 @@ function recruitSurvivor(){
 
   // 刷新UI
   updatePlayerStatusBar();
+  updateRecruitBtn();
   if(document.getElementById('survivorModal').style.display === 'block'){
     renderSurvivorList();
   }
@@ -2580,13 +2586,14 @@ function getSurvivorEffectMult(survivor){
 }
 
 function openSurvivorMenu(){
+  closeAllModals();
   document.getElementById('survivorModal').style.display = 'block';
   renderSurvivorList();
   renderTeamPanel();
 }
 
 function closeSurvivorMenu(){
-  document.getElementById('survivorModal').style.display = 'none';
+  closeAllModals();
 }
 
 function renderTeamPanel(){
@@ -2866,7 +2873,25 @@ function showMap(){
   // 更新主菜单队伍显示
   updateMainTeamPanel();
 
+  // 更新招募按钮状态
+  updateRecruitBtn();
+
   addBattleLog('=== 第 ' + G.wave + ' 波次 ===', 'log-system');
+}
+
+function updateRecruitBtn(){
+  let btn = document.getElementById('recruitBtn');
+  if(!btn) return;
+  let canRecruit = G.wood >= 20 && G.metal >= 10;
+  if(canRecruit){
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    btn.disabled = false;
+  } else {
+    btn.style.opacity = '0.4';
+    btn.style.cursor = 'not-allowed';
+    btn.disabled = true;
+  }
 }
 
 function updateMainTeamPanel(){

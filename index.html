@@ -1328,20 +1328,21 @@ body::before {
 </div>
 
 <!-- 地图 -->
-<div id="mapModal">
-  <h3>第 <span id="mapWave">1</span> 波次</h3>
-  <div class="map-info">
-    <div class="row"><span class="label">生命:</span><span class="value" id="mapHp">80/80</span></div>
-    <div class="row"><span class="label">木材:</span><span class="value" id="mapWood">0</span></div>
-    <div class="row"><span class="label">金属:</span><span class="value" id="mapMetal">0</span></div>
-    <div class="row"><span class="label">零件:</span><span class="value" id="mapParts">0</span></div>
-    <div class="row"><span class="label">经验:</span><span class="value" id="mapExp">0/100</span></div>
+<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:500px;z-index:300;display:none;">
+  <h3 style="text-align:center;font-size:2.5rem;margin-bottom:20px;">第 <span id="mapWave">1</span> 波次</h3>
+  <div class="map-info" style="text-align:center;width:100%;">
+    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">生命:</span><span class="value" id="mapHp">80/80</span></div>
+    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">木材:</span><span class="value" id="mapWood">0</span></div>
+    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">金属:</span><span class="value" id="mapMetal">0</span></div>
+    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">零件:</span><span class="value" id="mapParts">0</span></div>
+    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">经验:</span><span class="value" id="mapExp">0/100</span></div>
   </div>
-  <button class="map-btn" onclick="selectPath('battle')">▶ 普通遭遇</button>
-  <button class="map-btn elite" onclick="selectPath('elite')">★★ 精英丧尸群</button>
-  <button class="map-btn shop" onclick="openShop()">## 黑市商人</button>
-  <button class="map-btn" onclick="openPlayerInfo()">◈ 玩家信息</button>
-  <button class="map-btn" onclick="openBuildMenu()">🏗 基地建设</button>
+  <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+    <button class="map-btn" onclick="selectPath('battle')">▶ 普通遭遇</button>
+    <button class="map-btn elite" onclick="selectPath('elite')">★★ 精英丧尸群</button>
+    <button class="map-btn shop" onclick="openShop()">## 黑市商人</button>
+    <button class="map-btn" onclick="openPlayerInfo()">◈ 玩家信息</button>
+    <button class="map-btn" onclick="openBuildMenu()">🏗 基地建设</button>
   <button class="map-btn survivor" onclick="openSurvivorMenu()">👥 幸存者</button>
 </div>
 

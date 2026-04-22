@@ -1138,9 +1138,14 @@ body::before {
 
 /* ========== 幸存者界面 ========== */
 #survivorModal {
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:92%; max-width:420px; max-height:85vh; overflow-y:auto;
+  padding:20px; text-align:center;
   background:linear-gradient(180deg, #0a0e0c, var(--bg-darkest));
-  border-color:rgba(80,160,120,0.5);
+  border:2px solid rgba(80,160,120,0.5); border-radius:8px;
+  z-index:9998;
 }
+#survivorModal > * { text-align:center !important; }
 #survivorModal h3 { color:#80c8a8; }
 .survivor-tabs { display:flex; gap:10px; margin-bottom:18px; }
 .tab-btn { 
@@ -2985,14 +2990,14 @@ function updateBattleUI(){
   let hpPercent = Math.max(0, Math.min(100, G.enemyHp / G.enemyMaxHp * 100));
   document.getElementById('enemyHpText').textContent = G.enemyHp + ' / ' + G.enemyMaxHp;
   document.getElementById('enemyHpFill').style.width = hpPercent + '%';
-  
+
   let intentText = '';
   if(G.enemyIntent === 'atk') intentText = '⚔️ 准备攻击 (造成 ' + G.enemy.atk + ' 伤害)';
   else if(G.enemyIntent === 'def') intentText = '🛡️ 准备防御';
   else if(G.enemyIntent === 'special') intentText = '💀 准备特殊攻击！';
   else if(G.enemyIntent === 'siege') intentText = '🏰 准备攻城攻击！';
   document.getElementById('enemyIntent').textContent = intentText;
-  
+
   // [SYS_NEXT_INTENT] 显示下一回合意图预告
   let nextHint = document.getElementById('nextIntentHint');
   if(G.nextEnemyIntent){
@@ -3007,17 +3012,18 @@ function updateBattleUI(){
     nextHint.textContent = '◉ 下一回合: ???';
     nextHint.className = '';
   }
-  
+
   // 敌人状态 - 使用新的显示方式
   document.getElementById('enemyDefDisplay').textContent = G.enemyDef;
   document.getElementById('enemyPoisonDisplay').textContent = G.enemyPoison;
   document.getElementById('enemyStrDisplay').textContent = G.enemyStr;
-  
+
   // 手牌区能量显示
   document.getElementById('energy2').textContent = G.energy;
   document.getElementById('maxEnergy2').textContent = G.maxEnergy;
-  
-  // 手牌
+
+  // 手牌 - 使用文档片段减少重排
+  let handContainer = document.getElementById('handCards');
   let cardsHtml = '';
   G.hand.forEach((card,i) => {
     let typeClass = 'card ' + card.type;
@@ -3028,8 +3034,8 @@ function updateBattleUI(){
       <div class="effect">${card.desc}</div>
     </div>`;
   });
-  document.getElementById('handCards').innerHTML = cardsHtml;
-  
+  handContainer.innerHTML = cardsHtml;
+
   // 更新玩家状态栏
   updatePlayerStatusBar();
 }
@@ -3790,14 +3796,21 @@ function gameOver(){
 // 战斗日志 - 弹幕滚动
 const LOG_MAX = 30;
 let logQueue = [];
+let logUpdateScheduled = false;
 function addBattleLog(msg, type='log-player'){
   logQueue.push({msg, type});
   if(logQueue.length > LOG_MAX) logQueue.shift();
-  // 更新滚动条
-  let track = document.getElementById('battleLogTrack');
-  if(!track) return;
-  let html = logQueue.map(l => `<span class="${l.type}">&gt; ${l.msg}</span>`).join('');
-  track.innerHTML = html;
+  // 延迟更新，避免频繁重排
+  if(!logUpdateScheduled){
+    logUpdateScheduled = true;
+    requestAnimationFrame(() => {
+      logUpdateScheduled = false;
+      let track = document.getElementById('battleLogTrack');
+      if(!track) return;
+      let html = logQueue.map(l => `<span class="${l.type}">&gt; ${l.msg}</span>`).join('');
+      track.innerHTML = html;
+    });
+  }
 }
 
 function showOverlay(title, msg, callback){

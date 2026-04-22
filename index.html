@@ -59,11 +59,11 @@ body {
 
 /* ========== 移动端横屏适配 - 增大字体适配 ========== */
 @media (max-width: 768px) {
-  html { font-size: 18px !important; }
+  html { font-size: 20px !important; }
   
   /* 横屏时字体更大 */
   @media (orientation: landscape) {
-    html { font-size: 20px !important; }
+    html { font-size: 24px !important; }
     
     /* 战斗容器横屏适配 */
     #battleContainer {
@@ -76,7 +76,7 @@ body {
     /* 玩家敌人面板居中 */
     #playerPanel, #enemyPanel {
       width: 45% !important;
-      padding: 10px !important;
+      padding: 12px !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -87,7 +87,7 @@ body {
     /* 手牌区域 */
     #handArea {
       min-height: 55vh !important;
-      padding: 10px 8px !important;
+      padding: 12px 10px !important;
     }
     
     /* 手牌居中 */
@@ -98,72 +98,83 @@ body {
     /* 玩家状态栏 */
     #handHeader {
       flex-wrap: wrap !important;
-      gap: 8px !important;
-      padding: 8px !important;
+      gap: 10px !important;
+      padding: 10px !important;
       justify-content: center !important;
     }
     
     /* 卡牌尺寸放大 */
     .card {
-      width: 120px !important;
-      min-width: 110px !important;
-      font-size: 1rem !important;
-      margin: 3px !important;
+      width: 130px !important;
+      min-width: 120px !important;
+      font-size: 1.1rem !important;
+      margin: 4px !important;
     }
     
-    .card-name { font-size: 0.95rem !important; font-weight: bold !important; }
-    .card-cost { font-size: 1.1rem !important; }
-    .card-desc { font-size: 0.9rem !important; }
+    .card-name { font-size: 1rem !important; font-weight: bold !important; }
+    .card-cost { font-size: 1.2rem !important; }
+    .card-desc { font-size: 1rem !important; }
     
     /* 按钮放大 */
     button {
-      font-size: 1.1rem !important;
-      padding: 10px 18px !important;
-    }
-    
-    /* 地图按钮 */
-    .map-btn {
       font-size: 1.2rem !important;
       padding: 12px 20px !important;
-      margin: 5px !important;
+    }
+    
+    /* 地图按钮 - 大按钮居中 */
+    .map-btn {
+      font-size: 1.4rem !important;
+      padding: 15px 25px !important;
+      margin: 8px auto !important;
       display: block !important;
-      width: 80% !important;
-      max-width: 300px !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
+      width: 90% !important;
+      max-width: 350px !important;
+      border-radius: 10px !important;
     }
     
     /* 弹窗 */
     .modal-content {
-      max-width: 90vw !important;
-      max-height: 85vh !important;
-      font-size: 1.1rem !important;
+      max-width: 95vw !important;
+      max-height: 90vh !important;
+      font-size: 1.3rem !important;
       text-align: center !important;
+      padding: 20px !important;
     }
+    
+    /* 地图弹窗整体居中 */
+    #mapModal {
+      text-align: center !important;
+      padding: 15px !important;
+    }
+    #mapModal h3 { font-size: 1.6rem !important; margin-bottom: 15px !important; }
+    #mapModal .map-info { 
+      text-align: center !important; 
+      display: block !important;
+      margin: 0 auto 20px !important;
+      font-size: 1.2rem !important;
+    }
+    #mapModal .map-info .row { justify-content: center !important; gap: 15px !important; }
     
     /* 开始菜单居中 */
     #startMenu {
-      padding: 20px !important;
+      padding: 25px !important;
       text-align: center !important;
     }
-    #startMenu h1 { font-size: 3rem !important; }
-    #startMenu h2 { font-size: 1.5rem !important; }
+    #startMenu h1 { font-size: 3.5rem !important; }
+    #startMenu h2 { font-size: 1.8rem !important; }
+    #startMenu .tips { font-size: 1.2rem !important; line-height: 1.8 !important; }
     #startMenu button {
-      font-size: 1.2rem !important;
-      padding: 12px 24px !important;
+      font-size: 1.4rem !important;
+      padding: 15px 30px !important;
       display: block !important;
-      margin: 8px auto !important;
-      width: 80% !important;
-      max-width: 280px !important;
+      margin: 10px auto !important;
+      width: 85% !important;
+      max-width: 320px !important;
     }
     
     /* 玩家状态标签 */
-    .player-status-bar { font-size: 1.1rem !important; }
-    .stat-tag { font-size: 1rem !important; padding: 5px 10px !important; }
-    
-    /* 地图弹窗按钮居中 */
-    #mapModal { text-align: center !important; }
-    #mapModal .map-info { text-align: left !important; display: inline-block !important; }
+    .player-status-bar { font-size: 1.2rem !important; }
+    .stat-tag { font-size: 1.1rem !important; padding: 6px 12px !important; }
   }
   
   /* 竖屏时提示横屏 */

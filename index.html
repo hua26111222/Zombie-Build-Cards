@@ -228,7 +228,7 @@ body {
     
     /* ========== 其他弹窗居中（地图弹窗除外） ========== */
     #overlay, #rewardModal, #shopModal, #playerInfoModal, #buildModal, #survivorModal, #cardDetailModal {
-      display: flex !important;
+      /* 注意：不设置display，让其保持原始值（none） */
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
@@ -242,6 +242,7 @@ body {
       max-height: 90vh !important;
       overflow-y: auto !important;
     }
+    #overlay, #rewardModal { display: flex !important; }
     
     #mapModal > *, #overlay > div, #rewardModal > *, #shopModal > *, #playerInfoModal > *, #buildModal > *, #survivorModal > *, #cardDetailModal > * {
       text-align: center !important;
@@ -2088,6 +2089,13 @@ function startGame(){
   }
   
   document.getElementById('startMenu').style.display = 'none';
+
+  // 强制关闭所有弹窗
+  ['mapModal','survivorModal','shopModal','playerInfoModal','buildModal','overlay','rewardModal'].forEach(id => {
+    let el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+
   updatePlayerStatusBar();
   addBattleLog('=== 游戏开始 ===', 'log-system');
   addBattleLog('你是一名幸存者...', 'log-system');

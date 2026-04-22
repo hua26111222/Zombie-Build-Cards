@@ -57,32 +57,105 @@ body {
   font-family: var(--font-body);
 }
 
-/* ========== 移动端横屏适配和增大字体 ========== */
+/* ========== 移动端横屏适配 - 增大字体适配 ========== */
 @media (max-width: 768px) {
-  html { font-size: 18px !important; }
+  html { font-size: 14px !important; }
   
-  /* 游戏内容放大 */
-  #gameContent, #battleContent {
-    min-height: 100vh;
-    width: 100%;
+  /* 横屏时字体更大 */
+  @media (orientation: landscape) {
+    html { font-size: 16px !important; }
+    
+    /* 战斗容器横屏适配 */
+    #battleContainer {
+      flex-direction: row !important;
+      justify-content: space-around !important;
+      padding: 10px !important;
+      min-height: 35vh !important;
+    }
+    
+    /* 玩家敌人面板 */
+    #playerPanel, #enemyPanel {
+      width: 45% !important;
+      padding: 8px !important;
+    }
+    
+    /* 手牌区域 */
+    #handArea {
+      min-height: 55vh !important;
+      padding: 8px 5px !important;
+    }
+    
+    /* 玩家状态栏 */
+    #handHeader {
+      flex-wrap: wrap !important;
+      gap: 5px !important;
+      padding: 5px !important;
+    }
+    
+    /* 卡牌尺寸 */
+    .card {
+      width: 100px !important;
+      min-width: 90px !important;
+      font-size: 0.85rem !important;
+      margin: 2px !important;
+    }
+    
+    .card-name { font-size: 0.8rem !important; }
+    .card-cost { font-size: 0.9rem !important; }
+    .card-desc { font-size: 0.75rem !important; }
+    
+    /* 按钮放大 */
+    button {
+      font-size: 0.95rem !important;
+      padding: 6px 12px !important;
+    }
+    
+    /* 地图按钮 */
+    .map-btn {
+      font-size: 1rem !important;
+      padding: 10px 15px !important;
+      margin: 4px !important;
+    }
+    
+    /* 弹窗 */
+    .modal-content {
+      max-width: 90vw !important;
+      max-height: 85vh !important;
+      font-size: 1rem !important;
+    }
+    
+    /* 开始菜单 */
+    #startMenu {
+      padding: 15px !important;
+    }
+    #startMenu h1 { font-size: 2.5rem !important; }
+    #startMenu h2 { font-size: 1.2rem !important; }
+    
+    /* 玩家状态标签 */
+    .player-status-bar { font-size: 0.9rem !important; }
+    .stat-tag { font-size: 0.85rem !important; padding: 3px 6px !important; }
   }
   
-  /* 卡牌放大 */
-  .card {
-    transform: scale(1.1);
-    margin: 5px;
-  }
-  
-  /* 按钮放大 */
-  button {
-    font-size: 1rem !important;
-    padding: 8px 16px !important;
-  }
-  
-  /* 弹窗适配 */
-  .modal-content {
-    max-width: 95vw !important;
-    font-size: 1rem;
+  /* 竖屏时提示横屏 */
+  @media (orientation: portrait) {
+    #battleContainer, #handArea {
+      display: none !important;
+    }
+    #startMenu::after {
+      content: '请横屏使用此游戏';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.9);
+      color: #c4b8a8;
+      padding: 30px 40px;
+      border-radius: 15px;
+      font-size: 1.5rem;
+      text-align: center;
+      z-index: 99999;
+      border: 2px solid var(--accent-gold);
+    }
   }
 }
 

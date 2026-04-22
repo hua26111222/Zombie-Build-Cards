@@ -1024,7 +1024,11 @@ body::before {
 
 /* ========== 商店 ========== */
 #shopModal {
-  width:95%; max-width:420px; z-index:300;
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:92%; max-width:420px; max-height:85vh; overflow-y:auto; display:none;
+  padding:20px; text-align:center;
+  background:linear-gradient(180deg, #0a0e0c, var(--bg-darkest));
+  border:2px solid rgba(80,160,80,0.5); border-radius:8px; z-index:9997;
 }
 #shopModal h3 { color:var(--energy); }
 .shop-resources { 
@@ -1067,7 +1071,11 @@ body::before {
 
 /* ========== 玩家信息 ========== */
 #playerInfoModal {
-  width:90%; max-width:360px; z-index:300;
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:92%; max-width:420px; max-height:85vh; overflow-y:auto; display:none;
+  padding:20px; text-align:center;
+  background:linear-gradient(180deg, #0a0e0c, var(--bg-darkest));
+  border:2px solid rgba(168,152,120,0.5); border-radius:8px; z-index:9997;
 }
 .info-row { 
   display:flex; justify-content:space-between; padding:12px 0; 
@@ -1101,8 +1109,11 @@ body::before {
 
 /* ========== 建设界面 ========== */
 #buildModal {
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:92%; max-width:420px; max-height:85vh; overflow-y:auto; display:none;
+  padding:20px; text-align:center;
   background:linear-gradient(180deg, #0e0c0a, var(--bg-darkest));
-  border-color:rgba(100,140,100,0.5);
+  border:2px solid rgba(100,140,100,0.5); border-radius:8px; z-index:9997;
 }
 #buildModal h3 { color:var(--accent-green); }
 .build-resources { 

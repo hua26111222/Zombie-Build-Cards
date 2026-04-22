@@ -70,99 +70,114 @@ body {
       color: #f0e8d8 !important;
     }
     
-    /* 战斗容器横屏适配 */
+    /* 战斗容器 - 杀戮尖塔布局 */
     #battleContainer {
       flex-direction: row !important;
-      justify-content: space-around !important;
-      padding: 15px !important;
-      min-height: 35vh !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 8px 12px !important;
+      min-height: 32vh !important;
       background: linear-gradient(90deg, #0a0808 0%, #121010 50%, #0a0808 100%) !important;
     }
     
-    /* 玩家敌人面板居中 */
+    /* 中间分隔线隐藏 */
+    #battleDivider {
+      display: none !important;
+    }
+    
+    /* 玩家敌人面板 - 杀戮尖塔风格 */
     #playerPanel, #enemyPanel {
-      width: 45% !important;
-      padding: 15px !important;
+      width: 48% !important;
+      padding: 8px !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
-      background: rgba(20,18,15,0.8) !important;
-      border-radius: 10px !important;
-      border: 2px solid rgba(168,152,120,0.5) !important;
+      background: rgba(15,12,10,0.6) !important;
+      border-radius: 6px !important;
+      border: 1px solid rgba(100,80,60,0.3) !important;
+      min-height: 28vh !important;
     }
     
-    /* 玩家敌人文字高对比度 */
-    #playerPanel, #enemyPanel, #enemyIntent, #enemyName, #enemyHpText {
-      color: #fff !important;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+    /* 玩家敌人文字 */
+    #playerPanel, #enemyPanel, #enemyIntent, #enemyName, #enemyHpText, #playerHpTextNew {
+      color: #e8e0d0 !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
     }
     
     /* 手牌区域 */
     #handArea {
-      min-height: 55vh !important;
-      padding: 15px 12px !important;
+      min-height: 60vh !important;
+      padding: 10px 8px !important;
       background: linear-gradient(180deg, #0f0d0a 0%, #080608 100%) !important;
+    }
+    
+    /* 玩家状态栏 - 紧凑 */
+    #handHeader {
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      padding: 8px !important;
+      justify-content: center !important;
+      background: rgba(15,12,10,0.8) !important;
+      min-height: auto !important;
     }
     
     /* 手牌居中 */
     #handCards {
       justify-content: center !important;
+      padding: 8px 5px !important;
+      gap: 5px !important;
     }
     
-    /* 玩家状态栏 */
-    #handHeader {
-      flex-wrap: wrap !important;
-      gap: 12px !important;
-      padding: 12px !important;
-      justify-content: center !important;
-      background: rgba(15,12,10,0.9) !important;
-    }
-    
-    /* 卡牌尺寸放大 */
+    /* 卡牌 - 杀戮尖塔风格 */
     .card {
-      width: 140px !important;
-      min-width: 130px !important;
-      font-size: 1.2rem !important;
-      margin: 5px !important;
+      width: 110px !important;
+      min-width: 100px !important;
+      font-size: 1rem !important;
+      margin: 3px !important;
       background: linear-gradient(180deg, #252220, #151312) !important;
       border: 2px solid #a89878 !important;
-      color: #fff !important;
+      color: #e8e0d0 !important;
+      border-radius: 4px !important;
     }
     
-    .card-name { font-size: 1.1rem !important; font-weight: bold !important; color: #f0e8d8 !important; }
-    .card-cost { font-size: 1.3rem !important; color: #f8e878 !important; }
-    .card-desc { font-size: 1rem !important; color: #d0c8b8 !important; }
+    .card-name { font-size: 0.9rem !important; font-weight: bold !important; color: #f0e8d8 !important; }
+    .card-cost { font-size: 1.1rem !important; color: #f8e878 !important; }
+    .card-desc { font-size: 0.8rem !important; color: #c0b8a8 !important; }
     
-    /* 按钮 - 高对比度 */
+    /* 按钮 - 杀戮尖塔风格 */
     button {
-      font-size: 1.3rem !important;
-      padding: 14px 22px !important;
-      color: #fff !important;
-      background: linear-gradient(180deg, #3a3228, #1a1815) !important;
-      border: 2px solid #a89878 !important;
-      border-radius: 8px !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+      font-size: 1rem !important;
+      padding: 10px 16px !important;
+      color: #e8e0d0 !important;
+      background: linear-gradient(180deg, #2a2520, #1a1815) !important;
+      border: 1px solid rgba(168,152,120,0.5) !important;
+      border-radius: 4px !important;
     }
     button:hover {
-      background: linear-gradient(180deg, #4a4238, #2a2825) !important;
+      background: linear-gradient(180deg, #3a3528, #252018) !important;
     }
     
-    /* 地图按钮 - 两列布局 */
+    /* 地图按钮 - 杀戮尖塔风格 */
     .map-btn {
-      font-size: 1.2rem !important;
-      padding: 12px 10px !important;
+      font-size: 1.1rem !important;
+      padding: 14px 12px !important;
       margin: 0 !important;
       display: block !important;
       width: 100% !important;
-      border-radius: 8px !important;
-      color: #fff !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+      border-radius: 6px !important;
+      color: #e8e0d0 !important;
+      background: linear-gradient(180deg, #2a2520, #1a1815) !important;
+      border: 1px solid rgba(168,152,120,0.4) !important;
     }
-    .map-btn.elite { background: linear-gradient(180deg, #5a3020, #3a2015) !important; border-color: #c88040 !important; }
-    .map-btn.shop { background: linear-gradient(180deg, #204050, #152535) !important; border-color: #60a0c0 !important; }
-    .map-btn.survivor { background: linear-gradient(180deg, #2a3040, #1a2030) !important; border-color: #6080a0 !important; }
+    .map-btn:hover {
+      background: linear-gradient(180deg, #3a3528, #252018) !important;
+      border-color: rgba(168,152,120,0.7) !important;
+    }
+    .map-btn.elite { background: linear-gradient(180deg, #4a3020, #2a1810) !important; border-color: rgba(200,140,80,0.6) !important; }
+    .map-btn.shop { background: linear-gradient(180deg, #203040, #151a28) !important; border-color: rgba(100,160,200,0.6) !important; }
+    .map-btn.survivor { background: linear-gradient(180deg, #283040, #1a2530) !important; border-color: rgba(100,160,160,0.6) !important; }
     
     /* 弹窗 - 高对比度 */
     .modal-content {
@@ -1328,18 +1343,21 @@ body::before {
 </div>
 
 <!-- 地图 -->
-<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:450px;max-height:88vh;overflow-y:auto;z-index:300;display:none;padding:12px;">
-  <h3 style="text-align:center;font-size:1.8rem;margin-bottom:8px;">第 <span id="mapWave">1</span> 波次</h3>
-  <div style="text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 15px;font-size:1.2rem;margin-bottom:10px;">
+<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:92%;max-width:420px;max-height:85vh;overflow-y:auto;z-index:300;display:none;padding:10px 15px;background:rgba(12,10,8,0.97);border:2px solid #a89878;border-radius:8px;">
+  <h3 style="text-align:center;font-size:1.6rem;margin:0 0 10px 0;color:#f8e080;">第 <span id="mapWave">1</span> 波次</h3>
+  <div style="text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 12px;font-size:1.1rem;color:#e0d8c8;margin-bottom:12px;">
     <span>❤ <span id="mapHp">80/80</span></span>
     <span>🪵 <span id="mapWood">0</span></span>
     <span>⚙ <span id="mapMetal">0</span></span>
     <span>🔩 <span id="mapParts">0</span></span>
+    <span>⭐ <span id="mapExp">0</span></span>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+  <div style="display:flex;flex-direction:column;gap:6px;">
     <button class="map-btn" onclick="selectPath('battle')">⚔ 普通</button>
     <button class="map-btn elite" onclick="selectPath('elite')">⭐ 精英</button>
     <button class="map-btn shop" onclick="openShop()">🛒 商店</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
     <button class="map-btn" onclick="openPlayerInfo()">👤 玩家</button>
     <button class="map-btn" onclick="openBuildMenu()">🏗 建设</button>
     <button class="map-btn survivor" onclick="openSurvivorMenu()">👥 幸存者</button>

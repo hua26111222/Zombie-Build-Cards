@@ -149,20 +149,20 @@ body {
       background: linear-gradient(180deg, #4a4238, #2a2825) !important;
     }
     
-    /* 地图按钮 - 大按钮居中 */
+    /* 地图按钮 - 两列布局 */
     .map-btn {
-      font-size: 1.5rem !important;
-      padding: 18px 30px !important;
-      margin: 10px auto !important;
+      font-size: 1.2rem !important;
+      padding: 12px 10px !important;
+      margin: 0 !important;
       display: block !important;
-      width: 92% !important;
-      max-width: 380px !important;
-      border-radius: 12px !important;
+      width: 100% !important;
+      border-radius: 8px !important;
       color: #fff !important;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
     }
     .map-btn.elite { background: linear-gradient(180deg, #5a3020, #3a2015) !important; border-color: #c88040 !important; }
     .map-btn.shop { background: linear-gradient(180deg, #204050, #152535) !important; border-color: #60a0c0 !important; }
+    .map-btn.survivor { background: linear-gradient(180deg, #2a3040, #1a2030) !important; border-color: #6080a0 !important; }
     
     /* 弹窗 - 高对比度 */
     .modal-content {
@@ -1328,22 +1328,22 @@ body::before {
 </div>
 
 <!-- 地图 -->
-<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:500px;z-index:300;display:none;">
-  <h3 style="text-align:center;font-size:2.5rem;margin-bottom:20px;">第 <span id="mapWave">1</span> 波次</h3>
-  <div class="map-info" style="text-align:center;width:100%;">
-    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">生命:</span><span class="value" id="mapHp">80/80</span></div>
-    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">木材:</span><span class="value" id="mapWood">0</span></div>
-    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">金属:</span><span class="value" id="mapMetal">0</span></div>
-    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">零件:</span><span class="value" id="mapParts">0</span></div>
-    <div class="row" style="justify-content:center;font-size:1.8rem;padding:8px 0;"><span class="label">经验:</span><span class="value" id="mapExp">0/100</span></div>
+<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:450px;max-height:88vh;overflow-y:auto;z-index:300;display:none;padding:12px;">
+  <h3 style="text-align:center;font-size:1.8rem;margin-bottom:8px;">第 <span id="mapWave">1</span> 波次</h3>
+  <div style="text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 15px;font-size:1.2rem;margin-bottom:10px;">
+    <span>❤ <span id="mapHp">80/80</span></span>
+    <span>🪵 <span id="mapWood">0</span></span>
+    <span>⚙ <span id="mapMetal">0</span></span>
+    <span>🔩 <span id="mapParts">0</span></span>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
-    <button class="map-btn" onclick="selectPath('battle')">▶ 普通遭遇</button>
-    <button class="map-btn elite" onclick="selectPath('elite')">★★ 精英丧尸群</button>
-    <button class="map-btn shop" onclick="openShop()">## 黑市商人</button>
-    <button class="map-btn" onclick="openPlayerInfo()">◈ 玩家信息</button>
-    <button class="map-btn" onclick="openBuildMenu()">🏗 基地建设</button>
-  <button class="map-btn survivor" onclick="openSurvivorMenu()">👥 幸存者</button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+    <button class="map-btn" onclick="selectPath('battle')">⚔ 普通</button>
+    <button class="map-btn elite" onclick="selectPath('elite')">⭐ 精英</button>
+    <button class="map-btn shop" onclick="openShop()">🛒 商店</button>
+    <button class="map-btn" onclick="openPlayerInfo()">👤 玩家</button>
+    <button class="map-btn" onclick="openBuildMenu()">🏗 建设</button>
+    <button class="map-btn survivor" onclick="openSurvivorMenu()">👥 幸存者</button>
+  </div>
 </div>
 
 <!-- 遮罩 -->

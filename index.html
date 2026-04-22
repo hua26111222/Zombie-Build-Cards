@@ -223,24 +223,48 @@ body {
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 90vw !important;
+      max-width: 500px !important;
     }
     
     #mapModal > *, #overlay > div, #rewardModal > *, #shopModal > *, #playerInfoModal > *, #buildModal > *, #survivorModal > *, #cardDetailModal > * {
       text-align: center !important;
       margin-left: auto !important;
       margin-right: auto !important;
+      width: 100% !important;
     }
     
     /* 弹窗标题 */
     #mapModal h3, #shopModal h3, #playerInfoModal h3, #buildModal h3, #survivorModal h3 {
       text-align: center !important;
       width: 100% !important;
+      font-size: 2.5rem !important;
+      margin-bottom: 20px !important;
     }
     
     /* 弹窗内容 */
     .modal-content, #overlay > div, #rewardContent, #shopContent, #buildContent, #survivorContent, #playerInfoContent {
       text-align: center !important;
-      max-width: 95vw !important;
+      width: 100% !important;
+    }
+    
+    /* 资源信息居中 */
+    #mapModal .map-info, #shopContent, #buildContent, #playerInfoContent {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+    
+    #mapModal .map-info .row, #shopContent .row, #buildContent .row, #playerInfoContent .row {
+      justify-content: center !important;
+      width: 100% !important;
+      font-size: 1.8rem !important;
+      padding: 8px 0 !important;
     }
     
     .overlay-content, .overlay-content *, #overlayMsg, .modal-content * {
@@ -252,7 +276,8 @@ body {
       display: flex !important;
       justify-content: center !important;
       flex-wrap: wrap !important;
-      gap: 10px !important;
+      gap: 15px !important;
+      width: 100% !important;
     }
   }
   

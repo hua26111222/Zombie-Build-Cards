@@ -191,22 +191,17 @@ body {
       color: #fff !important;
     }
     
-    /* 地图弹窗整体居中 */
-    #mapModal {
-      text-align: center !important;
-      padding: 20px !important;
-      background: rgba(12,10,8,0.98) !important;
+    /* 地图弹窗 - 新左右分栏布局 */
+    #mapModal > div {
+      flex-direction: row !important;
     }
-    #mapModal h3 { font-size: 1.8rem !important; margin-bottom: 20px !important; color: #f8e080 !important; }
-    #mapModal .map-info { 
-      text-align: center !important; 
-      display: block !important;
-      margin: 0 auto 25px !important;
-      font-size: 1.3rem !important;
-      color: #e0d8c8 !important;
+    #mapModal > div > div:first-child {
+      width: 50% !important;
     }
-    #mapModal .map-info .row { justify-content: center !important; gap: 20px !important; }
-    
+    #mapModal > div > div:last-child {
+      width: 50% !important;
+    }
+
     /* 开始菜单居中 */
     #startMenu {
       padding: 30px !important;
@@ -231,8 +226,8 @@ body {
     .player-status-bar { font-size: 1.3rem !important; color: #fff !important; }
     .stat-tag { font-size: 1.2rem !important; padding: 8px 14px !important; color: #fff !important; background: rgba(40,35,30,0.9) !important; border: 1px solid rgba(168,152,120,0.6) !important; }
     
-    /* ========== 所有弹窗居中 ========== */
-    #mapModal, #overlay, #rewardModal, #shopModal, #playerInfoModal, #buildModal, #survivorModal, #cardDetailModal {
+    /* ========== 其他弹窗居中（地图弹窗除外） ========== */
+    #overlay, #rewardModal, #shopModal, #playerInfoModal, #buildModal, #survivorModal, #cardDetailModal {
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -244,6 +239,8 @@ body {
       transform: translate(-50%, -50%) !important;
       width: 90vw !important;
       max-width: 500px !important;
+      max-height: 90vh !important;
+      overflow-y: auto !important;
     }
     
     #mapModal > *, #overlay > div, #rewardModal > *, #shopModal > *, #playerInfoModal > *, #buildModal > *, #survivorModal > *, #cardDetailModal > * {
@@ -1347,25 +1344,58 @@ body::before {
   <div id="handCards"></div>
 </div>
 
-<!-- 地图 -->
-<div id="mapModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:92%;max-width:420px;max-height:85vh;overflow-y:auto;z-index:300;display:none;padding:10px 15px;background:rgba(12,10,8,0.97);border:2px solid #a89878;border-radius:8px;">
-  <h3 style="text-align:center;font-size:1.6rem;margin:0 0 10px 0;color:#f8e080;">第 <span id="mapWave">1</span> 波次</h3>
-  <div style="text-align:center;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 12px;font-size:1.1rem;color:#e0d8c8;margin-bottom:12px;">
-    <span>❤ <span id="mapHp">80/80</span></span>
-    <span>🪵 <span id="mapWood">0</span></span>
-    <span>⚙ <span id="mapMetal">0</span></span>
-    <span>🔩 <span id="mapParts">0</span></span>
-    <span>⭐ <span id="mapExp">0</span></span>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:6px;">
-    <button class="map-btn" onclick="selectPath('battle')">⚔ 普通</button>
-    <button class="map-btn elite" onclick="selectPath('elite')">⭐ 精英</button>
-    <button class="map-btn shop" onclick="openShop()">🛒 商店</button>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
-    <button class="map-btn" onclick="openPlayerInfo()">👤 玩家</button>
-    <button class="map-btn" onclick="openBuildMenu()">🏗 建设</button>
-    <button class="map-btn survivor" onclick="openSurvivorMenu()">👥 幸存者</button>
+<!-- 地图 - 左侧主菜单布局 -->
+<div id="mapModal" style="position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:9999;display:none;background:rgba(8,6,6,0.98);overflow:hidden;">
+  <div style="display:flex;width:100%;height:100%;">
+    <!-- 左侧主菜单面板 -->
+    <div style="width:45%;height:100%;background:linear-gradient(180deg, #0a0e0c, #080a08);border-right:2px solid rgba(80,160,120,0.4);display:flex;flex-direction:column;padding:15px;overflow-y:auto;">
+      <!-- 顶部信息 -->
+      <div style="text-align:center;margin-bottom:15px;">
+        <div style="font-size:1.4rem;color:#f8e080;font-family:var(--font-title);">第 <span id="mapWave">1</span> 波次</div>
+        <div style="display:flex;justify-content:center;gap:10px;margin-top:8px;font-size:1rem;color:#e0d8c8;flex-wrap:wrap;">
+          <span>❤ <span id="mapHp">80/80</span></span>
+          <span>🪵 <span id="mapWood">0</span></span>
+          <span>⚙ <span id="mapMetal">0</span></span>
+        </div>
+        <div style="display:flex;justify-content:center;gap:10px;font-size:0.95rem;color:#c0b8a8;margin-top:4px;">
+          <span>🔩 <span id="mapParts">0</span></span>
+          <span>⭐ <span id="mapExp">0/100</span></span>
+        </div>
+      </div>
+      
+      <!-- 幸存者状态摘要 -->
+      <div style="background:rgba(15,20,18,0.9);border:1px solid rgba(60,90,70,0.3);border-radius:6px;padding:12px;margin-bottom:12px;">
+        <div style="color:#80c8a8;font-size:1rem;margin-bottom:8px;text-align:center;">👥 幸存者状态</div>
+        <div id="mainTeamPanel" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+      
+      <!-- 招募按钮 -->
+      <div style="text-align:center;margin-bottom:12px;">
+        <button onclick="recruitSurvivor()" style="background:linear-gradient(180deg, #1a2520, #0f1a15);color:#80c8a8;border:1px solid rgba(80,160,120,0.5);padding:10px 20px;border-radius:4px;font-size:1rem;cursor:pointer;width:90%;">🎰 招募幸存者</button>
+      </div>
+      
+      <!-- 功能按钮 -->
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+        <button onclick="openPlayerInfo()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">👤 玩家信息</button>
+        <button onclick="openBuildMenu()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🏗 基地建设</button>
+        <button onclick="openShop()" style="background:linear-gradient(180deg, #1a1c28, #121420);color:#90a8c8;border:1px solid rgba(100,140,180,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🛒 黑市商店</button>
+      </div>
+    </div>
+    
+    <!-- 右侧战斗选择 -->
+    <div style="width:55%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;">
+      <div style="text-align:center;margin-bottom:25px;">
+        <div style="font-size:1.6rem;color:#a89878;font-family:var(--font-title);margin-bottom:10px;">选择战斗</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:15px;width:85%;max-width:280px;">
+        <button onclick="selectPath('battle')" style="background:linear-gradient(180deg, #2a2520, #1a1815);color:#e8e0d0;border:2px solid rgba(100,160,100,0.5);padding:20px;font-size:1.3rem;border-radius:6px;cursor:pointer;">
+          ⚔️ 普通战斗
+        </button>
+        <button onclick="selectPath('elite')" style="background:linear-gradient(180deg, #3a2518, #281510);color:#d8a090;border:2px solid rgba(180,100,80,0.5);padding:20px;font-size:1.3rem;border-radius:6px;cursor:pointer;">
+          ⭐ 精英战斗
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2805,16 +2835,45 @@ function recalcFacilityEffects(){
 function showMap(){
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
-  document.getElementById('mapModal').style.display = 'flex';
-  document.getElementById('mapModal').style.flexDirection = 'column';
-  document.getElementById('mapModal').style.alignItems = 'center';
+  document.getElementById('mapModal').style.display = 'block';
   document.getElementById('mapWave').textContent = G.wave;
   document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
   document.getElementById('mapWood').textContent = G.wood;
   document.getElementById('mapMetal').textContent = G.metal;
   document.getElementById('mapParts').textContent = G.parts;
   document.getElementById('mapExp').textContent = G.exp + ' / ' + G.expToLevel;
+
+  // 更新主菜单队伍显示
+  updateMainTeamPanel();
+
   addBattleLog('=== 第 ' + G.wave + ' 波次 ===', 'log-system');
+}
+
+function updateMainTeamPanel(){
+  let panel = document.getElementById('mainTeamPanel');
+  if(!panel) return;
+
+  let positions = [
+    { key: 'front', label: '前锋' },
+    { key: 'mid', label: '中坚' },
+    { key: 'back', label: '后排' },
+  ];
+
+  let html = '';
+  positions.forEach(pos => {
+    let s = G.team[pos.key];
+    if(s){
+      let statusColor = s.status === 'healthy' ? '#80c890' : s.status === 'injured' ? '#c8a840' : '#d06060';
+      html += `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:rgba(20,25,22,0.8);border-radius:4px;">
+        <span style="color:${statusColor};font-size:1.2rem;">${s.icon}</span>
+        <span style="color:#b0c8b8;font-size:0.95rem;">${s.name}</span>
+      </div>`;
+    } else {
+      html += `<div style="padding:6px;color:#4a5a4a;font-size:0.9rem;">${pos.label}: 空</div>`;
+    }
+  });
+
+  panel.innerHTML = html;
 }
 
 function selectPath(type){

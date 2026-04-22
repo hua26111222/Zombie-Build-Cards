@@ -2798,7 +2798,11 @@ function recalcFacilityEffects(){
 // ╚══════════════════════════════════════════════════════════════════╝
 
 function showMap(){
-  document.getElementById('mapModal').style.display = 'block';
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  document.getElementById('mapModal').style.display = 'flex';
+  document.getElementById('mapModal').style.flexDirection = 'column';
+  document.getElementById('mapModal').style.alignItems = 'center';
   document.getElementById('mapWave').textContent = G.wave;
   document.getElementById('mapHp').textContent = G.hp + ' / ' + G.maxHp;
   document.getElementById('mapWood').textContent = G.wood;
@@ -2810,6 +2814,8 @@ function showMap(){
 
 function selectPath(type){
   document.getElementById('mapModal').style.display = 'none';
+  document.getElementById('battleContainer').style.display = 'flex';
+  document.getElementById('handArea').style.display = 'flex';
   G.isElite = (type === 'elite');
   
   // 优先使用程序化敌人系统

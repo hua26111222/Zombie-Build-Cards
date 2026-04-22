@@ -53,9 +53,59 @@ body {
   font-family: var(--font-body);
 }
 
-/* 移动端横屏适配 */
-@media (max-width: 768px) and (orientation: portrait) {
-  html { font-size: 14px; }
+/* ========== 移动端横屏适配 - 强制横屏和增大字体 ========== */
+@media (max-width: 768px) {
+  html { font-size: 18px !important; }
+  
+  /* 强制横屏提示 */
+  body.landscape-required::before {
+    content: '请将手机横屏使用';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9);
+    color: #c4b8a8;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    z-index: 99999;
+    display: none;
+  }
+  
+  /* 竖屏时显示提示 */
+  @media (orientation: portrait) {
+    body.landscape-required::before { display: block; }
+  }
+  
+  /* 横屏时隐藏提示 */
+  @media (orientation: landscape) {
+    body.landscape-required::before { display: none !important; }
+  }
+  
+  /* 游戏内容放大 */
+  #gameContent, #battleContent {
+    transform: scale(1);
+    min-height: 100vh;
+  }
+  
+  /* 卡牌放大 */
+  .card {
+    transform: scale(1.1);
+    margin: 5px;
+  }
+  
+  /* 按钮放大 */
+  button {
+    font-size: 1rem !important;
+    padding: 8px 16px !important;
+  }
+  
+  /* 弹窗适配 */
+  .modal-content {
+    max-width: 95vw !important;
+    font-size: 1rem;
+  }
 }
 
 /* 安全区域适配 iPhone X+ */
@@ -954,7 +1004,7 @@ body::before {
 .survivor-card .status { font-size:11px; color:#5a7a6a; margin-top:5px; }
 </style>
 </head>
-<body>
+<body class="landscape-required">
 
 <!-- 开始菜单 -->
 <div id="startMenu">

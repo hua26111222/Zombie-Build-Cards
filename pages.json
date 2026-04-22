@@ -1,0 +1,20 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "丧尸堡垒",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "丧尸堡垒",
+    "navigationBarBackgroundColor": "#0a0a08",
+    "backgroundColor": "#0a0a08"
+  },
+  "uniStatistics": {
+    "enable": false
+  }
+}

@@ -1692,6 +1692,18 @@ body::before {
         </div>
       </div>
     </div>
+    
+    <!-- [SYS_FORTRESS_BATTLE] 堡垒血量显示 -->
+    <div id="fortressBattlePanel" style="margin-top:15px;padding:8px 12px;background:linear-gradient(180deg,rgba(200,120,40,0.3),rgba(100,60,20,0.3));border:1px solid rgba(200,140,60,0.5);border-radius:4px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">🏰</span>
+        <span style="font-size:11px;color:#e8d0b0;">堡垒</span>
+        <div style="flex:1;height:12px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;">
+          <div id="fortressBattleHpBar" style="width:100%;height:100%;background:linear-gradient(90deg,#a05020,#e08040);transition:width 0.3s;"></div>
+        </div>
+        <span id="fortressBattleHpText" style="font-size:10px;color:#e8c090;min-width:45px;">20/20</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4200,6 +4212,11 @@ function updateBattleUI(){
   document.getElementById('playerHpFill').style.width = teamHpPct + '%';
   document.getElementById('playerHpTextNew').textContent = teamHp.current + ' / ' + teamHp.max;
 
+  // [SYS_FORTRESS_BATTLE] 战斗画面堡垒血量
+  let fortHpPct = Math.max(0, (G.fortressHp / G.maxFortressHp) * 100);
+  document.getElementById('fortressBattleHpBar').style.width = fortHpPct + '%';
+  document.getElementById('fortressBattleHpText').textContent = G.fortressHp + '/' + G.maxFortressHp;
+
   // 手牌 - 使用文档片段减少重排
   let handContainer = document.getElementById('handCards');
   let cardsHtml = '';
@@ -4479,6 +4496,27 @@ function triggerPlayerHit(damage){
   updatePlayerStatusBar();
 }
 
+// [SYS_FORTRESS_BATTLE] 堡垒受伤特效
+function triggerFortressHit(){
+  let fortPanel = document.getElementById('fortressBattlePanel');
+  if(!fortPanel) return;
+  
+  // 堡垒面板闪烁
+  fortPanel.style.background = 'linear-gradient(180deg,rgba(200,40,40,0.6),rgba(100,20,20,0.6))';
+  setTimeout(() => {
+    fortPanel.style.background = 'linear-gradient(180deg,rgba(200,120,40,0.3),rgba(100,60,20,0.3))';
+  }, 300);
+  
+  // 屏幕震动
+  document.body.classList.remove('screen-shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('screen-shake');
+  setTimeout(() => document.body.classList.remove('screen-shake'), 250);
+  
+  // 更新堡垒血量显示
+  updateBattleUI();
+}
+
 // --- 敌人防御动画 ---
 function animateEnemyDefend(){
   let enemyPanel = document.getElementById('enemyPanel');
@@ -4554,32 +4592,38 @@ function enemyTurn(){
       triggerPlayerHit(dmg);
     }, 300);
   } else if(G.enemyIntent === 'siege'){
-    // [SYS_FACILITY] 攻城丧尸攻击设施
-    let facilityNames = Object.keys(G.facilities).filter(n => G.facilities[n] > 0);
-    if(facilityNames.length > 0){
-      let target = facilityNames[Math.floor(Math.random() * facilityNames.length)];
-      G.facilities[target]--;
-      if(G.facilities[target] <= 0) delete G.facilities[target];
-      addBattleLog(G.enemy.name + ' 破坏设施: ' + target + '！', 'log-damage');
+    // [SYS_FORTRESS_BATTLE] 攻城丧尸攻击堡垒
+    let atk = G.enemy.atk + G.enemyStr;
+    let fortDef = G.fortressDef || 0;
+    
+    // 堡垒护盾先抵消伤害
+    let actualDmg = Math.max(0, atk - fortDef);
+    G.fortressDef = Math.max(0, fortDef - atk);
+    
+    G.fortressHp -= actualDmg;
+    addBattleLog(G.enemy.name + ' 攻城攻击！堡垒 -' + actualDmg, 'log-damage');
+    
+    // [SYS_FORTRESS_BATTLE] 堡垒血量归零，清零所有建设
+    if(G.fortressHp <= 0){
+      G.fortressHp = 0;
+      // 清零所有设施建设
+      let destroyedFacilities = Object.keys(G.facilities).filter(n => G.facilities[n] > 0);
+      destroyedFacilities.forEach(name => {
+        addBattleLog('🏰 ' + name + ' 被摧毁！', 'log-damage');
+      });
+      G.facilities = {};
       recalcFacilityEffects();
-      // 攻城动画
-      let enemyPanel = document.getElementById('enemyPanel');
-      enemyPanel.style.transform = 'translateX(-80px) scale(1.1)';
-      setTimeout(() => {
-        enemyPanel.style.transform = '';
-      }, 300);
-    } else {
-      // 无设施时正常攻击玩家
-      let atk = G.enemy.atk + G.enemyStr;
-      G.hp -= atk;
-      addBattleLog(G.enemy.name + ' 攻城攻击！-' + atk + ' HP', 'log-enemy');
-      let enemyPanel = document.getElementById('enemyPanel');
-      enemyPanel.style.transform = 'translateX(-80px)';
-      setTimeout(() => {
-        enemyPanel.style.transform = '';
-        triggerPlayerHit(atk);
-      }, 200);
+      addBattleLog('⚠️ 堡垒沦陷！所有建设清零！', 'log-damage');
     }
+    
+    // 攻城动画
+    let enemyPanel = document.getElementById('enemyPanel');
+    enemyPanel.style.transform = 'translateX(-80px) scale(1.1)';
+    setTimeout(() => {
+      enemyPanel.style.transform = '';
+      // 触发堡垒受损特效
+      triggerFortressHit();
+    }, 300);
   }
   
   if(G.hpDrain > 0){ G.hp -= G.hpDrain; addBattleLog('生命流失 -' + G.hpDrain + ' HP', 'log-damage'); }

@@ -1651,14 +1651,31 @@ body::before {
 
 <!-- 战场容器 - 杀戮尖塔横版布局 -->
 <div id="battleContainer">
-  <!-- 左侧 - 玩家/幸存者面板 -->
+  <!-- 左侧 - 我方列表（堡垒 + 人物） -->
   <div id="playerPanel">
-    <div id="battleSurvivors"></div>
-    <div id="playerHpBarNew">
-      <div id="playerHpFill" style="width:100%"></div>
-      <span id="playerHpTextNew">50 / 50</span>
+    <div style="font-size:11px;color:#a89070;margin-bottom:8px;">我方</div>
+    
+    <!-- 堡垒（第一排第一个） -->
+    <div id="fortressCard" style="display:flex;align-items:center;padding:10px;background:linear-gradient(135deg,rgba(200,120,40,0.4),rgba(100,60,20,0.3));border:2px solid rgba(200,140,60,0.6);border-radius:6px;margin-bottom:8px;">
+      <div style="font-size:28px;margin-right:10px;">🏰</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;color:#e8d0b0;">堡垒</div>
+        <div style="height:14px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;margin-top:4px;">
+          <div id="fortressBattleHpBar" style="width:100%;height:100%;background:linear-gradient(90deg,#c84020,#e87040);transition:width 0.3s;"></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#e8c090;margin-left:8px;"><span id="fortressBattleHpText">20/20</span></div>
     </div>
-    <div id="playerStats">
+    
+    <!-- 人物列表 -->
+    <div id="allyList" style="display:flex;flex-direction:column;gap:6px;"></div>
+    
+    <!-- 总血量 -->
+    <div style="margin-top:10px;padding:6px 10px;background:rgba(0,0,0,0.4);border-radius:4px;font-size:11px;color:#a89070;text-align:center;">
+      总血量: <span id="playerHpTextNew" style="color:#e8d8d0;">50</span>
+    </div>
+    
+    <div id="playerStats" style="margin-top:8px;display:flex;gap:10px;">
       <span class="stat-tag str">⚔ <span id="playerStrTag">0</span></span>
       <span class="stat-tag energy">⚡ <span id="energyDisplay">0</span></span>
     </div>
@@ -1667,42 +1684,31 @@ body::before {
   <!-- 中间 - 战斗区域分隔线 -->
   <div id="battleDivider"></div>
   
-  <!-- 右侧 - 敌人面板 -->
+  <!-- 右侧 - 敌方列表 -->
   <div id="enemyPanel">
-    <div id="enemyIntent">准备攻击</div>
-    <div id="nextIntentHint">◉ 下一回合: ???</div>
-    <div id="enemySprite">[丧尸]</div>
-    <div id="enemyName">游荡丧尸</div>
+    <div style="font-size:11px;color:#a89070;margin-bottom:8px;">敌方</div>
     
-    <!-- 敌人状态栏面板 -->
-    <div id="enemyStatusPanel">
-      <div id="enemyHpBarNew"><div id="enemyHpFill" style="width:100%"></div><span id="enemyHpText">10 / 10</span></div>
-      <div class="row">
-        <div class="stat">
-          <div class="label">护盾</div>
-          <div class="value" id="enemyDefDisplay" style="color:#70c0a8">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">中毒</div>
-          <div class="value" id="enemyPoisonDisplay" style="color:#80c870">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">力量</div>
-          <div class="value" id="enemyStrDisplay" style="color:#c8a070">0</div>
-        </div>
+    <!-- 敌人列表 -->
+    <div id="enemyList" style="display:flex;flex-direction:column;gap:8px;">
+      <div id="enemySprite" style="font-size:48px;text-align:center;">[丧尸]</div>
+      <div id="enemyName" style="text-align:center;font-size:14px;color:#e8d8d0;">游荡丧尸</div>
+      <div id="enemyHpBarNew" style="height:16px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;margin-top:6px;">
+        <div id="enemyHpFill" style="width:100%;height:100%;background:linear-gradient(90deg,#a03030,#d04040);transition:width 0.3s;"></div>
       </div>
+      <div id="enemyHpText" style="text-align:center;font-size:11px;color:#e8d8d0;margin-top:4px;">10 / 10</div>
     </div>
     
-    <!-- [SYS_FORTRESS_BATTLE] 堡垒血量显示 -->
-    <div id="fortressBattlePanel" style="margin-top:15px;padding:8px 12px;background:linear-gradient(180deg,rgba(200,120,40,0.3),rgba(100,60,20,0.3));border:1px solid rgba(200,140,60,0.5);border-radius:4px;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:20px;">🏰</span>
-        <span style="font-size:11px;color:#e8d0b0;">堡垒</span>
-        <div style="flex:1;height:12px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;">
-          <div id="fortressBattleHpBar" style="width:100%;height:100%;background:linear-gradient(90deg,#a05020,#e08040);transition:width 0.3s;"></div>
-        </div>
-        <span id="fortressBattleHpText" style="font-size:10px;color:#e8c090;min-width:45px;">20/20</span>
-      </div>
+    <!-- 敌人意图 -->
+    <div style="margin-top:15px;padding:10px;background:rgba(80,20,20,0.4);border-radius:6px;border:1px solid rgba(160,60,60,0.4);">
+      <div id="enemyIntent" style="font-size:12px;color:#e8a0a0;text-align:center;">⚔️ 准备攻击</div>
+      <div id="nextIntentHint" style="font-size:10px;color:#886060;text-align:center;margin-top:4px;">◉ 下一回合: ???</div>
+    </div>
+    
+    <!-- 敌人状态 -->
+    <div style="margin-top:10px;display:flex;justify-content:center;gap:15px;font-size:11px;">
+      <div><span style="color:#70c0a8;">护盾</span> <span id="enemyDefDisplay">0</span></div>
+      <div><span style="color:#80c870;">中毒</span> <span id="enemyPoisonDisplay">0</span></div>
+      <div><span style="color:#c8a070;">力量</span> <span id="enemyStrDisplay">0</span></div>
     </div>
   </div>
 </div>
@@ -4170,6 +4176,55 @@ function startBattle(){
 }
 
 function updateBattleUI(){
+  // ========== 渲染我方列表 ==========
+  let allyListHtml = '';
+  
+  // 玩家
+  let playerHpPct = Math.max(0, (G.hp / G.maxHp) * 100);
+  let playerColor = G.hp < G.maxHp * 0.3 ? '#ff4444' : (G.hp < G.maxHp * 0.6 ? '#e8a040' : '#40c080');
+  allyListHtml += `
+    <div style="display:flex;align-items:center;padding:8px;background:linear-gradient(135deg,rgba(60,120,180,0.4),rgba(40,80,120,0.3));border:1px solid rgba(100,160,220,0.5);border-radius:5px;">
+      <div style="font-size:22px;margin-right:8px;">⚔️</div>
+      <div style="flex:1;">
+        <div style="font-size:11px;color:#a0c0e0;">玩家</div>
+        <div style="height:10px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;margin-top:3px;">
+          <div style="width:${playerHpPct}%;height:100%;background:${playerColor};transition:width 0.3s;"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#e8d8d0;margin-left:6px;">${G.hp}/${G.maxHp}</div>
+    </div>`;
+  
+  // 幸存者
+  for(let pos in G.team){
+    let s = G.team[pos];
+    if(s && s.status !== 'dead'){
+      let effectMult = getSurvivorEffectMult(s);
+      let maxHp = s.maxHp ? Math.floor(s.maxHp * effectMult) : Math.floor(s.baseStats.hp * (1 + (s.level - 1) * 0.1) * effectMult);
+      let hpPct = Math.max(0, (maxHp / maxHp) * 100);
+      let icon = s.icon || '👤';
+      let statusColor = s.status === 'injured' ? '#e8a040' : '#40c080';
+      allyListHtml += `
+        <div style="display:flex;align-items:center;padding:6px;background:linear-gradient(135deg,rgba(60,100,80,0.3),rgba(40,70,60,0.2));border:1px solid rgba(80,140,100,0.4);border-radius:4px;">
+          <div style="font-size:18px;margin-right:6px;">${icon}</div>
+          <div style="flex:1;">
+            <div style="font-size:10px;color:#90c0a0;">${s.name} ${s.status === 'injured' ? '⚠️' : ''}</div>
+            <div style="height:8px;background:rgba(0,0,0,0.5);border-radius:2px;overflow:hidden;margin-top:2px;">
+              <div style="width:${hpPct}%;height:100%;background:${statusColor};transition:width 0.3s;"></div>
+            </div>
+          </div>
+          <div style="font-size:9px;color:#e8d8d0;margin-left:4px;">${maxHp}</div>
+        </div>`;
+    }
+  }
+  
+  document.getElementById('allyList').innerHTML = allyListHtml;
+  
+  // 总血量（玩家 + 队伍 + 堡垒）
+  let teamHp = getTeamTotalHp();
+  let totalHp = teamHp.current + G.fortressHp;
+  document.getElementById('playerHpTextNew').textContent = totalHp;
+
+  // ========== 渲染敌方列表 ==========
   document.getElementById('enemySprite').textContent = getEnemySprite(G.enemy.name);
   document.getElementById('enemyName').textContent = G.enemy.name;
   let hpPercent = Math.max(0, Math.min(100, G.enemyHp / G.enemyMaxHp * 100));
@@ -4198,27 +4253,19 @@ function updateBattleUI(){
     nextHint.className = '';
   }
 
-  // 敌人状态 - 使用新的显示方式
+  // 敌人状态
   document.getElementById('enemyDefDisplay').textContent = G.enemyDef;
   document.getElementById('enemyPoisonDisplay').textContent = G.enemyPoison;
   document.getElementById('enemyStrDisplay').textContent = G.enemyStr;
 
-  // 手牌区能量显示
-  document.getElementById('energy2').textContent = G.energy;
-  document.getElementById('maxEnergy2').textContent = G.maxEnergy;
-
-  // [SYS_TEAM_HP] 战斗画面玩家/队伍血条 - 显示玩家+队伍总血量
-  let teamHp = getTeamTotalHp();
-  let teamHpPct = Math.max(0, (teamHp.current / teamHp.max) * 100);
-  document.getElementById('playerHpFill').style.width = teamHpPct + '%';
-  document.getElementById('playerHpTextNew').textContent = teamHp.current + ' + 🏰' + G.fortressHp;
-
-  // [SYS_FORTRESS_BATTLE] 战斗画面堡垒血量
+  // [SYS_FORTRESS_BATTLE] 堡垒血量
   let fortHpPct = Math.max(0, (G.fortressHp / G.maxFortressHp) * 100);
   document.getElementById('fortressBattleHpBar').style.width = fortHpPct + '%';
   document.getElementById('fortressBattleHpText').textContent = G.fortressHp + '/' + G.maxFortressHp;
 
-  // 手牌 - 使用文档片段减少重排
+  // 手牌区能量显示
+  document.getElementById('energy2').textContent = G.energy;
+  document.getElementById('maxEnergy2').textContent = G.maxEnergy;
   let handContainer = document.getElementById('handCards');
   let cardsHtml = '';
   G.hand.forEach((card,i) => {

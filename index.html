@@ -1340,8 +1340,8 @@ body::before {
 .reward-option.reward-relic .type-badge { background: linear-gradient(135deg, #3a2a1a, #251a0d); color: #e0c080; }
 .reward-option.reward-resource { border-color: rgba(100, 180, 100, 0.5); }
 .reward-option.reward-resource .type-badge { background: linear-gradient(135deg, #1a3a1a, #0d250d); color: #80c080; }
-.reward-option.reward-draw { border-color: rgba(180, 120, 200, 0.5); }
-.reward-option.reward-draw .type-badge { background: linear-gradient(135deg, #2a1a3a, #1a0d25); color: #c0a0e0; }
+.reward-option.reward-build { border-color: rgba(180, 140, 100, 0.5); }
+.reward-option.reward-build .type-badge { background: linear-gradient(135deg, #3a2a1a, #251810); color: #c0a080; }
 
 .type-badge {
   font-size:11px; padding:4px 10px; border-radius:4px; font-weight:600;
@@ -1469,6 +1469,41 @@ body::before {
 .build-item .effect-info { font-size:12px; color:#5a7a5a; margin-top:5px; }
 .build-item .effect-cur { color:#80b880; }
 .build-item .effect-next { color:#a0d8a0; }
+
+/* ========== [SYS_DAMAGE] 维修界面 ========== */
+.repair-header h3 { color:#e8c890; font-size:1.4rem; margin-bottom:15px; }
+.repair-resources {
+  display:flex; justify-content:center; gap:24px;
+  background:rgba(20,15,10,0.95); padding:12px; border-radius:4px; margin-bottom:18px;
+  border:1px solid rgba(180,140,80,0.3);
+  font-size:1.1rem; color:#e8d8b8;
+}
+.repair-item {
+  background:linear-gradient(180deg, #181410, #0e0c08);
+  border:1px solid rgba(180,140,80,0.3); padding:16px; margin:12px 0;
+  border-radius:4px; display:flex; align-items:center; gap:14px; transition: all 0.2s;
+}
+.repair-item .icon.damaged { opacity:0.7; filter: grayscale(0.3); }
+.repair-item .info { flex:1; text-align:left; }
+.repair-item .name { font-size:15px; color:#c8a878; font-weight:500; }
+.repair-item .level { font-size:12px; color:#b08850; margin-top:4px; }
+.repair-item .cost { font-size:13px; color:#d8a868; margin-top:6px; }
+.repair-item button {
+  padding:10px 16px; background:linear-gradient(180deg, #201810, #140f08);
+  color:#e8c890; border:1px solid rgba(180,140,80,0.5); cursor:pointer;
+  border-radius:4px; min-width:70px; transition: all 0.2s; font-family: var(--font-title);
+}
+.repair-item button:hover { background:linear-gradient(180deg, #2a2010, #1a1508); }
+.repair-item button:disabled { opacity:0.5; cursor:not-allowed; }
+.repair-empty { color:#8a7a5a; font-size:1rem; padding:30px; text-align:center; }
+.repair-all-btn { margin-top:20px; text-align:center; }
+.btn-repair-all {
+  padding:14px 30px; background:linear-gradient(180deg, #2a2010, #1a1508);
+  color:#e8c890; border:2px solid rgba(180,140,80,0.6); cursor:pointer;
+  border-radius:6px; font-size:1.1rem; font-family: var(--font-title);
+  transition: all 0.2s;
+}
+.btn-repair-all:hover { background:linear-gradient(180deg, #3a2a15, #2a1f0a); }
 
 /* ========== 幸存者界面 ========== */
 #survivorModal {
@@ -1699,6 +1734,19 @@ body::before {
           <span>🔩 <span id="mapParts">0</span></span>
           <span>⭐ <span id="mapExp">0/100</span></span>
         </div>
+        <!-- [SYS_FORTRESS] 堡垒血量显示 -->
+        <div id="fortressBar" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:10px;padding:8px 15px;background:rgba(30,25,20,0.8);border-radius:6px;border:1px solid rgba(180,140,80,0.4);">
+          <span style="font-size:1.3rem;">🏰</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;">
+            <div style="font-size:0.8rem;color:#a89070;">堡垒</div>
+            <div style="font-size:1rem;color:#e8c890;">
+              <span id="fortressHp">20</span> / <span id="fortressMaxHp">20</span>
+            </div>
+          </div>
+          <div style="width:80px;height:8px;background:rgba(60,50,40,0.8);border-radius:4px;overflow:hidden;">
+            <div id="fortressHpBar" style="width:100%;height:100%;background:linear-gradient(90deg,#c87830,#e8a040);transition:width 0.3s;"></div>
+          </div>
+        </div>
       </div>
       
       <!-- 幸存者状态摘要 -->
@@ -1717,6 +1765,7 @@ body::before {
       <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
         <button onclick="openPlayerInfo()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">👤 玩家信息</button>
         <button onclick="openBuildMenu()" style="background:linear-gradient(180deg, #1c1c10, #14140a);color:#e8e0d0;border:1px solid rgba(168,152,120,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🏗 基地建设</button>
+        <button id="repairBtn" onclick="openRepairMenu()" style="background:linear-gradient(180deg, #2a1c10, #1a1408);color:#e8c890;border:1px solid rgba(180,140,80,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🔧 设施维修</button>
         <button onclick="openShop()" style="background:linear-gradient(180deg, #1a1c28, #121420);color:#90a8c8;border:1px solid rgba(100,140,180,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">🛒 黑市商店</button>
         <button onclick="showDeckModal()" style="background:linear-gradient(180deg, #1a1828, #12121a);color:#a8a0c8;border:1px solid rgba(140,120,180,0.4);padding:14px;font-size:1.1rem;border-radius:5px;cursor:pointer;">📚 查看卡包</button>
       </div>
@@ -1733,6 +1782,12 @@ body::before {
         </button>
         <button onclick="selectPath('elite')" style="background:linear-gradient(180deg, #3a2518, #281510);color:#d8a090;border:2px solid rgba(180,100,80,0.5);padding:20px;font-size:1.3rem;border-radius:6px;cursor:pointer;">
           ⭐ 精英战斗
+        </button>
+        <button onclick="selectPath('boss')" style="background:linear-gradient(180deg, #4a1515, #301010);color:#ff8080;border:2px solid rgba(200,60,60,0.6);padding:20px;font-size:1.3rem;border-radius:6px;cursor:pointer;">
+          👹 BOSS战
+        </button>
+        <button onclick="openTestBattleMenu()" style="background:linear-gradient(180deg, #1a2a3a, #101820);color:#80c8e8;border:2px solid rgba(80,140,180,0.5);padding:15px;font-size:1.1rem;border-radius:6px;cursor:pointer;">
+          🧪 测试战斗（全类型）
         </button>
       </div>
     </div>
@@ -1776,6 +1831,13 @@ body::before {
   <button class="shop-close" onclick="closeBuildMenu()">[ 返回地图 ]</button>
 </div>
 
+<!-- [SYS_DAMAGE] 维修界面 -->
+<div id="repairModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:9000;overflow-y:auto;">
+  <div style="max-width:500px;margin:50px auto;padding:20px;background:rgba(15,12,8,0.98);border:2px solid rgba(180,140,80,0.5);border-radius:6px;">
+    <div id="repairList"></div>
+    <button class="shop-close" onclick="closeRepairMenu()" style="margin-top:20px;">[ 返回地图 ]</button>
+  </div>
+</div>
 
 <div id="playerInfoModal">
   <h3>## 幸存者状态 ##</h3>
@@ -1786,6 +1848,17 @@ body::before {
   <div class="info-row"><span class="label">抽牌数</span><span class="value" id="pDraw">5</span></div>
   <div class="info-row"><span class="label">最大能量</span><span class="value" id="pEnergy">3</span></div>
   <div class="info-row"><span class="label">零件</span><span class="value" id="pParts">0</span></div>
+  <!-- [SYS_FORTRESS] 堡垒信息 -->
+  <div style="margin-top:12px;padding:10px;background:rgba(30,25,20,0.8);border-radius:4px;border:1px solid rgba(180,140,80,0.4);">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.5rem;">🏰</span>
+      <div>
+        <div style="color:#e8c890;font-size:0.9rem;">堡垒血量</div>
+        <div style="color:#e8d8b8;font-size:1.1rem;">❤ <span id="pFortressHp">20</span> / <span id="pFortressMaxHp">20</span></div>
+      </div>
+    </div>
+    <div style="font-size:0.8rem;color:#a89070;margin-top:5px;">建设等级越高，堡垒血量上限越大</div>
+  </div>
   <button class="upgrade-btn" onclick="levelUp()" id="upgradeBtn">[ 升级 - 需要 100 经验 ]</button>
   <div style="margin-top:15px"><div class="shop-section-title">持有宝物</div><div id="playerRelics"></div></div>
   <div style="margin-top:10px"><div class="shop-section-title">牌库: <span id="pDeckCount">0</span> | 弃牌: <span id="pDiscardCount">0</span></div></div>
@@ -1799,15 +1872,18 @@ body::before {
   <div class="survivor-tabs">
     <button class="tab-btn active" onclick="openTeamSetup()">⚔️ 队伍</button>
     <button class="tab-btn" onclick="renderSurvivorList()">📋 列表</button>
+    <button class="tab-btn" onclick="renderRelicWarehouse()">💎 宝物库</button>
   </div>
   <div id="teamPanel"></div>
   <div id="survivorList"></div>
+  <div id="relicWarehousePanel"></div>
   <div class="recruit-bar">
     <span>🎰 招募: 🪵20 ⚙️10</span>
     <button class="recruit-btn" onclick="recruitSurvivor()">招募</button>
   </div>
   <div class="recruit-odds">概率: 普通55% | 稀有27% | 史诗13% | 传奇5%</div>
-  <div style="color:#788878;font-size:0.8rem;margin-top:8px;text-align:center;">点击幸存者卡片可编入/移出队伍</div>
+  <div style="color:#8a9a8a;font-size:0.8rem;margin-top:4px;text-align:center;">💡 天赋影响HP上限: 普通20-26 | 优秀28-34 | 精英36-40</div>
+  <div style="color:#788878;font-size:0.8rem;margin-top:4px;text-align:center;">💡 宝物必须分配给幸存者才能生效</div>
   <button class="info-close" onclick="closeSurvivorMenu()">[ 返回 ]</button>
 </div>
 
@@ -1820,7 +1896,7 @@ let G = {};
 
 // 统一关闭所有弹窗
 function closeAllModals(){
-  ['mapModal','survivorModal','shopModal','playerInfoModal','buildModal','overlay','rewardModal'].forEach(id => {
+  ['mapModal','survivorModal','shopModal','playerInfoModal','buildModal','overlay','rewardModal','repairModal'].forEach(id => {
     let el = document.getElementById(id);
     if(el) el.style.display = 'none';
   });
@@ -1970,8 +2046,19 @@ function getEnemySprite(name){
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  [SYS_FACILITY] 设施系统 - 建设数据结构                       ║
+// ║  [SYS_FACILITY] 设施系统 - 建设数据结构                          ║
 // ╚══════════════════════════════════════════════════════════════════╝
+
+// [SYS_DAMAGE] 设施损坏配置
+const FACILITY_DAMAGE_CONFIG = {
+  loseChance: 0.4,         // 战斗失败时40%概率损坏
+  eliteDamageChance: 0.15,  // 精英战后15%概率损坏
+  bossDamageChance: 0.25,   // Boss战后25%概率损坏
+  fleeDamageChance: 0.2,    // 逃跑20%概率损坏
+  minLevelLoss: 1,         // 每次最少降级
+  maxLevelLoss: 2,         // 每次最多降级
+  repairCostRate: 0.5,      // 维修费用系数（升级费用的50%）
+};
 
 const FACILITIES = {
   '围墙': {
@@ -1982,6 +2069,8 @@ const FACILITIES = {
     effects: { blockPerTurn: 2 },
     upgradeCost: (lvl) => ({ wood: 8 + lvl * 5, metal: 0, parts: 2 + lvl * 2 }),
     upgradeEffect: (lvl) => ({ blockPerTurn: 2 + lvl * 2 }),
+    // [SYS_DAMAGE] 维修费用：升级费用的50%
+    repairCost: (lvl) => ({ wood: Math.floor((8 + lvl * 5) * 0.5), metal: 0, parts: Math.floor((2 + lvl * 2) * 0.5) }),
   },
   '医疗站': {
     icon: '🏥',
@@ -1991,6 +2080,7 @@ const FACILITIES = {
     effects: { healPerTurn: 3 },
     upgradeCost: (lvl) => ({ wood: 10 + lvl * 8, metal: 5 + lvl * 5, parts: 3 + lvl * 3 }),
     upgradeEffect: (lvl) => ({ healPerTurn: 3 + lvl * 2 }),
+    repairCost: (lvl) => ({ wood: Math.floor((10 + lvl * 8) * 0.5), metal: Math.floor((5 + lvl * 5) * 0.5), parts: Math.floor((3 + lvl * 3) * 0.5) }),
   },
   '武器库': {
     icon: '⚔️',
@@ -2000,6 +2090,7 @@ const FACILITIES = {
     effects: { startStr: 2 },
     upgradeCost: (lvl) => ({ wood: 5, metal: 15 + lvl * 10, parts: 5 + lvl * 5 }),
     upgradeEffect: (lvl) => ({ startStr: 2 + lvl * 2 }),
+    repairCost: (lvl) => ({ wood: Math.floor(5 * 0.5), metal: Math.floor((15 + lvl * 10) * 0.5), parts: Math.floor((5 + lvl * 5) * 0.5) }),
   },
   '发电机': {
     icon: '⚡',
@@ -2009,6 +2100,7 @@ const FACILITIES = {
     effects: { extraEnergy: 1 },
     upgradeCost: (lvl) => ({ wood: 8, metal: 20 + lvl * 15, parts: 10 + lvl * 8 }),
     upgradeEffect: (lvl) => ({ extraEnergy: 1 + lvl }),
+    repairCost: (lvl) => ({ wood: Math.floor(8 * 0.5), metal: Math.floor((20 + lvl * 15) * 0.5), parts: Math.floor((10 + lvl * 8) * 0.5) }),
   },
   '瞭望塔': {
     icon: '🗼',
@@ -2018,6 +2110,7 @@ const FACILITIES = {
     effects: { seeNextIntent: true },
     upgradeCost: () => null,
     upgradeEffect: () => null,
+    repairCost: () => null,
   },
 };
 
@@ -2122,21 +2215,27 @@ const SURVIVORS = [
    growth:{hpPerLevel:5, relicSlots:1},
    passive:{type:'atkBoost', value:0.10, desc:'+10% 伤害'},
    active:{name:'突袭', cost:2, effect:{dmg:8, strGain:2}, desc:'造成8伤害，获得2力量'},
-   desc:'久经沙场的老兵，刀法凌厉'},
+   desc:'久经沙场的老兵，刀法凌厉',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'老兵战术', cost:1, desc:'造成5伤害，下回合额外抽1张', icon:'⚔️', type:'attack', effect:{dmg:5, drawExtra:1}}},
   {id:'fighter_2', name:'狂战士', icon:'💪', role:'front', rarity:'rare',
    baseStats:{hp:16, atk:5, def:0},
    state:{injuryResist:0.05, energyBonus:0, cardBonus:0},
    growth:{hpPerLevel:6, relicSlots:1},
    passive:{type:'lifesteal', value:0.15, desc:'15% 吸血'},
    active:{name:'血怒斩', cost:1, effect:{dmg:12, selfDamage:3}, desc:'造成12伤害，自损3HP'},
-   desc:'以血换伤，越战越勇'},
+   desc:'以血换伤，越战越勇',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'狂暴之力', cost:0, desc:'造成10伤害，自损3HP', icon:'💢', type:'attack', effect:{dmg:10, selfDamage:3}}},
   {id:'fighter_3', name:'格斗家', icon:'🥋', role:'front', rarity:'common',
    baseStats:{hp:10, atk:4, def:1},
    state:{injuryResist:0.15, energyBonus:0, cardBonus:1},
    growth:{hpPerLevel:4, relicSlots:1},
    passive:{type:'atkBoost', value:0.08, desc:'+8% 伤害'},
    active:{name:'连环腿', cost:1, effect:{dmg:6, extraHit:true}, desc:'造成6伤害，可能再攻击一次'},
-   desc:'身手敏捷，连击致命'},
+   desc:'身手敏捷，连击致命',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'连环打击', cost:1, desc:'造成6伤害，30%概率再攻击一次', icon:'🦵', type:'attack', effect:{dmg:6, extraHitChance:0.3}}},
 
   // === 中坚（平衡型）===
   {id:'tank_1', name:'盾卫张', icon:'🛡️', role:'mid', rarity:'common',
@@ -2145,28 +2244,36 @@ const SURVIVORS = [
    growth:{hpPerLevel:8, relicSlots:1},
    passive:{type:'blockStart', value:4, desc:'战斗开始 +4 护盾'},
    active:{name:'铁壁', cost:1, effect:{block:15}, desc:'获得15护盾'},
-   desc:'铜墙铁壁，坚不可摧'},
+   desc:'铜墙铁壁，坚不可摧',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'铜墙铁壁', cost:1, desc:'获得12护盾', icon:'🛡️', type:'skill', effect:{block:12}}},
   {id:'tank_2', name:'医生王', icon:'👨‍⚕️', role:'mid', rarity:'rare',
    baseStats:{hp:15, atk:2, def:1},
    state:{injuryResist:0.15, energyBonus:1, cardBonus:0},
    growth:{hpPerLevel:5, relicSlots:1},
    passive:{type:'healPerTurn', value:3, desc:'每回合治疗 +3 HP，战斗开始 +1 能量'},
    active:{name:'急救术', cost:1, effect:{heal:15}, desc:'恢复15 HP'},
-   desc:'救死扶伤，团队的守护天使'},
+   desc:'救死扶伤，团队的守护天使',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'急救包', cost:1, desc:'恢复8HP', icon:'💊', type:'skill', effect:{heal:8}}},
   {id:'tank_4', name:'能源专家', icon:'⚡', role:'mid', rarity:'epic',
    baseStats:{hp:10, atk:1, def:2},
    state:{injuryResist:0.10, energyBonus:2, cardBonus:0},
    growth:{hpPerLevel:4, relicSlots:2},
    passive:{type:'energyStart', value:2, desc:'战斗开始 +2 能量'},
    active:{name:'充能', cost:0, effect:{energyAll:1}, desc:'全队 +1 能量'},
-   desc:'能源大师，战场的动力源泉'},
+   desc:'能源大师，战场的动力源泉',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'能量爆发', cost:0, desc:'本回合+1能量', icon:'⚡', type:'skill', effect:{extraEnergyTurn:1}}},
   {id:'tank_3', name:'重装兵', icon:'🪖', role:'mid', rarity:'common',
    baseStats:{hp:25, atk:0, def:4},
    state:{injuryResist:0.40, energyBonus:-1, cardBonus:0},
    growth:{hpPerLevel:10, relicSlots:1},
    passive:{type:'blockStart', value:6, desc:'战斗开始 +6 护盾'},
    active:{name:'防御姿态', cost:0, effect:{block:10, defGain:2}, desc:'获得10护盾，本场+2防御'},
-   desc:'钢铁防线，但行动迟缓'},
+   desc:'钢铁防线，但行动迟缓',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'钢铁防线', cost:1, desc:'获得18护盾', icon:'🛡️', type:'skill', effect:{block:18}}},
 
   // === 后排（辅助型）===
   {id:'support_1', name:'工程师陈', icon:'🔧', role:'back', rarity:'common',
@@ -2175,28 +2282,36 @@ const SURVIVORS = [
    growth:{hpPerLevel:3, relicSlots:1},
    passive:{type:'resourceBoost', value:0.20, desc:'+20% 资源获取'},
    active:{name:'修理', cost:1, effect:{repairAll:1}, desc:'所有队友恢复1级'},
-   desc:'心灵手巧，设施维护专家'},
+   desc:'心灵手巧，设施维护专家',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'快速修理', cost:1, desc:'获得3护盾，+1能量', icon:'🔧', type:'skill', effect:{block:3, energy:1}}},
   {id:'support_2', name:'狙击手', icon:'🎯', role:'back', rarity:'epic',
    baseStats:{hp:6, atk:8, def:0},
    state:{injuryResist:0.05, energyBonus:0, cardBonus:0},
    growth:{hpPerLevel:2, relicSlots:1},
    passive:{type:'critChance', value:0.20, desc:'20% 暴击率'},
    active:{name:'一枪爆头', cost:2, effect:{dmg:20, crit:true}, desc:'造成20伤害，暴击伤害翻倍'},
-   desc:'百步穿杨，一击必杀'},
+   desc:'百步穿杨，一击必杀',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'精准射击', cost:1, desc:'造成15伤害，20%暴击', icon:'🎯', type:'attack', effect:{dmg:15, critChance:0.2}}},
   {id:'support_3', name:'联络员', icon:'📻', role:'back', rarity:'common',
    baseStats:{hp:10, atk:2, def:1},
    state:{injuryResist:0.12, energyBonus:1, cardBonus:1},
    growth:{hpPerLevel:4, relicSlots:1},
    passive:{type:'energyStart', value:1, desc:'战斗开始 +1 能量'},
    active:{name:'战术呼叫', cost:1, effect:{drawCards:2}, desc:'额外抽2张牌'},
-   desc:'战场指挥，能量充沛'},
+   desc:'战场指挥，能量充沛',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'战术指令', cost:0, desc:'额外抽2张牌', icon:'📻', type:'skill', effect:{drawCards:2}}},
   {id:'support_4', name:'断腿老赵', icon:'🦽', role:'back', rarity:'rare',
    baseStats:{hp:12, atk:5, def:0},
    state:{injuryResist:0.50, energyBonus:-1, cardBonus:0},
    growth:{hpPerLevel:5, relicSlots:1},
    passive:{type:'atkBoost', value:0.18, desc:'+18% 伤害'},
    active:{name:'临死一搏', cost:1, effect:{dmg:25, selfDamage:8}, desc:'造成25伤害，自损8HP'},
-   desc:'虽然断腿，但射击技术一流'},
+   desc:'虽然断腿，但射击技术一流',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'致命一击', cost:2, desc:'造成20伤害', icon:'💀', type:'attack', effect:{dmg:20}}},
 
   // === 传奇角色 ===
   {id:'legend_1', name:'堡垒指挥官', icon:'👑', role:'any', rarity:'legend',
@@ -2205,7 +2320,9 @@ const SURVIVORS = [
    growth:{hpPerLevel:8, relicSlots:2},
    passive:{type:'allBoost', value:0.12, desc:'全队 +12% 所有属性'},
    active:{name:'堡垒号令', cost:0, effect:{block:8, strAll:3, energyAll:1}, desc:'全体+8护盾+3力量+1能量'},
-   desc:'指挥若定，运筹帷幄'},
+   desc:'指挥若定，运筹帷幄',
+   // [SYS_UNIQUE_CARD] 专属卡牌
+   uniqueCard:{name:'指挥若定', cost:1, desc:'全体+4力量，+2护盾', icon:'👑', type:'skill', effect:{strAll:4, blockAll:2}}},
 ];
 
 // 玩家角色定义（作为特殊的"幸存者"）
@@ -2225,6 +2342,16 @@ const PLAYER_CHARACTER = {
 };
 
 const RECRUIT_COST = { wood: 20, metal: 10 };
+
+// [SYS_SURVIVOR_HP] 天赋等级系统 - HP范围20-40
+const TALENT_TIER = {
+  T1: { name: '普通', hpRange: [20, 26], color: '#888888', bonus: 0 },
+  T2: { name: '优秀', hpRange: [28, 34], color: '#44aaff', bonus: 1 },
+  T3: { name: '精英', hpRange: [36, 40], color: '#ffaa00', bonus: 2 }
+};
+const TALENT_NAMES = { T1: '普通', T2: '优秀', T3: '精英' };
+const TALENT_COLORS = { T1: '#888888', T2: '#44aaff', T3: '#ffaa00' };
+
 const RARITY_COLORS = { common:'#aaa', rare:'#4488ff', epic:'#aa44ff', legend:'#ffaa00' };
 const RARITY_NAMES = { common:'普通', rare:'稀有', epic:'史诗', legend:'传奇' };
 const ROLE_NAMES = { front:'前锋', mid:'中坚', back:'后排', any:'万能' };
@@ -2518,11 +2645,16 @@ function initGame(inheritedRelic){
     nextEnemyIntent:null,  // 下一回合敌人意图
     relics:[], relicCounters:{}, isElite:false, turnCount:0,
     inheritedRelic: inheritedRelic || null,
+    // [SYS_RELIc] 宝物仓库（未分配的宝物）
+    relicWarehouse:[],
     // [SYS_FACILITY] 设施系统
     facilities:{},  // 已建造的设施 { name: level }
     facilityEffects:{ block:0, heal:0, str:0, energy:0, seeIntent:false },
+    // [SYS_FORTRESS] 堡垒系统
+    fortressHp: 20,    // 堡垒起始血量20点
+    maxFortressHp: 20, // 堡垒最大血量
     // [SYS_SURVIVOR v2.0] 幸存者系统扩展
-    playerChar:{...PLAYER_CHARACTER, level:1, exp:0, status:'healthy', recoveryProgress:0, battleCount:0, relics:[]},
+    playerChar:{...PLAYER_CHARACTER, level:1, exp:0, status:'healthy', recoveryProgress:0, battleCount:0, equippedRelic:null},
     survivors:[],   // 已拥有的幸存者
     team:{ front:null, mid:null, back:null },  // 队伍编成
     teamBonus:{ atkBoost:0, hpBoost:0, blockBoost:0, resourceBoost:0 },
@@ -2537,18 +2669,21 @@ function startGame(){
     let template = ALL_CARDS.find(c=>c.name===name);
     G.deck.push({...template, id:name, uid:uid()});
   });
+
+  // [SYS_RELIc] 起始宝物分配给玩家角色（自动装备）
   let starter = {...RELICS.find(r=>r.name==='临时护甲')};
-  G.relics.push(starter);
+  G.playerChar.equippedRelic = starter;
   applyRelicEffect(starter);
-  
-  // 继承遗物
+  addBattleLog('初始装备: ' + starter.name, 'log-player');
+
+  // 继承遗物（自动装备）
   if(G.inheritedRelic){
     let inherited = {...RELICS.find(r=>r.name===G.inheritedRelic.name) || G.inheritedRelic};
-    G.relics.push(inherited);
+    G.playerChar.equippedRelic = inherited;
     applyRelicEffect(inherited);
     addBattleLog('传承遗物: ' + inherited.name, 'log-player');
   }
-  
+
   document.getElementById('startMenu').style.display = 'none';
   closeAllModals();
   updatePlayerStatusBar();
@@ -2600,15 +2735,34 @@ function openPlayerInfo(){
   document.getElementById('pDraw').textContent = G.drawCount;
   document.getElementById('pEnergy').textContent = G.maxEnergy;
   document.getElementById('pParts').textContent = G.parts;
-  
+
+  // [SYS_FORTRESS] 更新堡垒血量
+  let pFortressHp = document.getElementById('pFortressHp');
+  let pFortressMaxHp = document.getElementById('pFortressMaxHp');
+  if(pFortressHp) pFortressHp.textContent = G.fortressHp;
+  if(pFortressMaxHp) pFortressMaxHp.textContent = G.maxFortressHp;
+
   let btn = document.getElementById('upgradeBtn');
   if(G.exp >= G.expToLevel){ btn.disabled = false; btn.textContent = '[ 升级！ ]'; }
   else { btn.disabled = true; btn.textContent = '[ 升级 - 需要 ' + (G.expToLevel - G.exp) + ' 经验 ]'; }
-  
-  let html = '';
-  G.relics.forEach(r => { html += `<div class="relic-item"><span class="icon">${r.icon}</span><div><div class="name">${r.name} [Lv.${r.level}]</div><div class="desc">${r.desc}</div></div></div>`; });
-  if(!html) html = '<div style="color:#888;text-align:center;padding:10px">暂无宝物</div>';
-  document.getElementById('playerRelics').innerHTML = html;
+
+  // [SYS_RELIc] 显示已装备的宝物
+  let relicHtml = '';
+  if(G.playerChar && G.playerChar.equippedRelic){
+    let r = G.playerChar.equippedRelic;
+    let qualityColor = ['#888','#4488ff','#aa44ff','#ffaa00','#ff4488'][r.level - 1] || '#888';
+    relicHtml += `<div class="relic-item" style="border-color:${qualityColor}"><span class="icon">${r.icon}</span><div><div class="name">${r.name} [Lv.${r.level}]</div><div class="desc">${r.desc}</div></div></div>`;
+  } else {
+    relicHtml += '<div style="color:#888;text-align:center;padding:10px">未装备宝物</div>';
+  }
+
+  // 仓库宝物数量
+  let warehouseCount = (G.relicWarehouse || []).length;
+  if(warehouseCount > 0){
+    relicHtml += `<div style="color:#a090c0;text-align:center;padding:5px;font-size:0.85rem;">💎 仓库还有 ${warehouseCount} 件宝物</div>`;
+  }
+
+  document.getElementById('playerRelics').innerHTML = relicHtml;
   document.getElementById('pDeckCount').textContent = G.deck.length;
   document.getElementById('pDiscardCount').textContent = G.discard.length;
 }
@@ -2720,9 +2874,10 @@ function buyRelic(idx, price){
   if(idx >= relics.length) return;
   let relic = relics[idx];
   G.metal -= price;
-  G.relics.push({...relic});
-  applyRelicEffect(relic);
-  addBattleLog('购买了宝物: ' + relic.name, 'log-player');
+  // [SYS_RELIc] 购买的宝物进入仓库
+  if(!G.relicWarehouse) G.relicWarehouse = [];
+  G.relicWarehouse.push({...relic});
+  addBattleLog('购买了宝物: ' + relic.name + '（已进入仓库）', 'log-player');
   updatePlayerStatusBar();
   openShop();
 }
@@ -2797,10 +2952,16 @@ function renderBuildList(){
     let currentEffect = owned > 0 ? formatEffectText(name, owned) : '';
     let nextEffect = !isMax ? formatEffectText(name, owned + 1) : '';
 
+    // [SYS_DAMAGE] 满级状态显示
+    let statusBadge = '';
+    if(isMax){
+      statusBadge = '<span style="background:#3a3a20;color:#a8c860;padding:2px 8px;border-radius:3px;font-size:11px;margin-left:8px;">满级</span>';
+    }
+
     html += `<div class="build-item ${owned > 0 ? 'owned' : ''}">
       <span class="icon">${f.icon}</span>
       <div class="info">
-        <div class="name">${f.name}</div>
+        <div class="name">${f.name}${statusBadge}</div>
         <div class="desc">${f.desc}</div>
         <div class="level">${owned > 0 ? '等级: ' + level + ' / ' + f.maxLevel : '未建造'}</div>
         <div class="cost">${costText}</div>
@@ -2810,6 +2971,17 @@ function renderBuildList(){
       <button onclick="buildOrUpgrade('${name}')" ${(!canAfford && owned < f.maxLevel) ? 'disabled' : ''}>${btnText}</button>
     </div>`;
   }
+
+  // [SYS_DAMAGE] 添加维修入口
+  let damagedCount = Object.keys(G.facilities).filter(n => G.facilities[n] > 0 && G.facilities[n] < FACILITIES[n].maxLevel).length;
+  if(damagedCount > 0){
+    html += `<div style="text-align:center;margin-top:15px;padding-top:15px;border-top:1px solid rgba(180,140,80,0.3);">
+      <button onclick="closeBuildMenu();openRepairMenu();" style="background:linear-gradient(180deg, #2a1c10, #1a1408);color:#e8c890;border:1px solid rgba(180,140,80,0.5);padding:10px 20px;border-radius:4px;cursor:pointer;font-size:0.95rem;">
+        🔧 维修受损设施 (${damagedCount})
+      </button>
+    </div>`;
+  }
+
   document.getElementById('buildList').innerHTML = html;
 }
 
@@ -2830,6 +3002,13 @@ function buildOrUpgrade(name){
   G.facilities[name] = owned + 1;
 
   addBattleLog('建造/升级: ' + f.name + ' Lv.' + G.facilities[name], 'log-player');
+
+  // [SYS_FORTRESS] 建造/升级增加堡垒血量上限
+  let oldMaxHp = G.maxFortressHp;
+  recalcFortressMaxHp();
+  if(G.maxFortressHp > oldMaxHp){
+    addBattleLog('🏰 堡垒血量上限提升: ' + oldMaxHp + ' → ' + G.maxFortressHp, 'log-heal');
+  }
 
   // 刷新界面
   document.getElementById('buildWood').textContent = G.wood;
@@ -2891,11 +3070,39 @@ function recruitSurvivor(){
   if(rarePool.length === 0) rarePool = pool;
 
   let picked = rarePool[Math.floor(Math.random() * rarePool.length)];
-  // [SYS_TEAM_HP] 初始化幸存者个人血量
-  let maxHp = picked.baseStats.hp;
-  G.survivors.push({ ...picked, level: 1, exp: 0, currentHp: maxHp, maxHp: maxHp });
 
-  addBattleLog('🎉 招募成功: ' + picked.name + ' ' + picked.icon + ' [' + RARITY_NAMES[picked.rarity] + ']', 'log-player');
+  // [SYS_SURVIVOR_HP] 根据稀有度决定天赋等级，并计算HP（范围20-40）
+  let talentRoll = Math.random();
+  let talentTier = 'T1';  // 默认普通
+  if(picked.rarity === 'rare') talentTier = talentRoll < 0.6 ? 'T1' : 'T2';
+  else if(picked.rarity === 'epic') talentTier = talentRoll < 0.4 ? 'T1' : (talentRoll < 0.85 ? 'T2' : 'T3');
+  else if(picked.rarity === 'legend') talentTier = talentRoll < 0.2 ? 'T1' : (talentRoll < 0.7 ? 'T2' : 'T3');
+  // common默认T1
+
+  // [SYS_SURVIVOR_HP] 根据天赋等级和基础HP计算最终HP（范围20-40）
+  let baseHp = picked.baseStats.hp;
+  let [hpMin, hpMax] = TALENT_TIER[talentTier].hpRange;
+  // 根据基础HP在天赋范围内分配最终HP
+  let hpRatio = Math.min(baseHp / 25, 1);  // 基础HP越高的角色，获得更高HP
+  let maxHp = Math.floor(hpMin + (hpMax - hpMin) * hpRatio);
+  maxHp = Math.min(hpMax, Math.max(hpMin, maxHp));  // 确保在范围内
+
+  G.survivors.push({ ...picked, level: 1, exp: 0, currentHp: maxHp, maxHp: maxHp, talentTier: talentTier });
+
+  addBattleLog('🎉 招募成功: ' + picked.name + ' ' + picked.icon + ' [' + RARITY_NAMES[picked.rarity] + '] 【' + TALENT_TIER[talentTier].name + '天赋❤' + maxHp + '】', 'log-player');
+
+  // [SYS_UNIQUE_CARD] 招募时自动获得专属卡牌
+  if(picked.uniqueCard){
+    let uniqueCard = {
+      ...picked.uniqueCard,
+      uid: uid(),
+      survivorId: picked.id,
+      survivorName: picked.name,
+      isUnique: true
+    };
+    G.deck.push(uniqueCard);
+    addBattleLog('🃏 获得专属卡牌: ' + picked.uniqueCard.name, 'log-player');
+  }
 
   // 刷新UI
   updatePlayerStatusBar();
@@ -2930,14 +3137,20 @@ function renderSurvivorList(){
     let isInTeam = Object.values(G.team).find(t => t && t.id === s.id);
     let statusText = getSurvivorStatusText(s);
     let statusClass = s.status === 'dead' ? 'dead-survivor' : (s.status === 'serious' ? 'serious-survivor' : (s.status === 'injured' ? 'injured-survivor' : ''));
+    // [SYS_SURVIVOR_HP] 显示天赋等级
+    let talentTag = s.talentTier ? '【' + TALENT_NAMES[s.talentTier] + '】' : '';
+    let talentColor = s.talentTier ? TALENT_COLORS[s.talentTier] : '#888';
+    // [SYS_UNIQUE_CARD] 显示专属卡牌
+    let uniqueCardTag = s.uniqueCard ? `<span style="color:#a080e0;font-size:0.8em">🃏${s.uniqueCard.name}</span>` : '';
 
     html += `<div class="survivor-card ${getSurvivorRarityClass(s.rarity)} ${isInTeam ? 'in-team' : ''} ${statusClass}">
       <span class="icon">${s.icon}</span>
       <div class="info">
-        <div class="name" style="color:${rarityColor}">${s.name}</div>
+        <div class="name" style="color:${rarityColor}">${s.name} <span style="color:${talentColor};font-size:0.85em">${talentTag}</span></div>
         <div class="role">[${roleLabel}] ${s.desc}</div>
-        <div class="stats">Lv.${s.level} | ❤️${s.baseStats.hp} ⚔️${s.baseStats.atk} 🛡️${s.baseStats.def}</div>
+        <div class="stats">Lv.${s.level} | ❤️${s.maxHp} ⚔️${s.baseStats.atk} 🛡️${s.baseStats.def}</div>
         <div class="passive">被动: ${passiveText}</div>
+        ${uniqueCardTag ? `<div class="unique-card" style="color:#a080e0;font-size:0.85em;">专属: ${s.uniqueCard.icon} ${s.uniqueCard.name}</div>` : ''}
         <div class="status">状态: ${statusText}</div>
         ${isInTeam ? '<div class="team-tag">已编队</div>' : ''}
       </div>
@@ -2975,10 +3188,8 @@ function tryInjurySurvivor(survivor){
   chance = Math.max(0.05, chance); // 最低5%
 
   if(Math.random() < chance){
-    // 计算伤害（基于最大血量的百分比）
-    let scale = 1 + (survivor.level - 1) * 0.1;
-    let effectMult = getSurvivorEffectMult(survivor);
-    let maxHp = Math.floor(survivor.baseStats.hp * scale * effectMult);
+    // [SYS_SURVIVOR_HP] 使用幸存者的实际maxHp（包含天赋加成）
+    let maxHp = survivor.maxHp || survivor.baseStats.hp;
     let dmgPercent = INJURY_CONFIG.injuryDamageMin + Math.random() * (INJURY_CONFIG.injuryDamageMax - INJURY_CONFIG.injuryDamageMin);
     let damage = Math.floor(maxHp * dmgPercent / 100);
 
@@ -2991,6 +3202,12 @@ function tryInjurySurvivor(survivor){
       // 死亡
       survivor.status = 'dead';
       addBattleLog('☠️ ' + survivor.icon + survivor.name + ' 阵亡！所有升级和专属卡牌消失！', 'log-damage');
+
+      // [SYS_RELIc] 装备的宝物消失
+      if(survivor.equippedRelic){
+        addBattleLog('💎 ' + survivor.equippedRelic.name + ' 随主而去...', 'log-damage');
+        survivor.equippedRelic = null;
+      }
 
       // 移除队伍
       for(let pos in G.team){
@@ -3032,9 +3249,8 @@ function checkSurvivorDeath(){
     if(s.status === 'dead') return;
     if(s.isPlayer) return;
 
-    // 计算当前最大血量
-    let scale = 1 + (s.level - 1) * 0.1;
-    let maxHp = Math.floor(s.baseStats.hp * scale);
+    // [SYS_SURVIVOR_HP] 使用幸存者的实际maxHp
+    let maxHp = s.maxHp || s.baseStats.hp;
 
     // 重伤时每场战斗有概率恢复
     if(s.status === 'serious' && s.currentHp > 0){
@@ -3065,8 +3281,8 @@ function recoverySurvivors(){
     let inBattle = Object.values(G.team).find(t => t && t.id === s.id);
     if(inBattle) return; // 参战的不恢复
 
-    let scale = 1 + (s.level - 1) * 0.1;
-    let maxHp = Math.floor(s.baseStats.hp * scale);
+    // [SYS_SURVIVOR_HP] 使用幸存者的实际maxHp
+    let maxHp = s.maxHp || s.baseStats.hp;
 
     // 恢复血量
     let recoverRate = s.status === 'serious' ? 0.20 : 0.35;
@@ -3092,10 +3308,9 @@ function getSurvivorStatusText(s){
   if(s.isPlayer) return '⚔️ 堡垒领主';
   let color = STATUS_COLORS[s.status] || '#888';
   let text = STATUS_NAMES[s.status] || '未知';
-  // [SYS_TEAM_HP] 显示个人血量
+  // [SYS_SURVIVOR_HP] 显示个人血量（使用天赋加成后的maxHp）
   if(s.currentHp !== undefined && s.baseStats){
-    let scale = 1 + (s.level - 1) * 0.1;
-    let maxHp = Math.floor(s.baseStats.hp * scale);
+    let maxHp = s.maxHp || s.baseStats.hp;
     return '<span style="color:' + color + '">' + text + ' ❤️' + s.currentHp + '/' + maxHp + '</span>';
   }
   return '<span style="color:' + color + '">' + text + '</span>';
@@ -3125,6 +3340,109 @@ function openSurvivorMenu(){
   document.getElementById('survivorModal').style.display = 'block';
   renderSurvivorList();
   renderTeamPanel();
+}
+
+// [SYS_RELIc] 渲染宝物仓库
+function renderRelicWarehouse(){
+  let panel = document.getElementById('relicWarehousePanel');
+  let survivorList = document.getElementById('survivorList');
+  let teamPanel = document.getElementById('teamPanel');
+  if(!panel) return;
+
+  // 隐藏其他面板
+  if(survivorList) survivorList.style.display = 'none';
+  if(teamPanel) teamPanel.style.display = 'none';
+  panel.style.display = 'block';
+
+  // 收集所有角色（玩家+幸存者）
+  let allCharacters = [
+    { char: G.playerChar, type: 'player', posLabel: '玩家领主' },
+    ...G.survivors.filter(s => s.status !== 'dead').map(s => ({ char: s, type: 'survivor', posLabel: s.name }))
+  ];
+
+  // 仓库中的宝物
+  let warehouseRelics = G.relicWarehouse || [];
+
+  let html = `<div style="text-align:center;margin:10px 0;">
+    <div style="color:#a090c0;font-size:1rem;margin-bottom:10px;">💎 宝物仓库</div>
+    ${warehouseRelics.length === 0 ? '<div style="color:#606080;font-size:0.9rem;">仓库暂无宝物</div>' : ''}
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">`;
+
+  warehouseRelics.forEach((relic, idx) => {
+    let qualityColor = ['#888','#4488ff','#aa44ff','#ffaa00','#ff4488'][relic.level - 1] || '#888';
+    html += `<div style="background:rgba(20,18,28,0.9);border:2px solid ${qualityColor};border-radius:6px;padding:8px;min-width:100px;">
+      <div style="font-size:1.5rem;">${relic.icon}</div>
+      <div style="color:#d0c0e0;font-size:0.85rem;">${relic.name}</div>
+      <div style="color:#808090;font-size:0.75rem;">${relic.desc}</div>
+      <select onchange="assignRelicTo('warehouse',${idx},this.value)" style="margin-top:6px;padding:4px;background:#1a1820;color:#c0b0d0;border:1px solid #606080;border-radius:3px;font-size:0.75rem;width:100%;">
+        <option value="">分配给...</option>
+        ${allCharacters.map(c => `<option value="${c.type}:${c.char.id}">${c.posLabel}${c.char.equippedRelic ? ' (已装备)' : ''}</option>`).join('')}
+      </select>
+    </div>`;
+  });
+
+  html += `</div></div>`;
+
+  // 已装备宝物的角色
+  html += `<div style="text-align:center;margin-top:15px;">
+    <div style="color:#80c8a8;font-size:1rem;margin-bottom:10px;">⚔️ 已装备宝物</div>`;
+
+  allCharacters.forEach(c => {
+    if(c.char.equippedRelic){
+      let relic = c.char.equippedRelic;
+      let qualityColor = ['#888','#4488ff','#aa44ff','#ffaa00','#ff4488'][relic.level - 1] || '#888';
+      html += `<div style="background:rgba(20,28,20,0.9);border:2px solid ${qualityColor};border-radius:6px;padding:8px;margin:5px auto;max-width:200px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.3rem;">${relic.icon}</span>
+        <div style="text-align:left;flex:1;">
+          <div style="color:#a0d8a0;font-size:0.9rem;">${c.posLabel}</div>
+          <div style="color:#d0c0e0;font-size:0.8rem;">${relic.name}</div>
+        </div>
+      </div>`;
+    }
+  });
+
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+// [SYS_RELIc] 分配宝物给角色
+function assignRelicTo(fromType, fromIndex, targetInfo){
+  if(!targetInfo) return;
+
+  let [targetType, targetId] = targetInfo.split(':');
+  let relic;
+
+  if(fromType === 'warehouse'){
+    relic = G.relicWarehouse.splice(fromIndex, 1)[0];
+  }
+
+  if(!relic) return;
+
+  // 目标角色
+  let targetChar = targetType === 'player' ? G.playerChar : G.survivors.find(s => s.id === targetId);
+
+  if(!targetChar){
+    // 放回仓库
+    if(!G.relicWarehouse) G.relicWarehouse = [];
+    G.relicWarehouse.push(relic);
+    return;
+  }
+
+  // 如果目标已有宝物，先卸下
+  if(targetChar.equippedRelic){
+    if(!G.relicWarehouse) G.relicWarehouse = [];
+    G.relicWarehouse.push(targetChar.equippedRelic);
+  }
+
+  // 装备新宝物
+  targetChar.equippedRelic = relic;
+  applyRelicEffect(relic);
+
+  addBattleLog('💎 ' + (targetType === 'player' ? '玩家' : targetChar.name) + ' 装备了 ' + relic.name, 'log-player');
+
+  // 刷新仓库显示
+  renderRelicWarehouse();
+  updatePlayerStatusBar();
 }
 
 function closeSurvivorMenu(){
@@ -3390,6 +3708,62 @@ function recalcFacilityEffects(){
   }
 }
 
+// [SYS_FORTRESS] 计算堡垒最大血量
+// 基础20 + 每个设施等级 * 5
+function recalcFortressMaxHp(){
+  let baseHp = 20;
+  let bonusHp = 0;
+
+  for(let name in G.facilities){
+    let level = G.facilities[name] || 0;
+    if(level > 0){
+      bonusHp += level * 5; // 每级设施增加5点堡垒血量
+    }
+  }
+
+  G.maxFortressHp = baseHp + bonusHp;
+
+  // 如果当前血量超过最大值，调整
+  if(G.fortressHp > G.maxFortressHp){
+    G.fortressHp = G.maxFortressHp;
+  }
+
+  return G.maxFortressHp;
+}
+
+// [SYS_FORTRESS] 获得堡垒血量上限提升
+function gainFortressHp(amount){
+  G.maxFortressHp += amount;
+  G.fortressHp += amount;
+  addBattleLog('🏰 堡垒血量上限 +' + amount, 'log-heal');
+}
+
+// [SYS_FORTRESS] 恢复堡垒血量
+function healFortress(amount){
+  let before = G.fortressHp;
+  G.fortressHp = Math.min(G.maxFortressHp, G.fortressHp + amount);
+  let healed = G.fortressHp - before;
+  if(healed > 0){
+    addBattleLog('🏰 堡垒修复 +' + healed + ' HP', 'log-heal');
+  }
+  return healed;
+}
+
+// [SYS_FORTRESS] 堡垒受损
+function damageFortress(amount){
+  G.fortressHp = Math.max(0, G.fortressHp - amount);
+  addBattleLog('🏰 堡垒受损 -' + amount + ' HP', 'log-damage');
+
+  if(G.fortressHp <= 0){
+    // 堡垒完全损毁，触发严重惩罚
+    addBattleLog('🏰 堡垒完全损毁！', 'log-damage');
+    // 扣除玩家血量作为惩罚
+    let penalty = Math.ceil(G.hp * 0.3);
+    G.hp = Math.max(1, G.hp - penalty);
+    addBattleLog('💀 玩家损失 ' + penalty + ' HP', 'log-damage');
+  }
+}
+
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  [SYS_MAP] 地图系统 - 波次选择 & 路径                           ║
 // ╚══════════════════════════════════════════════════════════════════╝
@@ -3406,6 +3780,9 @@ function showMap(){
   document.getElementById('mapParts').textContent = G.parts;
   document.getElementById('mapExp').textContent = G.exp + ' / ' + G.expToLevel;
 
+  // [SYS_FORTRESS] 更新堡垒血量显示
+  updateFortressUI();
+
   // 更新主菜单队伍显示
   updateMainTeamPanel();
 
@@ -3413,6 +3790,47 @@ function showMap(){
   updateRecruitBtn();
 
   addBattleLog('=== 第 ' + G.wave + ' 波次 ===', 'log-system');
+}
+
+// [SYS_FORTRESS] 更新堡垒血量显示
+function updateFortressUI(){
+  // 确保堡垒血量已初始化
+  if(G.maxFortressHp === undefined){
+    recalcFortressMaxHp();
+  }
+
+  let hpEl = document.getElementById('fortressHp');
+  let maxHpEl = document.getElementById('fortressMaxHp');
+  let barEl = document.getElementById('fortressHpBar');
+  let fortressBar = document.getElementById('fortressBar');
+
+  if(hpEl) hpEl.textContent = G.fortressHp;
+  if(maxHpEl) maxHpEl.textContent = G.maxFortressHp;
+
+  if(barEl){
+    let percent = (G.fortressHp / G.maxFortressHp) * 100;
+    barEl.style.width = Math.max(0, Math.min(100, percent)) + '%';
+
+    // 根据血量调整颜色
+    if(percent <= 25){
+      barEl.style.background = 'linear-gradient(90deg,#c83030,#e84040)';
+    } else if(percent <= 50){
+      barEl.style.background = 'linear-gradient(90deg,#c87830,#e8a040)';
+    } else {
+      barEl.style.background = 'linear-gradient(90deg,#c87830,#e8a040)';
+    }
+  }
+
+  // 如果堡垒完全损毁，隐藏或显示警告
+  if(fortressBar){
+    if(G.fortressHp <= 0){
+      fortressBar.style.borderColor = 'rgba(200,50,50,0.6)';
+      fortressBar.style.background = 'rgba(80,30,30,0.8)';
+    } else {
+      fortressBar.style.borderColor = 'rgba(180,140,80,0.4)';
+      fortressBar.style.background = 'rgba(30,25,20,0.8)';
+    }
+  }
 }
 
 function updateRecruitBtn(){
@@ -3445,9 +3863,13 @@ function updateMainTeamPanel(){
     let s = G.team[pos.key];
     if(s){
       let statusColor = s.status === 'healthy' ? '#80c890' : s.status === 'injured' ? '#c8a840' : '#d06060';
+      // [SYS_SURVIVOR_HP] 显示天赋等级
+      let talentColor = s.talentTier ? TALENT_COLORS[s.talentTier] : '#888';
+      let talentTag = s.talentTier ? '【' + TALENT_NAMES[s.talentTier] + '】' : '';
       html += `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:rgba(20,25,22,0.8);border-radius:4px;">
         <span style="color:${statusColor};font-size:1.2rem;">${s.icon}</span>
         <span style="color:#b0c8b8;font-size:0.95rem;">${s.name}</span>
+        <span style="color:${talentColor};font-size:0.8rem;">${talentTag}</span>
       </div>`;
     } else {
       html += `<div style="padding:6px;color:#4a5a4a;font-size:0.9rem;">${pos.label}: 空</div>`;
@@ -3466,19 +3888,22 @@ function selectPath(type){
   // 优先使用程序化敌人系统
   let enemy = getWaveEnemy(G.wave);
   
+  // [SYS_REWARD_V3] 支持BOSS战斗
+  if (type === 'boss') {
+    enemy = getWaveEnemy(G.wave);
+    enemy.boss = true;
+    enemy.hp = Math.floor(enemy.hp * 3.5);
+    enemy.atk = Math.floor(enemy.atk * 2.0);
+    enemy.name = '👹 BOSS: ' + enemy.name;
+  }
   // 如果是精英但程序生成的是普通，调整
-  if (type === 'elite' && !enemy.elite && G.wave > 1) {
+  else if (type === 'elite' && !enemy.elite && G.wave > 1) {
     enemy = getWaveEnemy(G.wave);
     if (!enemy.elite) {
       enemy.elite = true;
       enemy.hp = Math.floor(enemy.hp * 1.5);
       enemy.atk = Math.floor(enemy.atk * 1.3);
     }
-  }
-  
-  // 如果是BOSS但程序生成的不是
-  if (G.wave % 5 === 0 && !enemy.boss) {
-    enemy = getWaveEnemy(G.wave);
   }
   
   G.enemy = enemy;
@@ -3490,7 +3915,8 @@ function selectPath(type){
   G.turnCount = 0;
   G.nextEnemyIntent = null;  // [SYS_NEXT_INTENT] 重置下一回合意图
   
-  addBattleLog('遭遇 ' + enemy.name + '！', type === 'elite' ? 'log-special' : 'log-enemy');
+  let logType = type === 'boss' ? 'log-boss' : (type === 'elite' ? 'log-special' : 'log-enemy');
+  addBattleLog('遭遇 ' + enemy.name + '！', logType);
   
   document.getElementById('battleContainer').style.display = 'flex';
   document.getElementById('handArea').style.display = 'flex';
@@ -3499,6 +3925,46 @@ function selectPath(type){
   logQueue = []; // 清空旧日志
   
   startBattle();
+}
+
+// [SYS_REWARD_V3] 打开测试战斗菜单
+function openTestBattleMenu(){
+  let html = `<div style="text-align:center;padding:20px;background:rgba(10,10,8,0.98);border:3px solid #4080c0;border-radius:4px;max-width:90vw;">
+    <h2 style="color:#80c8e8;margin-bottom:15px;">🧪 测试战斗菜单</h2>
+    <p style="color:#a09080;margin-bottom:15px;">选择一个敌人类型进行测试</p>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto;">
+      <button onclick="selectTestEnemy('normal')" style="background:linear-gradient(180deg,#2a3a2a,#1a2a1a);color:#a0c8a0;border:1px solid rgba(100,160,100,0.5);padding:12px;border-radius:4px;cursor:pointer;font-size:1rem;">
+        ⚔️ 普通敌人
+      </button>
+      <button onclick="selectTestEnemy('elite')" style="background:linear-gradient(180deg,#3a2a1a,#2a1a10);color:#d8a080;border:1px solid rgba(180,120,80,0.5);padding:12px;border-radius:4px;cursor:pointer;font-size:1rem;">
+        ⭐ 精英敌人
+      </button>
+      <button onclick="selectTestEnemy('boss')" style="background:linear-gradient(180deg,#4a1515,#301010);color:#ff8080;border:1px solid rgba(200,60,60,0.6);padding:12px;border-radius:4px;cursor:pointer;font-size:1rem;">
+        👹 BOSS敌人
+      </button>
+    </div>
+    <button onclick="closeTestBattleMenu()" style="margin-top:20px;padding:10px 25px;background:linear-gradient(180deg,#252525,#151515);color:#808080;border:1px solid rgba(100,100,100,0.4);border-radius:4px;cursor:pointer;">[ 关闭 ]</button>
+  </div>`;
+  
+  let modal = document.getElementById('testBattleModal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'testBattleModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = html;
+  modal.style.display = 'flex';
+}
+
+function closeTestBattleMenu(){
+  let modal = document.getElementById('testBattleModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function selectTestEnemy(type){
+  closeTestBattleMenu();
+  selectPath(type);
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -3552,9 +4018,21 @@ function startBattle(){
   G.block = 0;
   G.str = G.strBase;
   G.turnCount++;
-  
+
+  // [SYS_RELIc] 收集所有已装备的宝物
+  let equippedRelics = [];
+  if(G.playerChar && G.playerChar.equippedRelic){
+    equippedRelics.push(G.playerChar.equippedRelic);
+  }
+  for(let pos in G.team){
+    let s = G.team[pos];
+    if(s && s.equippedRelic && s.status !== 'dead'){
+      equippedRelics.push(s.equippedRelic);
+    }
+  }
+
   // 宝物效果
-  G.relics.forEach(r => {
+  equippedRelics.forEach(r => {
     let e = r.effect;
     if(e.block && (e.n ? (G.relicCounters[r.name] = (G.relicCounters[r.name] || 0) + 1) : true)){
       if(e.n && G.relicCounters[r.name] % e.n === 0){ G.block += e.block; addBattleLog(r.name + ' +' + e.block + ' 护盾', 'log-block'); }
@@ -3615,6 +4093,25 @@ function startBattle(){
   if(G.teamHealPerTurn && G.teamHealPerTurn > 0){
     G.hp = Math.min(G.maxHp, G.hp + G.teamHealPerTurn);
     addBattleLog('队友治疗: +' + Math.floor(G.teamHealPerTurn) + ' HP', 'log-heal');
+  }
+
+  // [SYS_UNIQUE_CARD] 战斗开始时，队伍幸存者的专属卡牌加入手牌（只在第一回合）
+  if(G.turnCount === 1){
+    let uniqueCardsAdded = [];
+    for(let pos in G.team){
+      let s = G.team[pos];
+      if(s && s.uniqueCard && s.status !== 'dead'){
+        // 查找牌组中该幸存者的专属卡
+        let uniqueIdx = G.deck.findIndex(c => c.survivorId === s.id && c.isUnique);
+        if(uniqueIdx >= 0){
+          G.hand.push(G.deck.splice(uniqueIdx, 1)[0]);
+          uniqueCardsAdded.push(s.uniqueCard.name);
+        }
+      }
+    }
+    if(uniqueCardsAdded.length > 0){
+      addBattleLog('🃏 专属卡: ' + uniqueCardsAdded.join(', '), 'log-player');
+    }
   }
 
   // 抽牌
@@ -3729,8 +4226,8 @@ function getTeamTotalHp(){
     let s = G.team[pos];
     if(s && s.status !== 'dead'){
       let effectMult = getSurvivorEffectMult(s);
-      let scale = 1 + (s.level - 1) * 0.1;
-      let survivorHp = Math.floor(s.baseStats.hp * scale * effectMult);
+      // [SYS_SURVIVOR_HP] 使用天赋加成后的maxHp，并应用状态效果倍数
+      let survivorHp = s.maxHp ? Math.floor(s.maxHp * effectMult) : Math.floor(s.baseStats.hp * (1 + (s.level - 1) * 0.1) * effectMult);
       totalHp += survivorHp;
       totalMaxHp += survivorHp;
     }
@@ -4166,14 +4663,24 @@ function fleeSuccess(){
   G.strBase -= 2;
   G.str -= 2;
   penalties.push('力量 -2（临时）');
-  
+
+  // [SYS_DAMAGE] 逃跑时可能损坏设施
+  let damagedFacilities = checkFacilityDamage('flee');
+  if(damagedFacilities.length > 0){
+    let damageText = damagedFacilities.map(d => d.name + ' 降为 Lv.' + d.newLevel).join(', ');
+    penalties.push('设施损坏: ' + damageText);
+  }
+
   // 显示逃跑惩罚
   let penaltyText = '逃跑惩罚：\n' + penalties.join('\n');
   showOverlay('🏃 逃跑成功', penaltyText, () => {
     closeOverlay();
+    if(damagedFacilities.length > 0){
+      showFacilityDamageNotice(damagedFacilities, 'flee');
+    }
     endBattle();
   });
-  
+
   // 检查是否死亡
   if(G.hp <= 0){
     G.hp = 1;  // 保命，不至于逃跑就死
@@ -4211,6 +4718,236 @@ function endBattle(){
   
   // [SYS_SURVIVOR] 逃跑也算休息，清除休息中的幸存者
   clearSurvivorRest();
+}
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  [SYS_DAMAGE] 设施损坏系统 - 战斗后设施损坏与维修               ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// [SYS_DAMAGE] 检查并触发设施损坏
+// context: 'lose'(失败), 'flee'(逃跑), 'eliteWin'(精英胜利), 'bossWin'(Boss胜利)
+function checkFacilityDamage(context = 'lose'){
+  let facilities = Object.keys(G.facilities).filter(n => G.facilities[n] > 0);
+  if(facilities.length === 0) return []; // 没有设施，不检查
+
+  let chance = 0;
+  let damagedList = [];
+
+  switch(context){
+    case 'lose':      chance = FACILITY_DAMAGE_CONFIG.loseChance; break;
+    case 'flee':      chance = FACILITY_DAMAGE_CONFIG.fleeDamageChance; break;
+    case 'eliteWin':  chance = FACILITY_DAMAGE_CONFIG.eliteDamageChance; break;
+    case 'bossWin':   chance = FACILITY_DAMAGE_CONFIG.bossDamageChance; break;
+    default:          chance = FACILITY_DAMAGE_CONFIG.loseChance;
+  }
+
+  // 检查是否触发损坏
+  if(Math.random() > chance) return [];
+
+  // 随机选择1-2个设施降级
+  let numDamage = FACILITY_DAMAGE_CONFIG.minLevelLoss +
+    Math.floor(Math.random() * (FACILITY_DAMAGE_CONFIG.maxLevelLoss - FACILITY_DAMAGE_CONFIG.minLevelLoss + 1));
+  numDamage = Math.min(numDamage, facilities.length);
+
+  shuffle(facilities);
+  let totalLevelLoss = 0;
+  for(let i = 0; i < numDamage; i++){
+    let name = facilities[i];
+    let currentLevel = G.facilities[name];
+    let levelLoss = 1;
+    let newLevel = Math.max(0, currentLevel - levelLoss);
+
+    if(newLevel < currentLevel){ // 实际降级了
+      G.facilities[name] = newLevel;
+      if(newLevel === 0){
+        delete G.facilities[name];
+      }
+      totalLevelLoss += levelLoss;
+      damagedList.push({name, oldLevel: currentLevel, newLevel});
+    }
+  }
+
+  // 重新计算设施效果和堡垒血量
+  if(damagedList.length > 0){
+    recalcFacilityEffects();
+    // [SYS_FORTRESS] 设施损坏减少堡垒血量
+    recalcFortressMaxHp();
+    let fortressDamage = totalLevelLoss * 5; // 每降1级损失5点堡垒血量
+    if(fortressDamage > 0){
+      damageFortress(fortressDamage);
+    }
+  }
+
+  return damagedList;
+}
+
+// [SYS_DAMAGE] 显示设施损坏提示
+function showFacilityDamageNotice(damagedList, context = 'lose'){
+  if(damagedList.length === 0) return;
+
+  let contextText = {
+    'lose': '战斗失败！设施损坏！',
+    'flee': '逃跑时设施被破坏！',
+    'eliteWin': '战后设施受损！',
+    'bossWin': 'Boss战后设施受损！'
+  };
+
+  let html = damagedList.map(d => {
+    let icon = d.newLevel > 0 ? '🔻' : '💥';
+    let levelText = d.newLevel > 0 ? `降为 Lv.${d.newLevel}` : '完全损毁！';
+    return `${icon} ${d.name}: Lv.${d.oldLevel} → ${levelText}`;
+  }).join('\n');
+
+  showOverlay(contextText[context] || '设施损坏！', html);
+}
+
+// [SYS_DAMAGE] 维修单个设施
+function repairFacility(name){
+  let f = FACILITIES[name];
+  let currentLevel = G.facilities[name] || 0;
+  if(currentLevel >= f.maxLevel) return;
+
+  let cost = f.repairCost ? f.repairCost(currentLevel + 1) : null;
+  if(!cost){
+    addBattleLog('该设施无法维修', 'log-damage');
+    return;
+  }
+
+  // 检查资源是否足够
+  if(G.wood < cost.wood || G.metal < cost.metal || G.parts < (cost.parts || 0)){
+    addBattleLog('维修资源不足！', 'log-damage');
+    return;
+  }
+
+  // 扣除资源并升级
+  G.wood -= cost.wood;
+  G.metal -= cost.metal;
+  G.parts -= cost.parts || 0;
+  G.facilities[name] = currentLevel + 1;
+
+  addBattleLog('维修成功: ' + f.name + ' → Lv.' + G.facilities[name], 'log-heal');
+  recalcFacilityEffects();
+  // [SYS_FORTRESS] 维修后更新堡垒血量上限
+  let oldMaxHp = G.maxFortressHp;
+  recalcFortressMaxHp();
+  if(G.maxFortressHp > oldMaxHp){
+    G.fortressHp += (G.maxFortressHp - oldMaxHp);
+    addBattleLog('🏰 堡垒血量上限 +' + (G.maxFortressHp - oldMaxHp), 'log-heal');
+  }
+  updateRepairMenu();
+}
+
+// [SYS_DAMAGE] 维修全部受损设施
+function repairAllFacilities(){
+  let damaged = Object.keys(G.facilities).filter(n => G.facilities[n] < FACILITIES[n].maxLevel);
+  if(damaged.length === 0){
+    addBattleLog('所有设施均已满级', 'log-system');
+    return;
+  }
+
+  // 检查所有维修费用
+  let totalCost = { wood: 0, metal: 0, parts: 0 };
+  let repairList = [];
+
+  for(let name of damaged){
+    let f = FACILITIES[name];
+    let cost = f.repairCost ? f.repairCost(G.facilities[name] + 1) : null;
+    if(cost){
+      totalCost.wood += cost.wood;
+      totalCost.metal += cost.metal;
+      totalCost.parts += cost.parts || 0;
+      repairList.push({name, cost});
+    }
+  }
+
+  // 检查资源是否足够
+  if(G.wood < totalCost.wood || G.metal < totalCost.metal || G.parts < totalCost.parts){
+    addBattleLog('维修资源不足！', 'log-damage');
+    return;
+  }
+
+  // 执行维修
+  G.wood -= totalCost.wood;
+  G.metal -= totalCost.metal;
+  G.parts -= totalCost.parts;
+
+  repairList.forEach(r => {
+    G.facilities[r.name]++;
+    addBattleLog('维修: ' + r.name + ' → Lv.' + G.facilities[r.name], 'log-heal');
+  });
+
+  recalcFacilityEffects();
+  // [SYS_FORTRESS] 维修后更新堡垒血量上限
+  let oldMaxHp = G.maxFortressHp;
+  recalcFortressMaxHp();
+  if(G.maxFortressHp > oldMaxHp){
+    G.fortressHp += (G.maxFortressHp - oldMaxHp);
+    addBattleLog('🏰 堡垒血量上限 +' + (G.maxFortressHp - oldMaxHp), 'log-heal');
+  }
+  closeRepairMenu();
+  showMap();
+  updateMapUI();
+}
+
+// [SYS_DAMAGE] 打开维修菜单
+function openRepairMenu(){
+  closeAllModals();
+  document.getElementById('repairModal').style.display = 'block';
+  updateRepairMenu();
+}
+
+// [SYS_DAMAGE] 更新维修菜单
+function updateRepairMenu(){
+  let html = '<div class="repair-header"><h3>🔧 设施维修</h3></div>';
+
+  // 显示资源
+  html += `<div class="repair-resources">
+    🪵${G.wood} ⚙️${G.metal} 🔩${G.parts}
+  </div>`;
+
+  let hasDamaged = false;
+
+  for(let name in FACILITIES){
+    let f = FACILITIES[name];
+    let currentLevel = G.facilities[name] || 0;
+
+    // 只显示已建造且未满级的设施
+    if(currentLevel > 0 && currentLevel < f.maxLevel){
+      hasDamaged = true;
+      let cost = f.repairCost ? f.repairCost(currentLevel + 1) : null;
+      let canAfford = cost && G.wood >= cost.wood && G.metal >= cost.metal && G.parts >= (cost.parts || 0);
+      let costText = cost ? `🪵${cost.wood} ⚙️${cost.metal} 🔩${cost.parts||0}` : '-';
+
+      html += `<div class="repair-item">
+        <span class="icon damaged">${f.icon}</span>
+        <div class="info">
+          <div class="name">${f.name}</div>
+          <div class="level">Lv.${currentLevel} → Lv.${currentLevel + 1} (满级${f.maxLevel})</div>
+          <div class="cost">费用: ${costText}</div>
+        </div>
+        <button onclick="repairFacility('${name}')" ${!canAfford ? 'disabled' : ''}>维修</button>
+      </div>`;
+    }
+  }
+
+  if(!hasDamaged){
+    html += '<div class="repair-empty">所有设施均已满级，无需维修</div>';
+  }
+
+  // 添加一键维修按钮
+  let damagedCount = Object.keys(G.facilities).filter(n => G.facilities[n] > 0 && G.facilities[n] < FACILITIES[n].maxLevel).length;
+  if(damagedCount > 0){
+    html += `<div class="repair-all-btn">
+      <button onclick="repairAllFacilities()" class="btn-repair-all">🔧 一键维修全部</button>
+    </div>`;
+  }
+
+  document.getElementById('repairList').innerHTML = html;
+}
+
+// [SYS_DAMAGE] 关闭维修菜单
+function closeRepairMenu(){
+  document.getElementById('repairModal').style.display = 'none';
 }
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -4272,6 +5009,16 @@ function battleWin(){
   G.exp += exp;
   addBattleLog('获得 ' + exp + ' 经验 (' + G.exp + '/' + G.expToLevel + ')', 'log-player');
 
+  // [SYS_DAMAGE] 精英/Boss战后可能损坏设施
+  let battleContext = G.enemy?.boss ? 'bossWin' : (G.isElite ? 'eliteWin' : null);
+  let battleDamaged = battleContext ? checkFacilityDamage(battleContext) : [];
+  if(battleDamaged.length > 0){
+    addBattleLog('战后设施受损！', 'log-damage');
+    battleDamaged.forEach(d => {
+      addBattleLog('  ' + d.name + ': Lv.' + d.oldLevel + ' → Lv.' + d.newLevel, 'log-damage');
+    });
+  }
+
   G.wave++;
 
   if(G.exp >= G.expToLevel){
@@ -4281,127 +5028,191 @@ function battleWin(){
   }
 }
 
-// ==================== 奖励系统 ====================
+// ==================== 奖励系统 v3.0 ====================
+// 所有战斗都提供3张卡牌选择，可放弃
+
 function generateRewards(){
   let baseScore = Math.min(25, 5 + (G.wave - 1) * 4);
-  let minScore = Math.max(1, baseScore - 5);
-  let maxScore = baseScore + 5;
+  // [SYS_REWARD_V3] 普通战斗卡牌等级偏低为主
+  let isNormalBattle = !G.isElite && !G.enemy?.boss && !G.enemy?.special;
+  let minScore = isNormalBattle ? 1 : Math.max(1, baseScore - 8);
+  let maxScore = isNormalBattle ? Math.min(baseScore - 3, 12) : baseScore + 5;
   
   let rewards = [];
   
-  if(!G.isElite){
-    // 普通战斗：混合奖励类型
-    let rewardTypes = ['card', 'card', 'resource', 'draw'];
-    shuffle(rewardTypes);
-    
-    rewardTypes.forEach((type, idx) => {
-      if(type === 'card'){
-        let cards = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-        if(cards.length > 0) rewards.push({type:'card', ...cards[0], quality:getCardQuality(cards[0].score)});
-      } else if(type === 'resource'){
-        rewards.push(generateResourcePack(baseScore));
-      } else if(type === 'draw'){
-        rewards.push({type:'drawCard', name:'额外抽卡', desc:'随机获得 ' + (G.wave > 5 ? 2 : 1) + ' 张卡牌', value:G.wave > 5 ? 2 : 1, icon:'🎴', quality:'稀有'});
-      }
-    });
-    
-    // 确保有4个奖励
-    while(rewards.length < 4){
-      let cards = drawRandomCards(ALL_CARDS, 1, minScore, maxScore);
-      if(cards.length > 0) rewards.push({type:'card', ...cards[0], quality:getCardQuality(cards[0].score)});
-      else rewards.push({type:'resourceOnly', name:'木材', desc:'+5 木材', wood:5, icon:'🪵', quality:'普通'});
-    }
-  } else {
-    // 精英战斗：宝物为主 + 卡牌
-    let cards = drawRandomCards(ALL_CARDS, 2, minScore, maxScore);
-    cards.forEach(c => rewards.push({type:'card', ...c, quality:getCardQuality(c.score)}));
-    
-    // 随机宝物
-    let relicLevel = Math.min(5, Math.max(1, Math.floor(G.wave / 3)));
-    let relicPool = RELICS.filter(r => r.level <= relicLevel);
-    shuffle(relicPool);
-    if(relicPool.length > 0){
-      let relic = relicPool[0];
-      rewards.push({type:'relic', ...relic, quality:['普通','稀有','史诗','传说'][[1,2,3,4][relic.level-1] || 1]});
-    }
-    
-    rewards.push(generateResourcePack(baseScore));
+  // [SYS_REWARD_V3] 所有战斗都给3张卡牌选择
+  let cardCount = 3;
+  let cards = drawRandomCards(ALL_CARDS, cardCount, minScore, maxScore);
+  
+  // 如果抽到的卡牌不足3张，用基础卡牌补足
+  while(cards.length < cardCount){
+    cards.push(createBasicCard(cards.length));
   }
-    
-    // 宝物
-    let relics = getRelicPool(Math.max(1, baseScore-5), Math.min(25, baseScore+5));
-    relics = relics.filter(r => !G.relics.find(e => e.name === r.name));
-  // BOSS额外奖励
-  if(G.enemy && G.enemy.boss){
-    rewards.push({type:'drawCard', value:2, name:'BOSS宝藏', desc:'直接获得 2 张随机卡牌！', icon:'👑', quality:'传说'});
-  }
+  
+  cards.forEach(card => {
+    rewards.push({type:'card', ...card, quality:getCardQuality(card.score || 5)});
+  });
   
   return rewards;
 }
 
+// [SYS_REWARD_V3] 创建基础卡牌补足奖励
+function createBasicCard(index){
+  let basicCards = [
+    {name:'轻击', desc:'造成 6 伤害', cost:1, dmg:6, icon:'⚔️', type:'attack', score:3},
+    {name:'格挡', desc:'获得 5 护盾', cost:1, block:5, icon:'🛡️', type:'skill', score:3},
+    {name:'治疗', desc:'恢复 8 HP', cost:1, heal:8, icon:'💚', type:'skill', score:3},
+    {name:'快刀', desc:'造成 4 伤害', cost:0, dmg:4, icon:'🗡️', type:'attack', score:2},
+    {name:'铁壁', desc:'获得 8 护盾', cost:1, block:8, icon:'🧱', type:'skill', score:4},
+  ];
+  return basicCards[index % basicCards.length];
+}
+
+// [SYS_REWARD_V2] 生成建设奖励
+function generateBuildReward(){
+  let upgradeableFacilities = [];
+  for(let name in FACILITIES){
+    let currentLevel = G.facilities[name] || 0;
+    if(currentLevel < FACILITIES[name].maxLevel){
+      upgradeableFacilities.push(name);
+    }
+  }
+  
+  if(upgradeableFacilities.length > 0){
+    let facilityName = upgradeableFacilities[Math.floor(Math.random() * upgradeableFacilities.length)];
+    let currentLevel = G.facilities[facilityName] || 0;
+    let nextLevel = currentLevel + 1;
+    let cost = FACILITIES[facilityName].upgradeCost(nextLevel);
+    let effect = FACILITIES[facilityName].upgradeEffect(nextLevel);
+    let effectDesc = '';
+    
+    if(effect.blockPerTurn) effectDesc = '+' + effect.blockPerTurn + ' 每回合护盾';
+    else if(effect.healPerTurn) effectDesc = '+' + effect.healPerTurn + ' 每回合治疗';
+    else if(effect.startStr) effectDesc = '+' + effect.startStr + ' 战斗开始力量';
+    else if(effect.extraEnergy) effectDesc = '+' + effect.extraEnergy + ' 初始能量';
+    else if(effect.seeNextIntent) effectDesc = '预知敌人意图';
+    
+    return {
+      type:'build',
+      name: facilityName + ' Lv.' + nextLevel,
+      desc: effectDesc,
+      icon: FACILITIES[facilityName].icon,
+      facility: facilityName,
+      quality: nextLevel <= 1 ? '普通' : nextLevel <= 2 ? '稀有' : nextLevel <= 3 ? '史诗' : '传说'
+    };
+  } else {
+    // 所有设施满级，改为资源补偿
+    let resourceType = ['wood', 'metal', 'parts'][Math.floor(Math.random() * 3)];
+    let amounts = { wood: 15, metal: 10, parts: 5 };
+    return {
+      type:'resourceOnly',
+      name: '建设材料',
+      desc: '+' + amounts[resourceType] + (resourceType === 'wood' ? '木材' : resourceType === 'metal' ? '金属' : '零件'),
+      [resourceType]: amounts[resourceType],
+      icon: resourceType === 'wood' ? '🪵' : resourceType === 'metal' ? '⚙️' : '🔩',
+      quality: '普通'
+    };
+  }
+}
+
+// [SYS_REWARD_V2] 生成法宝奖励
+function generateRelicReward(){
+  let relicLevel = Math.min(5, Math.max(1, Math.floor(G.wave / 3) + (G.enemy?.boss ? 1 : 0)));
+  let relicPool = RELICS.filter(r => r.level <= relicLevel && !G.relics.find(e => e.name === r.name));
+  
+  if(relicPool.length > 0){
+    shuffle(relicPool);
+    let relic = relicPool[0];
+    return {
+      type:'relic',
+      ...relic,
+      quality: ['普通','稀有','史诗','传说','神话'][relic.level - 1] || '普通'
+    };
+  }
+  
+  // 已拥有所有法宝，改为资源补偿
+  return {
+    type:'resourceOnly',
+    name: '法宝精华',
+    desc: '+20 木材 +15 金属 +10 零件',
+    wood: 20, metal: 15, parts: 10,
+    icon: '💎',
+    quality: '史诗'
+  };
+}
+
 function generateResourcePack(level){
-  let bonus = level * 5;
+  // [SYS_REWARD_V2] 减少资源包数量，只有特殊战斗才给
+  let bonus = level * 3;
   return {type:'resourcePack', name:'物资箱', desc:'+' + bonus + '木材 +' + bonus + '金属 +' + (bonus/2|0) + '零件', wood:bonus, metal:bonus, parts:bonus/2|0, icon:'📦', quality:'普通'};
 }
 
+// [SYS_REWARD_V3] 显示战斗奖励选择界面
 function showBattleRewards(){
   let rewards = generateRewards();
-  let title = G.isElite ? '精英战斗胜利！' : '战斗胜利！';
-  let subtitle = G.isElite ? '选择一项奖励' : '选择一项奖励';
-  if(G.enemy && G.enemy.boss) subtitle = 'BOSS奖励！选择一项奖励！';
+  let title = G.isElite ? '⭐ 精英战斗胜利！' : (G.enemy?.boss ? '👹 BOSS战胜利！' : '⚔️ 战斗胜利！');
+  let subtitle = '选择一张卡牌加入牌组';
   
-  let html = `<div class="reward-header"><h2>${title}</h2><p>${subtitle}</p></div>`;
+  // [SYS_REWARD_V3] 新的卡片式布局
+  let html = `<div style="text-align:center;padding:20px;background:rgba(10,10,8,0.98);border:3px solid #505040;border-radius:4px;max-width:95vw;">
+    <h2 style="color:#f0e8d0;margin-bottom:10px;font-family:var(--font-pixel);font-size:1.8rem;text-shadow:2px 2px 0 #000;">${title}</h2>
+    <p style="color:#a09080;margin-bottom:20px;">${subtitle}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;">`;
   
   rewards.forEach((r, i) => {
     let qColor = getQualityColor(r.quality || '普通');
-    // 根据类型添加不同的CSS类和标签
-    let typeClass = 'reward-card';
-    let typeBadge = '🎴 卡牌';
-    if(r.type === 'relic'){ typeClass = 'reward-relic'; typeBadge = '💎 宝物'; }
-    else if(r.type === 'resourcePack' || r.type === 'resourceOnly'){ typeClass = 'reward-resource'; typeBadge = '📦 物资'; }
-    else if(r.type === 'drawCard'){ typeClass = 'reward-draw'; typeBadge = '✨ 抽卡'; }
-    
-    html += `<div class="reward-option ${typeClass}" onclick="selectReward(${i})">
-      <span class="icon">${r.icon || '❓'}</span>
-      <div class="info">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="name">${r.name}</span>
-          <span class="type-badge">${typeBadge}</span>
-        </div>
-        <div class="desc">${r.desc || ''}</div>
-      </div>
-      <span class="quality" style="background:${qColor}">${r.quality || ''}</span>
-      <span class="select-hint">[选择]</span>
+    html += `<div onclick="selectReward(${i})" style="
+      background:linear-gradient(180deg, rgba(35,30,25,0.98), rgba(20,18,15,0.98));
+      border:2px solid ${qColor};border-radius:6px;padding:15px;width:140px;
+      box-shadow:3px 3px 0 rgba(0,0,0,0.5);text-align:center;cursor:pointer;
+      transition:transform 0.2s,box-shadow 0.2s;
+    " onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='3px 8px 0 rgba(0,0,0,0.5)';" onmouseout="this.style.transform='';this.style.boxShadow='3px 3px 0 rgba(0,0,0,0.5)';">
+      <div class="cost" style="background:rgba(20,18,12,0.98);color:#d8b040;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:8px;border:1px solid rgba(168,152,80,0.4);font-family:var(--font-retro);">${r.cost || 0}</div>
+      <div style="color:#e8e8d0;font-weight:bold;margin-bottom:5px;font-family:var(--font-retro);font-size:0.95rem;">${r.name}</div>
+      <div style="color:#989880;font-size:12px;min-height:30px;">${r.desc || ''}</div>
+      <div style="margin-top:8px;font-size:11px;color:${qColor};font-family:var(--font-retro);">${r.quality || '普通'}</div>
     </div>`;
   });
+  
+  html += `</div>
+    <button onclick="skipReward()" style="margin-top:25px;padding:10px 25px;background:linear-gradient(180deg,#252525,#151515);color:#808080;border:1px solid rgba(100,100,100,0.4);border-radius:4px;cursor:pointer;font-size:1rem;font-family:var(--font-retro);">[ 放弃奖励 ]</button>
+  </div>`;
   
   G.currentRewards = rewards;
   document.getElementById('rewardContent').innerHTML = html;
   document.getElementById('rewardModal').style.display = 'block';
 }
 
+// [SYS_REWARD_V3] 放弃奖励
+function skipReward(){
+  addBattleLog('放弃了卡牌奖励', 'log-system');
+  closeRewardModal();
+}
+
+// [SYS_REWARD_V3] 关闭奖励弹窗并返回地图
+function closeRewardModal(){
+  document.getElementById('rewardModal').style.display = 'none';
+  document.getElementById('battleContainer').style.display = 'none';
+  document.getElementById('handArea').style.display = 'none';
+  let battleLogBar = document.getElementById('battleLogBar');
+  if(battleLogBar) battleLogBar.style.display = 'none';
+  document.getElementById('mapModal').style.display = 'flex';
+}
+
+// [SYS_REWARD_V3] 选择奖励
 function selectReward(idx){
   let r = G.currentRewards[idx];
   if(!r) return;
 
   let gainedCards = [];
   
-  switch(r.type){
-    case 'card': 
-      G.deck.push({...r, uid:uid()}); 
-      gainedCards.push(r);
-      addBattleLog('获得卡牌: ' + r.name, 'log-player'); 
-      break;
-    case 'relic': G.relics.push({...r}); applyRelicEffect(r); addBattleLog('获得宝物: ' + r.name, 'log-player'); break;
-    case 'resourcePack': G.wood += r.wood||0; G.metal += r.metal||0; G.parts += r.parts||0; addBattleLog('获得物资！', 'log-player'); break;
-    case 'resourceOnly': G.wood += r.wood||0; addBattleLog('获得 ' + r.wood + ' 木材', 'log-player'); break;
-    case 'drawCard':
-      let bonus = r.value || 1;
-      let cards = drawRandomCards(ALL_CARDS, bonus, 1, Math.min(5, G.wave));
-      cards.forEach(c => { G.deck.push({...c, uid:uid()}); gainedCards.push(c); addBattleLog('获得: ' + c.name, 'log-player'); });
-      break;
+  if(r.type === 'card'){ 
+    G.deck.push({...r, uid:uid()}); 
+    gainedCards.push(r);
+    addBattleLog('获得卡牌: ' + r.name, 'log-player'); 
   }
   
+  // [SYS_REWARD_V3] 关闭奖励弹窗
   document.getElementById('rewardModal').style.display = 'none';
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';
@@ -4412,7 +5223,6 @@ function selectReward(idx){
   if(gainedCards.length > 0){
     showGainedCardsModal(gainedCards);
   } else {
-    // 没有获得卡牌，直接返回选择战斗菜单
     document.getElementById('mapModal').style.display = 'flex';
   }
 }
@@ -4680,7 +5490,16 @@ function gameOver(){
   
   // 将当前宝物加入永久存储
   G.relics.forEach(r => addPermRelic(r));
-  
+
+  // [SYS_DAMAGE] 游戏结束时触发设施损坏
+  let damagedList = checkFacilityDamage('lose');
+  if(damagedList.length > 0){
+    addBattleLog('设施在战火中受损！', 'log-damage');
+    damagedList.forEach(d => {
+      addBattleLog('  ' + d.name + ': Lv.' + d.oldLevel + ' → Lv.' + d.newLevel, 'log-damage');
+    });
+  }
+
   // 隐藏战斗界面
   document.getElementById('battleContainer').style.display = 'none';
   document.getElementById('handArea').style.display = 'none';

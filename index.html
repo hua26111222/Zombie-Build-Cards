@@ -2666,6 +2666,7 @@ function initGame(inheritedRelic){
     // [SYS_FORTRESS] 堡垒系统
     fortressHp: 20,    // 堡垒起始血量20点
     maxFortressHp: 20, // 堡垒最大血量
+    fortressDef: 0,    // 堡垒护盾
     // [SYS_SURVIVOR v2.0] 幸存者系统扩展
     playerChar:{...PLAYER_CHARACTER, level:1, exp:0, status:'healthy', recoveryProgress:0, battleCount:0, equippedRelic:null},
     survivors:[],   // 已拥有的幸存者
@@ -4206,11 +4207,11 @@ function updateBattleUI(){
   document.getElementById('energy2').textContent = G.energy;
   document.getElementById('maxEnergy2').textContent = G.maxEnergy;
 
-  // [SYS_TEAM_HP] 战斗画面玩家/队伍血条 - 显示总血量
+  // [SYS_TEAM_HP] 战斗画面玩家/队伍血条 - 显示玩家+队伍总血量
   let teamHp = getTeamTotalHp();
   let teamHpPct = Math.max(0, (teamHp.current / teamHp.max) * 100);
   document.getElementById('playerHpFill').style.width = teamHpPct + '%';
-  document.getElementById('playerHpTextNew').textContent = teamHp.current + ' / ' + teamHp.max;
+  document.getElementById('playerHpTextNew').textContent = teamHp.current + ' + 🏰' + G.fortressHp;
 
   // [SYS_FORTRESS_BATTLE] 战斗画面堡垒血量
   let fortHpPct = Math.max(0, (G.fortressHp / G.maxFortressHp) * 100);

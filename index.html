@@ -9,39 +9,39 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>丧尸堡垒 - 生存模式</title>
 <style>
-/* ========== [丧尸末日像素风格] CSS变量系统 ========== */
+/* ========== [丧尸末日血腥风格] CSS变量系统 ========== */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
 :root {
-  /* 丧尸末日红绿灰配色 - 增强对比度 */
-  --bg-darkest: #050505;
-  --bg-dark: #0d0d0d;
-  --bg-mid: #181818;
-  --bg-light: #282828;
+  /* 血腥背景 - 深红与腐烂色调 */
+  --bg-darkest: #0a0000;
+  --bg-dark: #120202;
+  --bg-mid: #1a0505;
+  --bg-light: #251008;
   
-  /* 文字颜色 - 增强对比度 */
-  --text-primary: #e8e8d0;
-  --text-secondary: #989880;
-  --text-dim: #585850;
+  /* 文字颜色 - 暗红与骨白 */
+  --text-primary: #e8d8d0;
+  --text-secondary: #a89080;
+  --text-dim: #584040;
   
-  /* 强调色 - 血红与毒绿 增强亮度 */
-  --accent-blood: #e84040;
-  --accent-poison: #80c060;
-  --accent-rust: #a07040;
-  --accent-gold: #d8b040;
+  /* 强调色 - 血红与毒绿 血腥主题 */
+  --accent-blood: #cc2222;
+  --accent-poison: #60a040;
+  --accent-rust: #8b4513;
+  --accent-gold: #b8860b;
   
-  /* 状态色 - 增强饱和度 */
-  --health: #d03030;
-  --health-dark: #902020;
-  --shield: #609080;
-  --energy: #c0b060;
-  --strength: #e87040;
-  --poison: #80c060;
+  /* 状态色 - 血腥饱和 */
+  --health: #aa1111;
+  --health-dark: #660808;
+  --shield: #4a6a5a;
+  --energy: #8b7500;
+  --strength: #cc4422;
+  --poison: #60a040;
   
-  /* 边框 - 金属质感增强 */
-  --border-subtle: rgba(100,100,80,0.4);
-  --border-normal: rgba(120,120,100,0.6);
-  --border-strong: rgba(160,160,120,0.8);
+  /* 边框 - 血腥边框 */
+  --border-subtle: rgba(120,40,40,0.4);
+  --border-normal: rgba(160,60,60,0.6);
+  --border-strong: rgba(200,80,80,0.8);
   
   /* 像素风格字体 */
   --font-pixel: 'Press Start 2P', monospace;
@@ -50,7 +50,7 @@
   --font-body: 'VT323', monospace;
   
   /* 像素网格线 */
-  --pixel-grid: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+  --pixel-grid: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='rgba(100,20,20,0.05)'/%3E%3C/svg%3E");
 }
 
 /* 像素化全局样式 */
@@ -2142,7 +2142,7 @@ const ALL_CARDS = [
   {name:'再生',type:'skill',cost:2,heal:25,desc:'恢复 25 点生命',score:18},
   {name:'死标记',type:'atk',cost:3,dmg:28,desc:'造成 28 伤害，中毒 12 层',score:27},
 // [SYS_FACILITY] 建设联动卡牌
-{name:'快速建造',type:'skill',cost:1,block:5,desc:'获得 5 护盾，建设进度+1',score:6},
+{name:'快速建造',type:'skill',cost:1,block:5,desc:'获得 5 护盾，+1 木材',score:6},
 {name:'紧急维修',type:'skill',cost:2,repair:true,desc:'恢复任意设施 1 级',score:5},
 {name:'建设热潮',type:'skill',cost:2,block:10,desc:'全体护盾 +10',score:8},
 {name:'筑防突袭',type:'def',cost:1,block:8,desc:'获得 8 护盾',score:6},
@@ -4266,6 +4266,8 @@ function updatePlayerStatusBar(){
 }
 
 function useCard(idx){
+  // [OPT] 动画期间禁用点击
+  if(G.isAnimating){ return; }
   let card = G.hand[idx];
   if(G.energy < card.cost){ addBattleLog('能量不足！需要 ' + card.cost + ' 点', 'log-damage'); return; }
   
@@ -4287,6 +4289,7 @@ function useCard(idx){
   }
   
   if(card.block){ G.block += card.block; addBattleLog('使用 ' + card.name + '，+' + card.block + ' 护盾', 'log-block'); }
+  if(card.wood){ G.wood += card.wood; addBattleLog('获得 ' + card.wood + ' 木材', 'log-system'); }
   if(card.heal){ G.hp = Math.min(G.maxHp, G.hp + card.heal); addBattleLog('使用 ' + card.name + '，+' + card.heal + ' HP', 'log-heal'); }
   if(card.strGain){ G.str += card.strGain; addBattleLog('使用 ' + card.name + '，+' + card.strGain + ' 力量', 'log-player'); }
   
@@ -4341,6 +4344,10 @@ function dealDamageToEnemy(dmg){
 
 // --- 敌人受击效果 ---
 function triggerHitEffect(damage){
+  // [OPT] 动画锁：防止动画期间点击卡牌
+  G.isAnimating = true;
+  document.getElementById('handCards').style.pointerEvents = 'none';
+  
   let enemySprite = document.getElementById('enemySprite');
   let enemyHpBar = document.getElementById('enemyHpBarNew');
   let battleContainer = document.getElementById('battleContainer');
@@ -4384,7 +4391,12 @@ function triggerHitEffect(damage){
   dmgNum.style.color = '#ff4444';
   dmgNum.style.textShadow = '0 0 10px #ff0000, 2px 2px 0 #000';
   battleContainer.appendChild(dmgNum);
-  setTimeout(() => dmgNum.remove(), 800);
+  setTimeout(() => {
+    dmgNum.remove();
+    // [OPT] 动画结束，解除点击锁定
+    G.isAnimating = false;
+    document.getElementById('handCards').style.pointerEvents = 'auto';
+  }, 500);
   
   // 立即更新血条宽度
   let newWidth = Math.max(0, Math.min(100, currentHp / maxHp * 100));

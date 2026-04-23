@@ -1592,32 +1592,57 @@ body::before {
 </head>
 <body>
 <script>
-// 移动端横屏提示（暂时禁用旋转功能避免黑屏）
+// 移动端横屏锁定系统
 (function() {
-  function checkOrientation() {
-    // 检测是否为移动设备
-    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      // 显示横屏提示
-      const hint = document.getElementById('rotateHint');
-      if (window.innerHeight > window.innerWidth) {
-        if (hint) hint.style.display = 'flex';
-      } else {
-        if (hint) hint.style.display = 'none';
-      }
+  function lockToLandscape() {
+    // 优先尝试 Screen Orientation API
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function() {
+        // API不支持，静默失败
+      });
     }
   }
-  checkOrientation();
-  window.addEventListener('orientationchange', checkOrientation);
-  window.addEventListener('resize', checkOrientation);
+  
+  function applyRotation() {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobile) return;
+    
+    // 如果是竖屏，旋转内容
+    if (window.innerHeight > window.innerWidth) {
+      document.body.style.transformOrigin = 'left top';
+      document.body.style.transform = 'rotate(90deg)';
+      document.body.style.position = 'fixed';
+      document.body.style.top = '0';
+      document.body.style.left = '100vh';
+      document.body.style.width = '100vh';
+      document.body.style.height = '100vw';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // 恢复正常
+      document.body.style.transform = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.overflow = '';
+    }
+  }
+  
+  // 延迟执行，等待页面完全加载
+  setTimeout(function() {
+    lockToLandscape();
+    applyRotation();
+  }, 100);
+  
+  window.addEventListener('orientationchange', function() {
+    setTimeout(applyRotation, 100);
+  });
+  window.addEventListener('resize', function() {
+    setTimeout(applyRotation, 100);
+  });
 })();
 </script>
-
-<!-- 横屏提示遮罩 -->
-<div id="rotateHint" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-size:18px;">
-  <div style="font-size:60px;">📱</div>
-  <div style="margin-top:20px;">请将手机旋转至横屏</div>
-  <div style="margin-top:10px;color:#888;font-size:14px;">Please rotate your device</div>
-</div>
 
 <!-- 开始菜单 -->
 <div id="startMenu">

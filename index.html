@@ -1695,11 +1695,6 @@ body::before {
     <!-- 人物列表 -->
     <div id="allyList" style="display:flex;flex-direction:column;gap:6px;"></div>
     
-    <!-- 总血量 -->
-    <div style="margin-top:10px;padding:6px 10px;background:rgba(0,0,0,0.4);border-radius:4px;font-size:11px;color:#a89070;text-align:center;">
-      总血量: <span id="playerHpTextNew" style="color:#e8d8d0;">50</span>
-    </div>
-    
     <div id="playerStats" style="margin-top:8px;display:flex;gap:10px;">
       <span class="stat-tag str">⚔ <span id="playerStrTag">0</span></span>
       <span class="stat-tag energy">⚡ <span id="energyDisplay">0</span></span>
@@ -4243,11 +4238,6 @@ function updateBattleUI(){
   }
   
   document.getElementById('allyList').innerHTML = allyListHtml;
-  
-  // 总血量（玩家 + 队伍 + 堡垒）
-  let teamHp = getTeamTotalHp();
-  let totalHp = teamHp.current + G.fortressHp;
-  document.getElementById('playerHpTextNew').textContent = totalHp;
 
   // ========== 渲染敌方列表 ==========
   document.getElementById('enemySprite').textContent = getEnemySprite(G.enemy.name);
@@ -4550,23 +4540,14 @@ function triggerPlayerHit(damage){
   handArea.appendChild(dmgNum);
   setTimeout(() => dmgNum.remove(), 800);
 
-  // [SYS_TEAM_HP] 玩家受伤时，随机一个健康幸存者受到溅射伤害
-  if(G.block <= 0 && damage > 0){
-    let healthySurvivors = [];
-    for(let pos in G.team){
-      let s = G.team[pos];
-      if(s && s.status === 'healthy'){
-        healthySurvivors.push(s);
-      }
-    }
-    // 随机选择一个受伤
-    if(healthySurvivors.length > 0){
-      let target = healthySurvivors[Math.floor(Math.random() * healthySurvivors.length)];
-      tryInjurySurvivor(target);
-    }
+  // 检查玩家是否死亡
+  if(G.hp <= 0){
+    gameOver();
+    return;
   }
 
   updatePlayerStatusBar();
+  updateBattleUI();
 }
 
 // [SYS_FORTRESS_BATTLE] 堡垒受伤特效
@@ -4635,15 +4616,38 @@ function enemyTurn(){
     G.block -= pen; atk -= pen;
     if(pen > 0) addBattleLog('护盾抵消 ' + pen + ' 伤害', 'log-block');
     if(atk > 0){ 
-      G.hp -= atk; 
-      addBattleLog(G.enemy.name + ' 攻击！-' + atk + ' HP', 'log-enemy');
-      // 敌人冲过来攻击玩家动画
-      let enemyPanel = document.getElementById('enemyPanel');
-      enemyPanel.style.transform = 'translateX(-80px)';
-      setTimeout(() => {
-        enemyPanel.style.transform = '';
+      // [SYS_BATTLE] 伤害随机分配给玩家、幸存者、堡垒
+      let targets = ['player'];
+      for(let pos in G.team){
+        if(G.team[pos] && G.team[pos].status !== 'dead') targets.push('survivor:' + pos);
+      }
+      targets.push('fortress');
+      
+      let target = targets[Math.floor(Math.random() * targets.length)];
+      if(target === 'player'){
+        G.hp -= atk;
+        addBattleLog(G.enemy.name + ' 攻击玩家！-' + atk + ' HP', 'log-enemy');
         triggerPlayerHit(atk);
-      }, 200);
+      } else if(target.startsWith('survivor:')){
+        let pos = target.split(':')[1];
+        let s = G.team[pos];
+        if(s) tryInjurySurvivor(s);
+        addBattleLog(G.enemy.name + ' 攻击 ' + s.name + '！-' + atk + ' HP', 'log-enemy');
+        updateBattleUI();
+      } else if(target === 'fortress'){
+        G.fortressHp -= atk;
+        addBattleLog(G.enemy.name + ' 攻击堡垒！-' + atk + ' HP', 'log-enemy');
+        if(G.fortressHp <= 0){
+          G.fortressHp = 0;
+          Object.keys(G.facilities).forEach(n => {
+            addBattleLog('🏰 ' + n + ' 被摧毁！', 'log-damage');
+          });
+          G.facilities = {};
+          recalcFacilityEffects();
+          addBattleLog('⚠️ 堡垒沦陷！所有建设清零！', 'log-damage');
+        }
+        triggerFortressHit();
+      }
     }
   } else if(G.enemyIntent === 'def'){
     // [SYS_BALANCE] 降低防御加成，并设置上限
@@ -4653,17 +4657,40 @@ function enemyTurn(){
     // 防御动画
     animateEnemyDefend();
   } else if(G.enemyIntent === 'special'){
-    // [SYS_BALANCE] 特殊攻击伤害：1.5倍攻击力（降低从2.0）
+    // [SYS_BALANCE] 特殊攻击伤害：1.5倍攻击力
     let dmg = Math.floor(G.enemy.atk * 1.5);
-    G.hp -= dmg;
-    addBattleLog(G.enemy.name + ' 特殊攻击！-' + dmg + ' HP', 'log-special');
-    // 敌人特殊攻击动画
-    let enemyPanel = document.getElementById('enemyPanel');
-    enemyPanel.style.transform = 'scale(1.2)';
-    setTimeout(() => {
-      enemyPanel.style.transform = '';
+    // [SYS_BATTLE] 特殊攻击同样随机分配
+    let targets = ['player'];
+    for(let pos in G.team){
+      if(G.team[pos] && G.team[pos].status !== 'dead') targets.push('survivor:' + pos);
+    }
+    targets.push('fortress');
+    
+    let target = targets[Math.floor(Math.random() * targets.length)];
+    if(target === 'player'){
+      G.hp -= dmg;
+      addBattleLog(G.enemy.name + ' 特殊攻击玩家！-' + dmg + ' HP', 'log-special');
       triggerPlayerHit(dmg);
-    }, 300);
+    } else if(target.startsWith('survivor:')){
+      let pos = target.split(':')[1];
+      let s = G.team[pos];
+      if(s) tryInjurySurvivor(s);
+      addBattleLog(G.enemy.name + ' 特殊攻击 ' + s.name + '！', 'log-special');
+      updateBattleUI();
+    } else if(target === 'fortress'){
+      G.fortressHp -= dmg;
+      addBattleLog(G.enemy.name + ' 特殊攻击堡垒！-' + dmg + ' HP', 'log-special');
+      if(G.fortressHp <= 0){
+        G.fortressHp = 0;
+        Object.keys(G.facilities).forEach(n => {
+          addBattleLog('🏰 ' + n + ' 被摧毁！', 'log-damage');
+        });
+        G.facilities = {};
+        recalcFacilityEffects();
+        addBattleLog('⚠️ 堡垒沦陷！所有建设清零！', 'log-damage');
+      }
+      triggerFortressHit();
+    }
   } else if(G.enemyIntent === 'siege'){
     // [SYS_FORTRESS_BATTLE] 攻城丧尸攻击堡垒
     let atk = G.enemy.atk + G.enemyStr;

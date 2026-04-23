@@ -1592,31 +1592,32 @@ body::before {
 </head>
 <body>
 <script>
-// 强制移动端横屏显示
+// 移动端横屏提示（暂时禁用旋转功能避免黑屏）
 (function() {
-  function lockOrientation() {
+  function checkOrientation() {
+    // 检测是否为移动设备
     if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      // 竖屏时旋转容器
+      // 显示横屏提示
+      const hint = document.getElementById('rotateHint');
       if (window.innerHeight > window.innerWidth) {
-        document.documentElement.style.width = '100vh';
-        document.documentElement.style.height = '100vw';
-        document.documentElement.style.transform = 'rotate(90deg)';
-        document.documentElement.style.transformOrigin = 'left top';
-        document.documentElement.style.position = 'fixed';
-        document.documentElement.style.top = '0';
-        document.documentElement.style.left = '100vh';
-        document.body.style.overflow = 'hidden';
+        if (hint) hint.style.display = 'flex';
+      } else {
+        if (hint) hint.style.display = 'none';
       }
     }
   }
-  
-  // 页面加载和屏幕方向变化时执行
-  lockOrientation();
-  window.addEventListener('load', lockOrientation);
-  window.addEventListener('orientationchange', lockOrientation);
-  window.addEventListener('resize', lockOrientation);
+  checkOrientation();
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('resize', checkOrientation);
 })();
 </script>
+
+<!-- 横屏提示遮罩 -->
+<div id="rotateHint" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:99999;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-size:18px;">
+  <div style="font-size:60px;">📱</div>
+  <div style="margin-top:20px;">请将手机旋转至横屏</div>
+  <div style="margin-top:10px;color:#888;font-size:14px;">Please rotate your device</div>
+</div>
 
 <!-- 开始菜单 -->
 <div id="startMenu">

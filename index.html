@@ -2351,7 +2351,7 @@ const PLAYER_CHARACTER = {
   icon:'⚔️',
   role:'any',
   rarity:'legend',
-  baseStats:{hp:50, atk:0, def:0},  // [SYS_FIX] 基础HP从80降到50
+  baseStats:{hp:50, atk:0, def:0},  // 幸存者基础HP
   state:{injuryResist:0.20, energyBonus:0, cardBonus:0},
   growth:{hpPerLevel:5, relicSlots:3},  // [SYS_FIX] 每级HP成长从10降到5
   passive:{type:'atkBoost', value:0.05, desc:'+5% 伤害'},
@@ -2653,7 +2653,7 @@ function getProceduralRelicPool(level) {
 
 function initGame(inheritedRelic){
   G = {
-    mode:'map', wave:1, hp:50, maxHp:50, block:0, str:0, strBase:0,
+    mode:'map', wave:1, hp:20, maxHp:20, block:0, str:0, strBase:0,
     energy:0, maxEnergy:0, drawCount:4,
     poisonApply:0, lifesteal:0, hpDrain:0, drawExtra:0,
     level:1, exp:0, expToLevel:100,
@@ -2670,8 +2670,8 @@ function initGame(inheritedRelic){
     facilities:{},  // 已建造的设施 { name: level }
     facilityEffects:{ block:0, heal:0, str:0, energy:0, seeIntent:false },
     // [SYS_FORTRESS] 堡垒系统
-    fortressHp: 20,    // 堡垒起始血量20点
-    maxFortressHp: 20, // 堡垒最大血量
+    fortressHp: 50,    // 堡垒起始血量50点
+    maxFortressHp: 50, // 堡垒最大血量
     fortressDef: 0,    // 堡垒护盾
     // [SYS_SURVIVOR v2.0] 幸存者系统扩展
     playerChar:{...PLAYER_CHARACTER, level:1, exp:0, status:'healthy', recoveryProgress:0, battleCount:0, equippedRelic:null},
